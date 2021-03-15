@@ -6,10 +6,12 @@ function main() {
     return;
   }
 
-  let matrixFactory = new MatrixFactory(glCntxt)
+  let matrixFactory = new MatrixController(glCntxt)
   let shaderFactory = new ShaderFactory(glCntxt)
-  let myDrawableA = new Drawable(glCntxt, shaderFactory, matrixFactory)
+  let myDrawableA = new Cube(glCntxt, shaderFactory, matrixFactory)
   let myDrawableB = new Drawable(glCntxt, shaderFactory, matrixFactory)
+  myDrawableA.init()
+  myDrawableB.init()
   myDrawableB.setVertices([
     -3.0,  -1.0,
     -1.0,  -1.0,

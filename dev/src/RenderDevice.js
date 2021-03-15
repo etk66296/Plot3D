@@ -5,7 +5,7 @@ class RenderDevice extends PlotterObject {
     
     this.buffers = buffers
 
-    this.fps = 1
+    this.fps = 30
     this.interval(this.update, 1000 / this.fps)
   }
 
@@ -44,6 +44,7 @@ class RenderDevice extends PlotterObject {
 
 
     this.buffers.forEach( buffer => {
+      buffer.update()
       buffer.draw()
     })
   }

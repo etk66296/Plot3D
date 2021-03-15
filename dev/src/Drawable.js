@@ -5,96 +5,121 @@ class Drawable extends PlotterObject {
     this.matrixControl = matrixControl
     this.glCntxt = glCntxt
 
-    this.glVerticeBuffer = this.glCntxt.createBuffer()
-    this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticeBuffer)
+    this.isInitialized = false
 
+    this.rotation = 0.0
+    this.rotAxis = { x: 1.0, y: 1.0, z: 1.0 }
+
+    this.glVerticeBuffer = null
     this.numOfVertexComponents = 2
     this.vertexType = this.glCntxt.FLOAT
     this.normalizeVertices = false
     this.vertexStride = 0
     this.vertexOffset = 0
     this.vertexCount = 4
-
     this.vertices = [
       -1.0,  1.0,
       1.0,  1.0,
       -1.0, -1.0,
       1.0, -1.0
     ]
+    
 
-    this.glCntxt.bufferData(
-      this.glCntxt.ARRAY_BUFFER,
-      new Float32Array(this.vertices),
-      this.glCntxt.STATIC_DRAW
-    )
-
+    this.glColorBuffer = null
     this.numOfColorComponents = 4
     this.colorType = this.glCntxt.FLOAT
     this.normalizeColors = false
     this.colorStride = 0
     this.colorOffset = 0
     this.colorCount = 4
-
     this.colors = [
       1.0,  1.0,  1.0,  1.0,
       1.0,  0.0,  0.0,  1.0,
       0.0,  1.0,  0.0,  1.0,
       0.0,  0.0,  1.0,  1.0
     ]
-    this.glColorBuffer = this.glCntxt.createBuffer()
-    this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorBuffer)
-    this.glCntxt.bufferData(
-      this.glCntxt.ARRAY_BUFFER,
-      new Float32Array(this.colors),
-      this.glCntxt.STATIC_DRAW
-    )
+  }
+
+  init() {
+    if (!this.isInitialized) {
+      this.glVerticeBuffer = this.glCntxt.createBuffer()
+      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticeBuffer)
+      this.glCntxt.bufferData(
+        this.glCntxt.ARRAY_BUFFER,
+        new Float32Array(this.vertices),
+        this.glCntxt.STATIC_DRAW
+      )
+      this.glColorBuffer = this.glCntxt.createBuffer()
+      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorBuffer)
+      this.glCntxt.bufferData(
+        this.glCntxt.ARRAY_BUFFER,
+        new Float32Array(this.colors),
+        this.glCntxt.STATIC_DRAW
+      )
+      this.isInitialized = true
+    }
   }
 
   setVertices(vertices) {
-    this.vertices = vertices
-    this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticeBuffer)
-    this.glCntxt.bufferData(
-      this.glCntxt.ARRAY_BUFFER,
-      new Float32Array(this.vertices),
-      this.glCntxt.STATIC_DRAW
-    )
+    if (this.isInitialized) {
+      this.vertices = vertices
+      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticeBuffer)
+      this.glCntxt.bufferData(
+        this.glCntxt.ARRAY_BUFFER,
+        new Float32Array(this.vertices),
+        this.glCntxt.STATIC_DRAW
+      )
+    }
+  }
+
+  update() {
+    if (this.isInitialized) {
+      if (this.rotation !== 0.0) {
+        this.matrixControl.modelViewMatrix = this.matrixControl.rotate(
+          this.matrixControl.modelViewMatrix,
+          this.rotation,
+          this.rotAxis
+        )
+      }
+    }
   }
 
   draw() {
-    this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticeBuffer)
-    this.glCntxt.vertexAttribPointer(
-      this.shaderControl.attributes.vertexPosition,
-      this.numOfVertexComponents,
-      this.vertexType,
-      this.normalizeVertices,
-      this.vertexStride,
-      this.vertexOffset
-    )
-    this.glCntxt.enableVertexAttribArray(this.shaderControl.attributes.vertexPosition)
+    if (this.isInitialized) {
+      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticeBuffer)
+      this.glCntxt.vertexAttribPointer(
+        this.shaderControl.attributes.vertexPosition,
+        this.numOfVertexComponents,
+        this.vertexType,
+        this.normalizeVertices,
+        this.vertexStride,
+        this.vertexOffset
+      )
+      this.glCntxt.enableVertexAttribArray(this.shaderControl.attributes.vertexPosition)
 
-    this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorBuffer)
-    this.glCntxt.vertexAttribPointer(
-      this.shaderControl.attributes.vertexColor,
-      this.numOfColorComponents,
-      this.colorType,
-      this.normalizeColors,
-      this.colorStride,
-      this.colorOffset
-    )
-    this.glCntxt.enableVertexAttribArray(this.shaderControl.attributes.vertexColor)
+      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorBuffer)
+      this.glCntxt.vertexAttribPointer(
+        this.shaderControl.attributes.vertexColor,
+        this.numOfColorComponents,
+        this.colorType,
+        this.normalizeColors,
+        this.colorStride,
+        this.colorOffset
+      )
+      this.glCntxt.enableVertexAttribArray(this.shaderControl.attributes.vertexColor)
 
-    this.glCntxt.useProgram(this.shaderControl.program)
-    this.glCntxt.uniformMatrix4fv(
-      this.shaderControl.uniforms.projectionMatrix,
-      false,
-      this.matrixControl.projectionMatrix
-    )
-    this.glCntxt.uniformMatrix4fv(
-      this.shaderControl.uniforms.modelViewMatrix,
-      false,
-      this.matrixControl.modelViewMatrix
-    )
-    this.glCntxt.drawArrays(this.glCntxt.TRIANGLE_STRIP, 0, this.vertexCount)
-
+      this.glCntxt.useProgram(this.shaderControl.program)
+      this.glCntxt.uniformMatrix4fv(
+        this.shaderControl.uniforms.projectionMatrix,
+        false,
+        this.matrixControl.projectionMatrix
+      )
+      this.glCntxt.uniformMatrix4fv(
+        this.shaderControl.uniforms.modelViewMatrix,
+        false,
+        this.matrixControl.modelViewMatrix
+      )
+      this.glCntxt.drawArrays(this.glCntxt.TRIANGLE_STRIP, 0, this.vertexCount)
+    }
   }
 }
