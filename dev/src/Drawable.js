@@ -7,8 +7,10 @@ class Drawable extends PlotterObject {
 
     this.isInitialized = false
 
-    this.rotation = 0.0
-    this.rotAxis = { x: 1.0, y: 1.0, z: 1.0 }
+    this.modelViewMatrix = this.matrixControl.translate(this.matrixControl.create(), [0.0, 0.0, -6.0])
+
+    this.rotation = 0.01
+    this.rotAxis = { x: 0.0, y: 0.0, z: 1.0 }
 
     this.glVerticeBuffer = null
     this.numOfVertexComponents = 2
@@ -31,7 +33,6 @@ class Drawable extends PlotterObject {
     this.normalizeColors = false
     this.colorStride = 0
     this.colorOffset = 0
-    this.colorCount = 4
     this.colors = [
       1.0,  1.0,  1.0,  1.0,
       1.0,  0.0,  0.0,  1.0,
@@ -75,8 +76,8 @@ class Drawable extends PlotterObject {
   update() {
     if (this.isInitialized) {
       if (this.rotation !== 0.0) {
-        this.matrixControl.modelViewMatrix = this.matrixControl.rotate(
-          this.matrixControl.modelViewMatrix,
+        this.modelViewMatrix = this.matrixControl.rotate(
+          this.modelViewMatrix,
           this.rotation,
           this.rotAxis
         )
@@ -117,7 +118,7 @@ class Drawable extends PlotterObject {
       this.glCntxt.uniformMatrix4fv(
         this.shaderControl.uniforms.modelViewMatrix,
         false,
-        this.matrixControl.modelViewMatrix
+        this.modelViewMatrix
       )
       this.glCntxt.drawArrays(this.glCntxt.TRIANGLE_STRIP, 0, this.vertexCount)
     }
