@@ -12,21 +12,30 @@ class ShaderFactory extends PlotterObject {
     this.vertexShaderCode = `
       attribute vec4 aVertexPosition;
       attribute vec4 aVertexColor;
+      attribute vec3 aVertexNormal;
 
+      uniform mat4 uNormalMatrix;
       uniform mat4 uModelViewMatrix;
       uniform mat4 uProjectionMatrix;
-
       varying lowp vec4 vColor;
-
-      void main() {
+      varying highp vec3 vLighting;
+    
+      void main(void) {
         gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+        highp vec3 ambientLight = vec3(0.3, 0.3, 0.3);
+        highp vec3 directionalLightColor = vec3(1, 1, 1);
+        highp vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
+        highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
+        highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+        vLighting = ambientLight + (directionalLightColor * directional);
         vColor = aVertexColor;
       }
     `
     this.fragmentShaderCode = `
       varying lowp vec4 vColor;
+      varying highp vec3 vLighting;
       void main(void) {
-        gl_FragColor = vColor;
+        gl_FragColor =  vec4(vColor.rgb * vLighting, vColor.a);
       }
     `
 
@@ -59,10 +68,12 @@ class ShaderFactory extends PlotterObject {
 
     this.attributes = {
       vertexPosition: this.glCntxt.getAttribLocation(this.program, 'aVertexPosition'),
+      vertexNormal: this.glCntxt.getAttribLocation(this.program, 'aVertexNormal'),
       vertexColor: this.glCntxt.getAttribLocation(this.program, 'aVertexColor')
     }
     this.uniforms = {
       projectionMatrix: this.glCntxt.getUniformLocation(this.program, 'uProjectionMatrix'),
+      normalMatrix: this.glCntxt.getUniformLocation(this.program, 'uNormalMatrix'),
       modelViewMatrix: this.glCntxt.getUniformLocation(this.program, 'uModelViewMatrix')
     }
 
