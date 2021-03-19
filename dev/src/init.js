@@ -10,8 +10,8 @@ function main() {
   let shaderFactory = new ShaderFactory(glCntxt)
   let myDrawableA = new Cube(glCntxt, shaderFactory, matrixFactory)
   myDrawableA.init()
-  myDrawableA.rotation = 0.01
-  myDrawableA.rotAxis = { x: 0.1, y: 0.3, z: 0.1 }
+  myDrawableA.rotation = 0.025
+  myDrawableA.rotAxis = { x: 1.0, y: 0.0, z: 0.0 }
   // let myDrawableB = new Drawable(glCntxt, shaderFactory, matrixFactory)
   // myDrawableB.init()
   // myDrawableB.setVertices([
