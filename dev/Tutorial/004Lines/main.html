@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3d plotter</title>
+    <meta charset="utf-8"/>
+    <script src="src/DevObject.js"></script>
+    <script src="src/Shader.js"></script>
+    <script src="src/ShaderFactory.js"></script>
+    <script src="src/RenderObject.js"></script>
+
+    <script src="src/BufferConfiguration.js"></script>
+    <script src="src/VertexGroup.js"></script>
+    <script src="src/Lines.js"></script>
+
+    <script src="src/Cycle.js"></script>
+    <script src="src/code.js"></script>
+    <script>
+      window.addEventListener("load",
+        () => {
+          main()
+        }
+      )
+    </script>
+  </head>
+  <body>
+    <canvas id="glCanvas" width="640" height="480"></canvas>
+    <button id="playButton" type="button">play</button>
+    <button id="stopButton" type="button">stop</button>
+    <button id="pauseButton" type="button">pause</button>
+
+  </body>
+</html>
