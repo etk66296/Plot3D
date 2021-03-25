@@ -4,8 +4,20 @@ class ShaderFactory extends DevObject{
     this.glCntxt = glCntxt
   }
 
-  create() {
-    return this.compileAndLink(new Shader())
+  create(
+    vertexShaderCode = '',
+    fragmentShaderCode = '',
+    attributeList = ['a_position'],
+    uniformList = ['']
+  ) {
+    return this.compileAndLink(
+      new Shader(
+        vertexShaderCode,
+        fragmentShaderCode,
+        attributeList,
+        uniformList
+      )
+    )
   }
 
   compileAndLink(shader) {
