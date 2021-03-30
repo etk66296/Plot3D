@@ -15,14 +15,14 @@ function main() {
   let shaderFactory = new ShaderFactory(glCntxt)
   let myPrimitves2DFactory = new Primitves2DFactory(glCntxt, shaderFactory)
 
-  let myLineLoop2D = myPrimitves2DFactory.createLineLoop2D([ 0.0,0.0,1.0,1.0 ], [ 0.0, 1.0, 0.0, 1.0 ])
   let myLines2D = myPrimitves2DFactory.createLines2D([ 0.0,0.0,-1.0,1.0 ], [ 1.0, 0.0, 0.0, 1.0 ])
+  let myLineLoop2D = myPrimitves2DFactory.createLineLoop2D([ 0.0,0.0,1.0,1.0 ], [ 0.0, 1.0, 0.0, 1.0 ])
   let myLineStrip2D = myPrimitves2DFactory.createLineStrip2D([ 0.0,0.0,1.0,-1.0 ], [ 0.0, 0.0, 1.0, 1.0 ])
   
 
   let cycle = new Cylce()
-  cycle.add(myLineLoop2D)
   cycle.add(myLines2D)
+  cycle.add(myLineLoop2D)
   cycle.add(myLineStrip2D)
   
   

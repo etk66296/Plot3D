@@ -5,11 +5,14 @@ class Primitves2DFactory extends Plot3DFactory{
     this.shaderFactory = shaderFactory
 
     this.primitves2DVertexShaderCode = `
-      attribute vec4 a_position;
+      attribute vec2 a_position;
       uniform vec4 u_color;
+      uniform mat3 u_matrix;
+
       varying vec4 v_color;
       void main() {
-        gl_Position = a_position;
+        vec2 position = (u_matrix * vec3(a_position, 1)).xy;
+        gl_Position = vec4(position, 0, 1);
         v_color = u_color;
       }
     `
@@ -21,7 +24,7 @@ class Primitves2DFactory extends Plot3DFactory{
       }
     `
     this.attributeList = ['a_position']
-    this.uniformList = ['u_color']
+    this.uniformList = ['u_color', 'u_matrix']
     this.shader = this.shaderFactory.create(
       this.primitves2DVertexShaderCode,
       this.primitves2DFragmentShaderCode,
@@ -31,13 +34,13 @@ class Primitves2DFactory extends Plot3DFactory{
   }
 
   createLines2D(coordinateList = undefined, color = undefined){
-    return new LineLoop2D(this.glCntxt, this.shader, 'u_color', 'a_position', color, coordinateList)
+    return new Lines2D(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
   }
   createLineStrip2D(coordinateList = undefined, color = undefined){
-    return new LineLoop2D(this.glCntxt, this.shader, 'u_color', 'a_position', color, coordinateList)
+    return new LineStrip2D(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
   }
   createLineLoop2D(coordinateList = undefined, color = undefined){
-    return new LineLoop2D(this.glCntxt, this.shader, 'u_color', 'a_position', color, coordinateList)
+    return new LineLoop2D(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
   }
   
 }
