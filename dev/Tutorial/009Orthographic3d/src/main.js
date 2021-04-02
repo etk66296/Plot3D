@@ -13,7 +13,7 @@ function main() {
   }
 
   let shaderFactory = new ShaderFactory(glCntxt)
-  // let myPrimitves2dFactory = new Primitves2dFactory(glCntxt, shaderFactory)
+  let myPrimitves2dFactory = new Primitves2dFactory(glCntxt, shaderFactory)
   let myPrimitves3dFactory = new Primitves3dFactory(glCntxt, shaderFactory)
 
   let myLines3d = myPrimitves3dFactory.createLines3d()

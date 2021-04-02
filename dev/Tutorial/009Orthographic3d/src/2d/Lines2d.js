@@ -1,14 +1,14 @@
 class Lines2d extends VertexGroup2d {
-  constructor(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey, color4fv, vertices2fv) {
+  constructor(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv) {
     if (color4fv === undefined && vertices2fv === undefined) {
-      super(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey)
+      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey)
     } else if (vertices2fv === undefined) {
-      super(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey, color4fv)
+      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
     } else {
-      super(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey, color4fv, vertices2fv)
+      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
@@ -21,16 +21,16 @@ class Lines2d extends VertexGroup2d {
 }
 
 class LineStrip2d extends VertexGroup2d {
-  constructor(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey, color4fv, vertices2fv) {
+  constructor(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv) {
     if (color4fv === undefined && vertices2fv === undefined) {
-      super(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey)
+      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey)
     } else if (vertices2fv === undefined) {
-      super(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey, color4fv)
+      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
     } else {
-      super(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey, color4fv, vertices2fv)
+      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
@@ -43,16 +43,16 @@ class LineStrip2d extends VertexGroup2d {
 }
 
 class LineLoop2d extends VertexGroup2d {
-  constructor(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey, color4fv, vertices2fv) {
+  constructor(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv) {
     if (color4fv === undefined && vertices2fv === undefined) {
-      super(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey)
+      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey)
     } else if (vertices2fv === undefined) {
-      super(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey, color4fv)
+      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
     } else {
-      super(glCntxt, shader, colorUnivormKey, posAttributeKey, matrixUnivormKey, color4fv, vertices2fv)
+      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }

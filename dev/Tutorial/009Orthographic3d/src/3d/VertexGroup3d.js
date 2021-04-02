@@ -1,45 +1,47 @@
-class VertexGroup2d extends Plot3dBase {
+class VertexGroup3d extends Plot3dBase {
   constructor(
     glCntxt,
     shader,
-    colorUnivormKey,
+    colorUniformKey,
     posAttributeKey,
     matrixUniformKey,
     color4fv = [ 1.0, 0.0, 1.0, 1.0 ],
     vertices2fv = [
       // 3
-        0, 0,
-        0.1, 0,
-        0.1, 0.2,
-        0, 0.2,
-        0.1, 0.1,
-        0.05, 0.1,
+        0.0, 0.0, 0.0,
+        0.1, 0, 0.0,
+        0.1, 0.2, 0.0,
+        0, 0.2, 0.0,
+        0.1, 0.1, 0.0,
+        0.05, 0.1, 0.0,
       // d
-        0.2, 0,
-        0.3, 0,
-        0.3, 0.2,
-        0.3, 0.1,
-        0.2, 0.1,
-        0.2, 0.0,
+        0.2, 0, 0.0,
+        0.3, 0, 0.0,
+        0.3, 0.2, 0.0,
+        0.3, 0.1, 0.0,
+        0.2, 0.1, 0.0,
+        0.2, 0.0, 0.0,
       // p
-        0.4, 0,
-        0.5, 0,
-        0.5, 0.1,
-        0.4, 0.1,
-        0.4, -0.1
+        0.4, 0, 0.0,
+        0.5, 0, 0.0,
+        0.5, 0.1, 0.0,
+        0.4, 0.1, 0.0,
+        0.4, -0.1, 0.0
     ]) {
     super()
     
-    this.colorUnivormKey = colorUnivormKey
+    this.colorUniformKey = colorUniformKey
     this.matrixUniformKey = matrixUniformKey
 
-    this.angle = 0.0
-    this.translation = { x: 0.0, y: 0.0 }
+    this.translation = { x: 0.0, y: 0.0, z: 0.0 }
+    this.angle = { x: 0.0, y: 0.0, z: 0.0 }
     this.scale = { x: 1.0, y: 1.0 }
+    
     this.matrixTransRotScale = [
-      Math.cos(this.angle) * this.scale.x, (-1) * Math.sin(this.angle)        , 0.0,
-      Math.sin(this.angle)               , Math.cos(this.angle) * this.scale.y, 0.0,
-      this.translation.x                 , this.translation.y                 , 1.0
+      Math.cos(this.angle.y) * this.scale.x, 0.0, (-1) * Math.sin(this.angle.y)        , 0.0,
+      0.0                 , 1.0                 , 0.0, 0.0,
+      Math.sin(this.angle.y), 0.0               , Math.cos(this.angle.y) * this.scale.y, 0.0,
+      this.translation.x                 , this.translation.y                 , this.translation.z,  1.0
     ]
 
     this.color4fv = color4fv
@@ -74,8 +76,8 @@ class VertexGroup2d extends Plot3dBase {
   draw() {
     this.glCntxt.useProgram(this.shader.program)
     
-    this.glCntxt.uniform4fv(this.shader.uniforms[this.colorUnivormKey], this.color4fv)
-    this.glCntxt.uniformMatrix3fv(this.shader.uniforms[this.matrixUniformKey], false, this.matrixTransRotScale)
+    this.glCntxt.uniform4fv(this.shader.uniforms[this.colorUniformKey], this.color4fv)
+    this.glCntxt.uniformMatrix4fv(this.shader.uniforms[this.matrixUniformKey], false, this.matrixTransRotScale)
 
     this.glCntxt.enableVertexAttribArray(this.shader.attributes[this.posAttributeKey])
     this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)

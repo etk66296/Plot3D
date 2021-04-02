@@ -3,8 +3,9 @@ class Primitves3dFactory extends FactoryBase{
     super()
     this.glCntxt = glCntxt
     this.shaderFactory = shaderFactory
+    this.matrixMath4x4 = new MatrixMath4x4()
 
-    this.primitves2DVertexShaderCode = `
+    this.primitves3DVertexShaderCode = `
       attribute vec4 a_position;
       uniform vec4 u_color;
       uniform mat4 u_matrix;
@@ -15,7 +16,7 @@ class Primitves3dFactory extends FactoryBase{
         v_color = u_color;
       }
     `
-    this.primitves2DFragmentShaderCode = `
+    this.primitves3DFragmentShaderCode = `
       precision mediump float;
       varying vec4 v_color;
       void main() {
@@ -25,31 +26,36 @@ class Primitves3dFactory extends FactoryBase{
     this.attributeList = ['a_position']
     this.uniformList = ['u_color', 'u_matrix']
     this.shader = this.shaderFactory.create(
-      this.primitves2DVertexShaderCode,
-      this.primitves2DFragmentShaderCode,
+      this.primitves3DVertexShaderCode,
+      this.primitves3DFragmentShaderCode,
       this.attributeList,
       this.uniformList
     )
   }
 
+
+  createVertexGroup3d(color = undefined, coordinateList = undefined) {
+    return new VertexGroup3d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
+  }
+
   createLines3d(color = undefined, coordinateList = undefined) {
-    return new Lines2d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
+    return new Lines3d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
   }
   createLineStrip3d(color = undefined, coordinateList = undefined) {
-    return new LineStrip2d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
+    return new LineStrip3d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
   }
   createLineLoop3d(color = undefined, coordinateList = undefined) {
-    return new LineLoop2d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
+    return new LineLoop3d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
   }
 
   createTriangles3d(color = undefined, coordinateList = undefined) {
-    return new Triangles2d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
+    return new Triangles3d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
   }
   createTrianglesStrip3d(color = undefined, coordinateList = undefined) {
-    return new TrianglesStrip2d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
+    return new TrianglesStrip3d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
   }
   createTrianglesLoop3d(color = undefined, coordinateList = undefined) {
-    return new TrianglesLoop2d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
+    return new TrianglesLoop3d(this.glCntxt, this.shader, 'u_color', 'a_position', 'u_matrix', color, coordinateList)
   }
   
 }
