@@ -1,14 +1,14 @@
 class Triangles3d extends VertexGroup3d {
-  constructor(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv) {
+  constructor(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv) {
     if (color4fv === undefined && vertices2fv === undefined) {
-      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey)
+      super(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey)
     } else if (vertices2fv === undefined) {
-      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv)
+      super(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
     } else {
-      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv)
+      super(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
@@ -21,16 +21,16 @@ class Triangles3d extends VertexGroup3d {
 }
 
 class TrianglesStrip3d extends VertexGroup3d {
-  constructor(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv) {
+  constructor(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv) {
     if (color4fv === undefined && vertices2fv === undefined) {
-      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey)
+      super(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey)
     } else if (vertices2fv === undefined) {
-      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv)
+      super(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
     } else {
-      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv)
+      super(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
@@ -43,16 +43,16 @@ class TrianglesStrip3d extends VertexGroup3d {
 }
 
 class TrianglesLoop3d extends VertexGroup3d {
-  constructor(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv) {
+  constructor(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv) {
     if (color4fv === undefined && vertices2fv === undefined) {
-      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey)
+      super(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey)
     } else if (vertices2fv === undefined) {
-      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv)
+      super(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }
     } else {
-      super(glCntxt, shader, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv)
+      super(glCntxt, shader, matrixMath4x4, colorUniformKey, posAttributeKey, matrixUniformKey, color4fv, vertices2fv)
       if (color4fv.length < 4) {
         this.errorLog("color data must be of the type 4fv")
       }

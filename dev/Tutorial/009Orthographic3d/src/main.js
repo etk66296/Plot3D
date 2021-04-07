@@ -17,6 +17,7 @@ function main() {
   let myPrimitves3dFactory = new Primitves3dFactory(glCntxt, shaderFactory)
 
   let myLines3d = myPrimitves3dFactory.createLines3d()
+  let myTriangles3d = myPrimitves3dFactory.createTriangles3d()
 
   // let myLines2d = myPrimitves2dFactory.createLines2d([ 1.0, 0.0, 0.0, 1.0 ], [ 0.0,0.0,-1.0,1.0 ])
   // let myLineLoop2d = myPrimitves2dFactory.createLineLoop2d([ 0.0, 1.0, 0.0, 1.0 ], [ 0.0,0.0,1.0,1.0 ])
@@ -40,6 +41,7 @@ function main() {
 
   let cycle = new Cylce()
   cycle.add(myLines3d)
+  cycle.add(myTriangles3d)
   // cycle.add(myLines2d)
   // cycle.add(myLineLoop2d)
   // cycle.add(myLineStrip2d)
@@ -49,7 +51,7 @@ function main() {
   
   
   glCntxt.viewport(0, 0, glCntxt.canvas.width, glCntxt.canvas.height)
-  glCntxt.clearColor(0, 0, 0, 1.0)
+  glCntxt.clearColor(1.0, 1.0, 1.0, 1.0)
   glCntxt.clear(glCntxt.COLOR_BUFFER_BIT)
   
   

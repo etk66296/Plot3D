@@ -5,7 +5,7 @@ class Cylce extends Plot3dBase {
     this.isStopped = !runInstantly
 
     this.renderObjectList = renderObjectList
-    this.fps = 5
+    this.fps = 24
 
     this.ticks = 0
 
