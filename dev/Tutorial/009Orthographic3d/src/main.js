@@ -12,12 +12,17 @@ function main() {
     return;
   }
 
+  glCntxt.enable(glCntxt.CULL_FACE)
+  glCntxt.enable(glCntxt.DEPTH_TEST)
+
+  let myBackground = new Background(glCntxt)
+
   let shaderFactory = new ShaderFactory(glCntxt)
   let myPrimitves2dFactory = new Primitves2dFactory(glCntxt, shaderFactory)
   let myPrimitves3dFactory = new Primitves3dFactory(glCntxt, shaderFactory)
 
-  let myLines3d = myPrimitves3dFactory.createLines3d()
-  let myTriangles3d = myPrimitves3dFactory.createTriangles3d()
+  // let myLineStrip3d = myPrimitves3dFactory.createLineStrip3d()
+  let myTrianglesStrip3d = myPrimitves3dFactory.createTrianglesStrip3d()
 
   // let myLines2d = myPrimitves2dFactory.createLines2d([ 1.0, 0.0, 0.0, 1.0 ], [ 0.0,0.0,-1.0,1.0 ])
   // let myLineLoop2d = myPrimitves2dFactory.createLineLoop2d([ 0.0, 1.0, 0.0, 1.0 ], [ 0.0,0.0,1.0,1.0 ])
@@ -40,8 +45,9 @@ function main() {
   // }
 
   let cycle = new Cylce()
-  cycle.add(myLines3d)
-  cycle.add(myTriangles3d)
+  cycle.add(myBackground)
+  // cycle.add(myLineStrip3d)
+  cycle.add(myTrianglesStrip3d)
   // cycle.add(myLines2d)
   // cycle.add(myLineLoop2d)
   // cycle.add(myLineStrip2d)
