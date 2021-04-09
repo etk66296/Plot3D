@@ -2,6 +2,8 @@ function main() {
   const playButton = document.getElementById("playButton")
   const stopButton = document.getElementById("stopButton")
   const pauseButton = document.getElementById("pauseButton")
+  let fudgeFactorSlider = document.getElementById("fudgeslider")
+  let fudgeFactorSliderValue = document.getElementById("fudgefactorvalue")
   playButton.onclick = () => { cycle.play() }
   stopButton.onclick = () => { cycle.stop() }
   pauseButton.onclick = () => { cycle.pause() }
@@ -21,8 +23,13 @@ function main() {
   let myPrimitves2dFactory = new Primitves2dFactory(glCntxt, shaderFactory)
   let myPrimitves3dFactory = new Primitves3dFactory(glCntxt, shaderFactory)
 
-  // let myLineStrip3d = myPrimitves3dFactory.createLineStrip3d()
-  let myTrianglesStrip3d = myPrimitves3dFactory.createTrianglesStrip3d()
+  let myLineStrip3d = myPrimitves3dFactory.createLineStrip3d()
+  fudgeFactorSlider.oninput = function() {
+    console.log(fudgeFactorSlider.value)
+    fudgeFactorSliderValue.innerHTML = fudgeFactorSlider.value
+    myLineStrip3d.setFudgeFactor(fudgeFactorSlider.value)
+  } 
+  // let myTrianglesStrip3d = myPrimitves3dFactory.createTrianglesStrip3d()
 
   // let myLines2d = myPrimitves2dFactory.createLines2d([ 1.0, 0.0, 0.0, 1.0 ], [ 0.0,0.0,-1.0,1.0 ])
   // let myLineLoop2d = myPrimitves2dFactory.createLineLoop2d([ 0.0, 1.0, 0.0, 1.0 ], [ 0.0,0.0,1.0,1.0 ])
@@ -46,8 +53,8 @@ function main() {
 
   let cycle = new Cylce()
   cycle.add(myBackground)
-  // cycle.add(myLineStrip3d)
-  cycle.add(myTrianglesStrip3d)
+  cycle.add(myLineStrip3d)
+  // cycle.add(myTrianglesStrip3d)
   // cycle.add(myLines2d)
   // cycle.add(myLineLoop2d)
   // cycle.add(myLineStrip2d)

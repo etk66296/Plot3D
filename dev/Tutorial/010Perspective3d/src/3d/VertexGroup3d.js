@@ -27,27 +27,27 @@ class VertexGroup3d extends Plot3dBase {
         0.5, 0.0, 0.0,
         0.5, 0.1, 0.0,
         0.4, 0.1, 0.0,
-        0.4, -0.1, 0.0,
+        0.4, -0.2, 0.0,
        // 3
-       0.0, 0.0, -1.0,
-       0.1, 0.0, -1.0,
-       0.1, 0.2, -1.0,
-       0.0, 0.2, -1.0,
-       0.1, 0.1, -1.0,
-       0.05, 0.1, -1.0,
+       0.0, 0.0, -0.2,
+       0.1, 0.0, -0.2,
+       0.1, 0.2, -0.2,
+       0.0, 0.2, -0.2,
+       0.1, 0.1, -0.2,
+       0.05, 0.1, -0.2,
      // d
-       0.2, 0.0, -1.0,
-       0.3, 0.0, -1.0,
-       0.3, 0.2, -1.0,
-       0.3, 0.1, -1.0,
-       0.2, 0.1, -1.0,
-       0.2, 0.0, -1.0,
+       0.2, 0.0, -0.2,
+       0.3, 0.0, -0.2,
+       0.3, 0.2, -0.2,
+       0.3, 0.1, -0.2,
+       0.2, 0.1, -0.2,
+       0.2, 0.0, -0.2,
      // p
-       0.4, 0.0, -1.0,
-       0.5, 0.0, -1.0,
-       0.5, 0.1, -1.0,
-       0.4, 0.1, -1.0,
-       0.4, -0.1, -1.0
+       0.4, 0.0, -0.2,
+       0.5, 0.0, -0.2,
+       0.5, 0.1, -0.2,
+       0.4, 0.1, -0.2,
+       0.4, -0.2, -0.2
     ]
     ) {
     super()
@@ -61,10 +61,12 @@ class VertexGroup3d extends Plot3dBase {
 
     this.position = { x: 0.0, y: 0.0, z: 0.0 }
 
+    this.fudgeFactor = 0.5
+
     this.orthoProjectionMatrix = [
       1.0, 0.0, 0.0, 0.0,
       0.0, 1.0, 0.0, 0.0,
-      0.0, 0.0, 1.0, 0.0,
+      0.0, 0.0, 1.0, this.fudgeFactor,
       0.0, 0.0, 0.0, 1.0
   ]
 
@@ -121,6 +123,11 @@ class VertexGroup3d extends Plot3dBase {
     this.bufferCfg.setElementCount(vertices2fv.length / this.bufferCfg.blockSize)
   }
 
+  setFudgeFactor(ff) {
+    this.fudgeFactor = ff
+    this.orthoProjectionMatrix[11] = this.fudgeFactor
+  }
+
   setTranslation(x = 0, y = 0, z = 0) {
     this.translation.x = x
     this.translation.y = y
@@ -128,6 +135,8 @@ class VertexGroup3d extends Plot3dBase {
     this.translationScaleMatrix[12] = this.translation.x
     this.translationScaleMatrix[13] = this.translation.y
     this.translationScaleMatrix[14] = this.translation.z
+
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.translationScaleMatrix)  
   }
 
   setRotation(x = 0, y = 0, z = 0) {
@@ -148,6 +157,10 @@ class VertexGroup3d extends Plot3dBase {
     this.zRotationMatrix[1] = Math.sin(this.angle.y)
     this.zRotationMatrix[4] = (-1.0) * Math.sin(this.angle.y)
     this.zRotationMatrix[5] = Math.cos(this.angle.y)
+
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.zRotationMatrix)
   }
 
   update() {
@@ -177,24 +190,24 @@ class VertexGroup3d extends Plot3dBase {
     this.position.y += this.translation.y
     this.translationScaleMatrix[13] = this.translation.y
     
-    this.translation.z = 0.01 * this.dir.z + (Math.random() * 0.0001)
-    this.translationScaleMatrix[14] = this.translation.z
-    this.position.z += this.translation.z
-    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.translationScaleMatrix)
+    // this.translation.z = 0.01 * this.dir.z + (Math.random() * 0.0001)
+    // this.translationScaleMatrix[14] = this.translation.z
+    // this.position.z += this.translation.z
+    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.translationScaleMatrix)
 
-    this.angle.x = 0.01
-    this.xRotationMatrix[5] = Math.cos(this.angle.x)
-    this.xRotationMatrix[6] = Math.sin(this.angle.x)
-    this.xRotationMatrix[9] = (-1.0) * Math.sin(this.angle.x)
-    this.xRotationMatrix[10] = Math.cos(this.angle.x)
-    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
+    // this.angle.x = 0.01
+    // this.xRotationMatrix[5] = Math.cos(this.angle.x)
+    // this.xRotationMatrix[6] = Math.sin(this.angle.x)
+    // this.xRotationMatrix[9] = (-1.0) * Math.sin(this.angle.x)
+    // this.xRotationMatrix[10] = Math.cos(this.angle.x)
+    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
 
-    this.angle.y = 0.01
-    this.yRotationMatrix[0] = Math.cos(this.angle.y)
-    this.yRotationMatrix[2] = (-1.0) * Math.sin(this.angle.y)
-    this.yRotationMatrix[8] = Math.sin(this.angle.y)
-    this.yRotationMatrix[10] = Math.cos(this.angle.y)
-    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
+    // this.angle.y = 0.01
+    // this.yRotationMatrix[0] = Math.cos(this.angle.y)
+    // this.yRotationMatrix[2] = (-1.0) * Math.sin(this.angle.y)
+    // this.yRotationMatrix[8] = Math.sin(this.angle.y)
+    // this.yRotationMatrix[10] = Math.cos(this.angle.y)
+    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
 
     let posXDisplay = document.getElementById("posX")
     let posYDisplay = document.getElementById("posY")
@@ -203,14 +216,6 @@ class VertexGroup3d extends Plot3dBase {
     posXDisplay.innerHTML = "x: " + String(this.position.x.toFixed(6))
     posYDisplay.innerHTML = "y: " + String(this.position.y.toFixed(6))
     posZDisplay.innerHTML = "z: " + String(this.position.z.toFixed(6))
-  }
-
-  setAngle(angle) {
-    this.angle = angle
-    this.matrixTransRotScale[0] = Math.cos(this.angle) * this.scale.x
-    this.matrixTransRotScale[1] = (-1) * Math.sin(this.angle)
-    this.matrixTransRotScale[3] = Math.sin(this.angle)
-    this.matrixTransRotScale[4] = Math.cos(this.angle) * this.scale.y
   }
 
   draw() {
