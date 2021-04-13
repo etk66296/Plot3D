@@ -25,7 +25,6 @@ function main() {
 
   let myLineStrip3d = myPrimitves3dFactory.createLineStrip3d()
   fudgeFactorSlider.oninput = function() {
-    console.log(fudgeFactorSlider.value)
     fudgeFactorSliderValue.innerHTML = fudgeFactorSlider.value
     myLineStrip3d.setFudgeFactor(fudgeFactorSlider.value)
   } 

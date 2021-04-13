@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3d plotter</title>
+    <meta charset="utf-8"/>
+
+    <style>
+     
+    </style>
+
+    <script src="src/Plot3dBase.js"></script>
+    <script src="src/MatrixBase.js"></script>
+    <script src="src/FactoryBase.js"></script>
+    <script src="src/Background.js"></script>
+
+    <script src="src/matrix/Math4x4.js"></script>
+
+    <script src="src/shader/Shader.js"></script>
+    <script src="src/shader/ShaderFactory.js"></script>
+
+    <script src="src/2d/PrimitivesFactory2d.js"></script>
+    <script src="src/3d/PrimitivesFactory3d.js"></script>
+
+    <script src="src/BufferConfiguration.js"></script>
+
+    <script src="src/2d/VertexGroup2d.js"></script>
+    <script src="src/2d/Lines2d.js"></script>
+    <script src="src/2d/Triangles2d.js"></script>
+
+    <script src="src/3d/VertexGroup3d.js"></script>
+    <script src="src/3d/Lines3d.js"></script>
+    <script src="src/3d/Triangles3d.js"></script>
+
+    <script src="src/Cycle.js"></script>
+    <script src="src/main.js"></script>
+    <script>
+      window.addEventListener("load",
+        () => {
+          main()
+        }
+      )
+    </script>
+  </head>
+  <body>
+    <canvas id="glCanvas" width="640" height="480"></canvas>
+    <div>
+      <button id="playButton" type="button">play</button>
+      <button id="stopButton" type="button">stop</button>
+      <button id="pauseButton" type="button">pause</button>
+      <div style="display: inline-block;">
+        <div id="posX" style="float: left; margin-right: 5px;">x</div>
+        <div id="posY" style="float: left; margin-right: 5px;">y</div>
+        <div id="posZ" style="float: left;">z</div>
+      </div>
+    </div>
+
+  </body>
+</html>
