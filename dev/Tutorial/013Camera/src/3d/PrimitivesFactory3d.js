@@ -1,11 +1,11 @@
 class Primitves3dFactory extends FactoryBase{
-  constructor(glCntxt, shaderFactory, matrixMath, vectorMath) {
+  constructor(glCntxt, shaderFactory, camera) {
     super()
     this.glCntxt = glCntxt
     this.shaderFactory = shaderFactory
-    this.matrixMath4x4 = matrixMath
-    this.vectorMath3x1 = vectorMath
-    this.camera = new Camera(this.glCntxt, this.matrixMath4x4, this.vectorMath3x1)
+    this.matrixMath4x4 = camera.matrixMath4x4
+    this.vectorMath3x1 = camera.vectorMath3x1
+    this.camera = camera
 
     this.primitves3DVertexShaderCode = `
       attribute vec4 a_position;

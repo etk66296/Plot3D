@@ -90,7 +90,7 @@ class VertexGroup3d extends Plot3dBase {
     // ]
 
     this.position = { x: 0.0, y: 0.0, z: 0.0 }
-    this.translation = { x: -150.0, y: -50.0, z: -1200.0 }
+    this.translation = { x: 0.0, y: 0.0, z: 0.0 }
     this.angle = { x: 0.3, y: 0.4, z: 0.1 }
     this.scale = { x: 1.0, y: 1.0, z: 1.0 }
     
@@ -180,65 +180,30 @@ class VertexGroup3d extends Plot3dBase {
   }
 
   update() {
-    // if (this.position.x < 0.0) {
-    //   this.dir.x = 1.0
-    // }
-    // if (this.position.x > this.glCntxt.canvas.clientWidth) {
-    //   this.dir.x = -1.0
-    // }
-    // if (this.position.y < 0.0) {
-    //   this.dir.y = 1.0
-    // }
-    // if (this.position.y > this.glCntxt.canvas.clientHeight) {
-    //   this.dir.y = -1.0
-    // }
-    // if (this.position.z > (this.far * 0.25)) {
-    //   this.dir.z = -1.0
-    // }
-    // if (this.position.z < this.near) {
-    //   this.dir.z = 1.0
-    // }
-    // this.translation.x = 2.0 * this.dir.x
-    // this.position.x += this.translation.x
-    // this.translationScaleMatrix[12] = this.translation.x
+
+    this.angle.x = 0.01
+    this.xRotationMatrix[5] = Math.cos(this.angle.x)
+    this.xRotationMatrix[6] = Math.sin(this.angle.x)
+    this.xRotationMatrix[9] = (-1.0) * Math.sin(this.angle.x)
+    this.xRotationMatrix[10] = Math.cos(this.angle.x)
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
+
+    this.angle.y = 0.01
+    this.yRotationMatrix[0] = Math.cos(this.angle.y)
+    this.yRotationMatrix[2] = (-1.0) * Math.sin(this.angle.y)
+    this.yRotationMatrix[8] = Math.sin(this.angle.y)
+    this.yRotationMatrix[10] = Math.cos(this.angle.y)
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
     
-    // this.translation.y = 2.0 * this.dir.y
-    // this.position.y += this.translation.y
-    // this.translationScaleMatrix[13] = this.translation.y
-    
-    // this.translation.z = 2.0 * this.dir.z
-    // this.translationScaleMatrix[14] = this.translation.z
-    // this.position.z += this.translation.z
-    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.translationScaleMatrix)
+    this.angle.z = 0.01
+    this.zRotationMatrix[0] = Math.cos(this.angle.z)
+    this.zRotationMatrix[1] = Math.sin(this.angle.z)
+    this.zRotationMatrix[4] = (-1.0) * Math.sin(this.angle.z)
+    this.zRotationMatrix[5] = Math.cos(this.angle.z)
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.zRotationMatrix)
 
-    // this.angle.x = 0.01
-    // this.xRotationMatrix[5] = Math.cos(this.angle.x)
-    // this.xRotationMatrix[6] = Math.sin(this.angle.x)
-    // this.xRotationMatrix[9] = (-1.0) * Math.sin(this.angle.x)
-    // this.xRotationMatrix[10] = Math.cos(this.angle.x)
-    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
-
-    // this.angle.y = 0.01
-    // this.yRotationMatrix[0] = Math.cos(this.angle.y)
-    // this.yRotationMatrix[2] = (-1.0) * Math.sin(this.angle.y)
-    // this.yRotationMatrix[8] = Math.sin(this.angle.y)
-    // this.yRotationMatrix[10] = Math.cos(this.angle.y)
-    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
-    
-    // this.angle.z = 0.01
-    // this.zRotationMatrix[0] = Math.cos(this.angle.z)
-    // this.zRotationMatrix[1] = Math.sin(this.angle.z)
-    // this.zRotationMatrix[4] = (-1.0) * Math.sin(this.angle.z)
-    // this.zRotationMatrix[5] = Math.cos(this.angle.z)
-    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.zRotationMatrix)
-
-    // let posXDisplay = document.getElementById("posX")
-    // let posYDisplay = document.getElementById("posY")
-    // let posZDisplay = document.getElementById("posZ")
-
-    // posXDisplay.innerHTML = "x: " + String(this.position.x.toFixed(6))
-    // posYDisplay.innerHTML = "y: " + String(this.position.y.toFixed(6))
-    // posZDisplay.innerHTML = "z: " + String(this.position.z.toFixed(6))
+    // console.log(this.camera.matrix)
+    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.camera.matrix)
 
   }
 

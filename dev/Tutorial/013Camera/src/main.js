@@ -2,6 +2,8 @@ function main() {
   const playButton = document.getElementById("playButton")
   const stopButton = document.getElementById("stopButton")
   const pauseButton = document.getElementById("pauseButton")
+  let CameraRotationFactorSlider = document.getElementById("cameraRotationValue")
+  let CameraRotationFactorSliderValue = document.getElementById("cameraRotationSlider")
   playButton.onclick = () => { cycle.play() }
   stopButton.onclick = () => { cycle.stop() }
   pauseButton.onclick = () => { cycle.pause() }
@@ -19,8 +21,15 @@ function main() {
   let myMatrixMath = new MatrixMath4x4()
   let myVectorMath = new VectorMath3x1()
 
+  myCamera = new Camera(glCntxt, myMatrixMath, myVectorMath)
+
+  CameraRotationFactorSlider.oninput = function() {
+    CameraRotationFactorSliderValue.innerHTML = CameraRotationFactorSlider.value
+    myCamera.translation.x = CameraRotationFactorSlider.value
+  }
+
   let shaderFactory = new ShaderFactory(glCntxt)
-  let myPrimitves3dFactory = new Primitves3dFactory(glCntxt, shaderFactory, myMatrixMath, myVectorMath)
+  let myPrimitves3dFactory = new Primitves3dFactory(glCntxt, shaderFactory, myCamera)
 
   
 
@@ -185,6 +194,7 @@ function main() {
     0, 150,   0
   ]))
   let cycle = new Cylce()
+  cycle.add(myCamera)
   cycle.add(myBackground)
   myTriangles3d.forEach((faces) => {
     cycle.add(faces)
