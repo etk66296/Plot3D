@@ -181,27 +181,39 @@ class VertexGroup3d extends Plot3dBase {
 
   update() {
 
-    this.angle.x = 0.01
-    this.xRotationMatrix[5] = Math.cos(this.angle.x)
-    this.xRotationMatrix[6] = Math.sin(this.angle.x)
-    this.xRotationMatrix[9] = (-1.0) * Math.sin(this.angle.x)
-    this.xRotationMatrix[10] = Math.cos(this.angle.x)
-    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
+    this.orthoProjectionMatrix = [
+      this.fieldOfViewFactor / this.aspect, 0.0, 0.0, 0.0,
+      0.0, this.fieldOfViewFactor, 0.0, 0.0,
+      0.0, 0.0, (this.near + this.far) * this.rangeInverted, -1.0,
+      0.0, 0.0, this.near * this.far * this.rangeInverted * 2, 0.0
+    ]
 
-    this.angle.y = 0.01
-    this.yRotationMatrix[0] = Math.cos(this.angle.y)
-    this.yRotationMatrix[2] = (-1.0) * Math.sin(this.angle.y)
-    this.yRotationMatrix[8] = Math.sin(this.angle.y)
-    this.yRotationMatrix[10] = Math.cos(this.angle.y)
-    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
+
     
-    this.angle.z = 0.01
-    this.zRotationMatrix[0] = Math.cos(this.angle.z)
-    this.zRotationMatrix[1] = Math.sin(this.angle.z)
-    this.zRotationMatrix[4] = (-1.0) * Math.sin(this.angle.z)
-    this.zRotationMatrix[5] = Math.cos(this.angle.z)
-    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.zRotationMatrix)
 
+    // this.angle.x += 0.01
+    // this.xRotationMatrix[5] = Math.cos(this.angle.x)
+    // this.xRotationMatrix[6] = Math.sin(this.angle.x)
+    // this.xRotationMatrix[9] = (-1.0) * Math.sin(this.angle.x)
+    // this.xRotationMatrix[10] = Math.cos(this.angle.x)
+    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
+
+    // this.angle.y += 0.01
+    // this.yRotationMatrix[0] = Math.cos(this.angle.y)
+    // this.yRotationMatrix[2] = (-1.0) * Math.sin(this.angle.y)
+    // this.yRotationMatrix[8] = Math.sin(this.angle.y)
+    // this.yRotationMatrix[10] = Math.cos(this.angle.y)
+    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
+    
+    // this.angle.z += 0.01
+    // this.zRotationMatrix[0] = Math.cos(this.angle.z)
+    // this.zRotationMatrix[1] = Math.sin(this.angle.z)
+    // this.zRotationMatrix[4] = (-1.0) * Math.sin(this.angle.z)
+    // this.zRotationMatrix[5] = Math.cos(this.angle.z)
+    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.zRotationMatrix)
+
+
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.camera.matrix)
     // console.log(this.camera.matrix)
     // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.camera.matrix)
 

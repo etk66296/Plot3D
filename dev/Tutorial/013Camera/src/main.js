@@ -2,8 +2,20 @@ function main() {
   const playButton = document.getElementById("playButton")
   const stopButton = document.getElementById("stopButton")
   const pauseButton = document.getElementById("pauseButton")
-  let CameraRotationFactorSlider = document.getElementById("cameraRotationValue")
-  let CameraRotationFactorSliderValue = document.getElementById("cameraRotationSlider")
+  let cameraTargetXSlider = document.getElementById("cameraTargetXSlider")
+  let cameraTargetXValue = document.getElementById("cameraTargetXValue")
+  let cameraTargetYSlider = document.getElementById("cameraTargetYSlider")
+  let cameraTargetYValue = document.getElementById("cameraTargetYValue")
+  let cameraTargetZSlider = document.getElementById("cameraTargetZSlider")
+  let cameraTargetZValue = document.getElementById("cameraTargetZValue")
+
+  let cameraPositionXSlider = document.getElementById("cameraPositionXSlider")
+  let cameraPositionXValue = document.getElementById("cameraPositionXValue")
+  let cameraPositionYSlider = document.getElementById("cameraPositionYSlider")
+  let cameraPositionYValue = document.getElementById("cameraPositionYValue")
+  let cameraPositionZSlider = document.getElementById("cameraPositionZSlider")
+  let cameraPositionZValue = document.getElementById("cameraPositionZValue")
+
   playButton.onclick = () => { cycle.play() }
   stopButton.onclick = () => { cycle.stop() }
   pauseButton.onclick = () => { cycle.pause() }
@@ -23,9 +35,30 @@ function main() {
 
   myCamera = new Camera(glCntxt, myMatrixMath, myVectorMath)
 
-  CameraRotationFactorSlider.oninput = function() {
-    CameraRotationFactorSliderValue.innerHTML = CameraRotationFactorSlider.value
-    myCamera.translation.x = CameraRotationFactorSlider.value
+  cameraTargetXSlider.oninput = function() {
+    cameraTargetXValue.innerHTML = cameraTargetXSlider.value
+    myCamera.target.x = cameraTargetXSlider.value
+  }
+  cameraTargetYSlider.oninput = function() {
+    cameraTargetYValue.innerHTML = cameraTargetYSlider.value
+    myCamera.target.y = cameraTargetYSlider.value
+  }
+  cameraTargetZSlider.oninput = function() {
+    cameraTargetZValue.innerHTML = cameraTargetZSlider.value
+    myCamera.target.z = cameraTargetZSlider.value
+  }
+
+  cameraPositionXSlider.oninput = function() {
+    cameraPositionXValue.innerHTML = cameraPositionXSlider.value
+    myCamera.position.x = cameraPositionXSlider.value
+  }
+  cameraPositionYSlider.oninput = function() {
+    cameraPositionYValue.innerHTML = cameraPositionYSlider.value
+    myCamera.position.y = cameraPositionYSlider.value
+  }
+  cameraPositionZSlider.oninput = function() {
+    cameraPositionZValue.innerHTML = cameraPositionZSlider.value
+    myCamera.position.z = cameraPositionZSlider.value
   }
 
   let shaderFactory = new ShaderFactory(glCntxt)

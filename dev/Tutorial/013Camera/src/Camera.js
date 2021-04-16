@@ -14,7 +14,7 @@ class Camera extends Plot3dBase {
     this.zAxis = [0.0, 0.0, 1.0]
 
 
-    this.position = { x: 0.0, y: 800.0, z: 400.0 }
+    this.position = { x: 0.0, y: 0.0, z: 400.0 }
     this.target = { x: 0.0, y: 0.0, z: 0.0 }
     this.translation = { x: 0.0, y: 0.0, z: 0.0 }
     this.angle = { x: 0.0, y: 0.0, z: 0.0 }
@@ -53,13 +53,18 @@ class Camera extends Plot3dBase {
       [ 0.0, 1.0, 0.0 ]
     )
 
-    this.matrixMath4x4.multiply(this.matrix, this.matrix, this.translationScaleMatrix)
-    this.matrixMath4x4.multiply(this.matrix, this.matrix, this.yRotationMatrix)
+    // this.matrixMath4x4.multiply(this.matrix, this.matrix, this.translationScaleMatrix)
+    // this.matrixMath4x4.multiply(this.matrix, this.matrix, this.yRotationMatrix)
     this.matrix = this.matrixMath4x4.invert(this.matrix, this.matrix)
-
   }
 
   update() {
+    this.matrix = this.lookAt(
+      [ this.position.x, this.position.y, this.position.z],
+      [ this.target.x, this.target.y, this.target.z],
+      [ 0.0, 1.0, 0.0 ]
+    )
+    this.matrix = this.matrixMath4x4.invert(this.matrix, this.matrix)
   }
 
   draw() {
