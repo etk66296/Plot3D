@@ -69,7 +69,7 @@ class VertexGroup3d extends Plot3dBase {
     this.near = 1
     this.far = 2000
 
-    this.fieldOfViewInRadians = this.degToRad(60)
+    this.fieldOfViewInRadians = this.degToRad(120)
 
     this.fieldOfViewFactor = Math.tan(Math.PI * 0.5 - 0.5 * this.fieldOfViewInRadians)
     this.rangeInverted = 1.0 / (this.near - this.far)
@@ -120,11 +120,11 @@ class VertexGroup3d extends Plot3dBase {
       0.0, 0.0, 0.0, 1.0
     ]
 
-    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.camera.matrix)
     this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.translationScaleMatrix)
     this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
     this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
     this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.zRotationMatrix)
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.camera.matrix)
     this.dir = { x: 1.0, y: 1.0, z: 1.0 }
 
     this.color4fv = color4fv
@@ -180,43 +180,36 @@ class VertexGroup3d extends Plot3dBase {
   }
 
   update() {
-
     this.orthoProjectionMatrix = [
       this.fieldOfViewFactor / this.aspect, 0.0, 0.0, 0.0,
       0.0, this.fieldOfViewFactor, 0.0, 0.0,
       0.0, 0.0, (this.near + this.far) * this.rangeInverted, -1.0,
       0.0, 0.0, this.near * this.far * this.rangeInverted * 2, 0.0
     ]
-
-
-    
-
-    // this.angle.x += 0.01
-    // this.xRotationMatrix[5] = Math.cos(this.angle.x)
-    // this.xRotationMatrix[6] = Math.sin(this.angle.x)
-    // this.xRotationMatrix[9] = (-1.0) * Math.sin(this.angle.x)
-    // this.xRotationMatrix[10] = Math.cos(this.angle.x)
-    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
-
-    // this.angle.y += 0.01
-    // this.yRotationMatrix[0] = Math.cos(this.angle.y)
-    // this.yRotationMatrix[2] = (-1.0) * Math.sin(this.angle.y)
-    // this.yRotationMatrix[8] = Math.sin(this.angle.y)
-    // this.yRotationMatrix[10] = Math.cos(this.angle.y)
-    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
-    
-    // this.angle.z += 0.01
-    // this.zRotationMatrix[0] = Math.cos(this.angle.z)
-    // this.zRotationMatrix[1] = Math.sin(this.angle.z)
-    // this.zRotationMatrix[4] = (-1.0) * Math.sin(this.angle.z)
-    // this.zRotationMatrix[5] = Math.cos(this.angle.z)
-    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.zRotationMatrix)
-
-
     this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.camera.matrix)
-    // console.log(this.camera.matrix)
-    // this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.camera.matrix)
 
+
+    this.angle.x += 0.01
+    this.xRotationMatrix[5] = Math.cos(this.angle.x)
+    this.xRotationMatrix[6] = Math.sin(this.angle.x)
+    this.xRotationMatrix[9] = (-1.0) * Math.sin(this.angle.x)
+    this.xRotationMatrix[10] = Math.cos(this.angle.x)
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.xRotationMatrix)
+
+    this.angle.y += 0.01
+    this.yRotationMatrix[0] = Math.cos(this.angle.y)
+    this.yRotationMatrix[2] = (-1.0) * Math.sin(this.angle.y)
+    this.yRotationMatrix[8] = Math.sin(this.angle.y)
+    this.yRotationMatrix[10] = Math.cos(this.angle.y)
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.yRotationMatrix)
+    
+    this.angle.z += 0.01
+    this.zRotationMatrix[0] = Math.cos(this.angle.z)
+    this.zRotationMatrix[1] = Math.sin(this.angle.z)
+    this.zRotationMatrix[4] = (-1.0) * Math.sin(this.angle.z)
+    this.zRotationMatrix[5] = Math.cos(this.angle.z)
+    this.matrixMath4x4.multiply(this.orthoProjectionMatrix, this.orthoProjectionMatrix, this.zRotationMatrix)
+   
   }
 
   draw() {
