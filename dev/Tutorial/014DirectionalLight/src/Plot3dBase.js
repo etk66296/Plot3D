@@ -1,6 +1,10 @@
-class PlotterObject {
+class Plot3dBase {
   constructor() {
     this.debugModeEnabled = true
+  }
+
+  degToRad(deg) {
+    return Math.PI / 180 * deg
   }
 
   debugLog(message) {
