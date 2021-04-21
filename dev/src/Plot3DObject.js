@@ -1,6 +1,6 @@
 class Plot3DObject {
   constructor() {
-    this.debugModeEnabled = true
+    this.isInDebugMode = false
   }
 
   convertDegToRad(deg) {
@@ -11,33 +11,10 @@ class Plot3DObject {
     return undefined
   }
 
-  debugLog(message) {
-    if (this.debugModeEnabled) {
-      if (message instanceof Array) {
-        message.forEach( (messageItem) => {
-          if (String(messageItem) !== '') {
-            console.log(messageItem)
-          }
-        })
-      } else {
-        if (String(message) !== '') {
-          console.log(String(message))
-        }
-      }
+  debuglog(message) {
+    if (this.isInDebugMode) {
+      console.log(message)
     }
   }
 
-  errorLog(message) {
-    if (message instanceof Array) {
-      message.forEach( (messageItem) => {
-        if (String(messageItem) !== '') {
-          console.error(messageItem)
-        }
-      })
-    } else {
-      if (String(message) !== '') {
-        console.error(String(message))
-      }
-    }
-  }
 }

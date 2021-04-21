@@ -4,6 +4,29 @@ describe("Plot3DObject", function() {
   beforeEach(function() {
     myPlot3DObject = new Plot3DObject()
     spyOn(console, 'error')
+    spyOn(console, 'log')
+  })
+
+  it("has an attribute isInDebugMode", function() {
+    expect(myPlot3DObject.isInDebugMode).toBeFalsy()
+  })
+
+  
+
+  it("should provide a method debuglog", function() {
+    expect(typeof myPlot3DObject.debuglog).toBe("function")
+  })
+
+  describe("the method debuglog", function() {
+    it ("should not log message if the attribute isInDebugMode is falsy", function() {
+      myPlot3DObject.debuglog("message")
+      expect(console.log).not.toHaveBeenCalled()
+    })
+    it ("should log message if the attribute isInDebugMode is truthy", function() {
+      myPlot3DObject.isInDebugMode = true
+      myPlot3DObject.debuglog("message")
+      expect(console.log).toHaveBeenCalled()
+    })
   })
 
   it("should provide a method to convert degree to radian", function() {

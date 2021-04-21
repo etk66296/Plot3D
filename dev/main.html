@@ -8,12 +8,13 @@
       
     </style>
 
-    <script src="src/Plot3dBase.js"></script>
-    <script src="src/main.js"></script>
+    <script src="src/Plot3DObject.js"></script>
+    <script src="src/Plot3D.js"></script>
     <script>
       window.addEventListener("load",
         () => {
-          main()
+          let app = new Plot3D()
+          console.log(app.__proto__.__proto__.constructor.name)
         }
       )
     </script>
