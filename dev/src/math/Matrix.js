@@ -1,107 +1,97 @@
-class MatrixFactory {
-  constructor() {
+class Matrix extends Plot3DObject {
+  constructor(cells = []) {
+    super()
+    this.cells = cells
   }
 }
 
 class Matrix4x4 extends Matrix {
-  constructor() {
-    super()
+  constructor(cells = [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  ]) {
+    super(cells)
   }
-}
 
-class MatrixMath4x4 extends MatrixBase{
-  constructor() {
-    super()
-  }
-  multiply(out, a, b) {
-    let a00 = a[0],  a01 = a[1],  a02 = a[2],  a03 = a[3]
-    let a10 = a[4],  a11 = a[5],  a12 = a[6],  a13 = a[7]
-    let a20 = a[8],  a21 = a[9],  a22 = a[10], a23 = a[11]
-    let a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15]
+  multiplyM4(multiplier) {
+    let a00 = this.cells[0],  a01 = this.cells[1],  a02 = this.cells[2],  a03 = this.cells[3]
+    let a10 = this.cells[4],  a11 = this.cells[5],  a12 = this.cells[6],  a13 = this.cells[7]
+    let a20 = this.cells[8],  a21 = this.cells[9],  a22 = this.cells[10], a23 = this.cells[11]
+    let a30 = this.cells[12], a31 = this.cells[13], a32 = this.cells[14], a33 = this.cells[15]
 
-    let b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3]
+    let b0 = multiplier.cells[0]
+    let b1 = multiplier.cells[1]
+    let b2 = multiplier.cells[2]
+    let b3 = multiplier.cells[3]
 
-    out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30
-    out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31
-    out[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32
-    out[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+    this.cells[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30
+    this.cells[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31
+    this.cells[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32
+    this.cells[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
 
-    b0 = b[4]
-    b1 = b[5]
-    b2 = b[6]
-    b3 = b[7]
+    b0 = multiplier.cells[4]
+    b1 = multiplier.cells[5]
+    b2 = multiplier.cells[6]
+    b3 = multiplier.cells[7]
 
-    out[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30
-    out[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31
-    out[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32
-    out[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+    this.cells[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30
+    this.cells[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31
+    this.cells[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32
+    this.cells[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
     
-    b0 = b[8]
-    b1 = b[9]
-    b2 = b[10]
-    b3 = b[11]
+    b0 = multiplier.cells[8]
+    b1 = multiplier.cells[9]
+    b2 = multiplier.cells[10]
+    b3 = multiplier.cells[11]
 
-    out[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30
-    out[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31
-    out[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32
-    out[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+    this.cells[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30
+    this.cells[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31
+    this.cells[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32
+    this.cells[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
 
-    b0 = b[12]
-    b1 = b[13]
-    b2 = b[14]
-    b3 = b[15]
+    b0 = multiplier.cells[12]
+    b1 = multiplier.cells[13]
+    b2 = multiplier.cells[14]
+    b3 = multiplier.cells[15]
 
-    out[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30
-    out[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31
-    out[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32
-    out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
+    this.cells[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30
+    this.cells[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31
+    this.cells[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32
+    this.cells[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33
 
-    return out
+    return this
   }
 
-  transpose(out, a) {
-    if (out === a) {
-      let a01 = a[1], a02 = a[2], a03 = a[3]
-      let a12 = a[6], a13 = a[7]
-      let a23 = a[11]
-      out[1] = a[4]
-      out[2] = a[8]
-      out[3] = a[12]
-      out[4] = a01
-      out[6] = a[9]
-      out[7] = a[13]
-      out[8] = a02
-      out[9] = a12
-      out[11] = a[14]
-      out[12] = a03
-      out[13] = a13
-      out[14] = a23
-    } else {
-      out[0] = a[0]
-      out[1] = a[4]
-      out[2] = a[8]
-      out[3] = a[12]
-      out[4] = a[1]
-      out[5] = a[5]
-      out[6] = a[9]
-      out[7] = a[13]
-      out[8] = a[2]
-      out[9] = a[6]
-      out[10] = a[10]
-      out[11] = a[14]
-      out[12] = a[3]
-      out[13] = a[7]
-      out[14] = a[11]
-      out[15] = a[15]
-    }
-    return out
+  transpose() {
+    let a01 = this.cells[1]
+    let a02 = this.cells[2]
+    let a03 = this.cells[3]
+    let a12 = this.cells[6]
+    let a13 = this.cells[7]
+    let a23 = this.cells[11]
+    this.cells[1] = this.cells[4]
+    this.cells[2] = this.cells[8]
+    this.cells[3] = this.cells[12]
+    this.cells[4] = a01
+    this.cells[6] = this.cells[9]
+    this.cells[7] = this.cells[13]
+    this.cells[8] = a02
+    this.cells[9] = a12
+    this.cells[11] = this.cells[14]
+    this.cells[12] = a03
+    this.cells[13] = a13
+    this.cells[14] = a23
+
+    return this
   }
 
-  invert(out, a) {
-    let a00 = a[0],  a01 = a[1],  a02 = a[2],  a03 = a[3]
-    let a10 = a[4],  a11 = a[5],  a12 = a[6],  a13 = a[7]
-    let a20 = a[8],  a21 = a[9],  a22 = a[10], a23 = a[11]
-    let a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15]
+  invert() {
+    let a00 = this.cells[0],  a01 = this.cells[1],  a02 = this.cells[2],  a03 = this.cells[3]
+    let a10 = this.cells[4],  a11 = this.cells[5],  a12 = this.cells[6],  a13 = this.cells[7]
+    let a20 = this.cells[8],  a21 = this.cells[9],  a22 = this.cells[10], a23 = this.cells[11]
+    let a30 = this.cells[12], a31 = this.cells[13], a32 = this.cells[14], a33 = this.cells[15]
   
     let b00 = a00 * a11 - a01 * a10
     let b01 = a00 * a12 - a02 * a10
@@ -122,23 +112,29 @@ class MatrixMath4x4 extends MatrixBase{
       return null
     }
     det = 1.0 / det
-    out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det
-    out[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det
-    out[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det
-    out[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det
-    out[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det
-    out[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det
-    out[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det
-    out[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det
-    out[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det
-    out[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det
-    out[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det
-    out[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det
-    out[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det
-    out[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det
-    out[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det
-    out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det
+    this.cells[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det
+    this.cells[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det
+    this.cells[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det
+    this.cells[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det
+    this.cells[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det
+    this.cells[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det
+    this.cells[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det
+    this.cells[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det
+    this.cells[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det
+    this.cells[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det
+    this.cells[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det
+    this.cells[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det
+    this.cells[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det
+    this.cells[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det
+    this.cells[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det
+    this.cells[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det
   
-    return out
+    return this
+  }
+}
+
+class Matrix3x3 extends Matrix{
+  constructor() {
+    super()
   }
 }
