@@ -21,13 +21,27 @@ class Vector3 extends Vector {
     let by = multiplier.cells[1]
     let bz = multiplier.cells[2]
   
-    out[0] = ay * bz - az * by;
+    this.cells[0] = ay * bz - az * by
+    this.cells[1] = az * bx - ax * bz
+    this.cells[2] = ax * by - ay * bx
   
-    out[1] = az * bx - ax * bz;
-  
-    out[2] = ax * by - ay * bx;
-  
-    return out;
+    return this
+  }
+
+  subtract(subtrahend) {
+    this.cells[0] = this.cells[0] - subtrahend.cells[0]
+    this.cells[1] = this.cells[1] - subtrahend.cells[1]
+    this.cells[2] = this.cells[2] - subtrahend.cells[2]
+    return this
+  }
+
+  normalize() {
+    let len = this.cells[0] * this.cells[0] + this.cells[1] * this.cells[1] + this.cells[2] * this.cells[2]
+    len = 1 / Math.sqrt(len)
+    this.cells[0] = this.cells[0] * len
+    this.cells[1] = this.cells[1] * len
+    this.cells[2] = this.cells[2] * len
+    return this
   }
 
 }
