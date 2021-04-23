@@ -90,3 +90,15 @@ describe("Vector3", function() {
     })
   })
 })
+
+describe("Vector4", function() {
+  var myVector4
+
+  beforeEach(function() {
+    myVector4 = new Vector4()
+  })
+
+  it("has the parent class Vector", function() {
+    expect(myVector4.__proto__.__proto__.constructor.name).toEqual('Vector')
+  })
+})
