@@ -18,4 +18,8 @@ describe("Renderable", function() {
   it("should take an instance of canvas webgl context webgl2", function() {
     expect(myRenderable.glCntxt.constructor.name).toEqual('WebGL2RenderingContext')
   })
+
+  it("should take an instance of a compiled and linked shader", function() {
+    // expect(myRenderable.glCntxt.constructor.name).toEqual('WebGL2RenderingContext')
+  })
 })
