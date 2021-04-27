@@ -16,8 +16,12 @@ describe("Plot3DShader", function() {
     expect(typeof myPlot3DShader.fragmentShaderCode).toEqual('string')
   })
 
-  it("should have an attribute uniformList of type array", function() {
-    expect(myPlot3DShader.uniformList.constructor.name).toEqual('Array')
+  it("should have an attribute vertexUniformList of type array", function() {
+    expect(myPlot3DShader.vertexUniformList.constructor.name).toEqual('Array')
+  })
+
+  it("should have an attribute fragmentUniformList of type array", function() {
+    expect(myPlot3DShader.fragmentUniformList.constructor.name).toEqual('Array')
   })
 
   it("should have an attribute attributeList of type array", function() {

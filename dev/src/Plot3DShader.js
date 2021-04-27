@@ -6,7 +6,8 @@ class Plot3DShader extends Plot3DObject {
 
     this.program = null
     this.attributeList = []
-    this.uniformList = []
+    this.vertexUniformList = []
+    this.fragmentUniformList = []
     
     this.vertexShaderCode = ''
     this.fragmentShaderCode = ''
