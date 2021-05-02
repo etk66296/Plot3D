@@ -11,5 +11,8 @@ class Plot3DShader extends Plot3DObject {
     
     this.vertexShaderCode = ''
     this.fragmentShaderCode = ''
+
+    this.glVertexShader = null
+    this.glFragmentShader = null
   }
 }

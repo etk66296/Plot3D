@@ -8,34 +8,63 @@ class Plot3DShaderBuilder extends Plot3DBuilder {
   }
 
   buildShader(vertexShaderCode, fragmentShaderCode) {
-    if (typeof vertexShaderCode != 'string' &&
+    if (typeof vertexShaderCode != 'string' ||
       typeof fragmentShaderCode != 'string') {
         console.error('vertex- and fragment shader code must be of type string')
         return null
-      }
+    }
+    if (vertexShaderCode === '') {
+        console.error('vertex shader source code is empty')
+        return null
+    }
+    if (fragmentShaderCode === '') {
+      console.error('fragment shader source code is empty')
+      return null
+  }
+
     let shader = new Plot3DShader()
+    shader.vertexShaderCode = vertexShaderCode
+    shader.fragmentShaderCode = fragmentShaderCode
     this.shaderList.push(shader)
     let regExpUnfiromFilter = /(?<=uniform\s+\w+\s+).*(?=\s*;)/g
-    shader.vertexUniformList = vertexShaderCode.match(regExpUnfiromFilter)
-    shader.fragmentUniformList = fragmentShaderCode.match(regExpUnfiromFilter)
+    shader.vertexUniformList = shader.vertexShaderCode.match(regExpUnfiromFilter)
+    shader.fragmentUniformList = shader.fragmentShaderCode.match(regExpUnfiromFilter)
     let regExpAttributeFilter = /(?<=attribute\s+\w+\s+).*(?=\s*;)/g
-    shader.attributeList = vertexShaderCode.match(regExpAttributeFilter)
-
-    this.compileAndLink(shader)
+    shader.attributeList = shader.vertexShaderCode.match(regExpAttributeFilter)
 
     return shader
   }
 
-  compileAndLink(shader = null) {
+  compileVertexShader(shader) {
+    this.debuglog('..compile vertex shader')
+    shader.glVertexShader = this.glCntxt.createShader(this.glCntxt.VERTEX_SHADER)
+    this.glCntxt.shaderSource(shader.glVertexShader, shader.vertexShaderCode)
+    this.glCntxt.compileShader(shader.glVertexShader)
+    if (!this.glCntxt.getShaderParameter(shader.glVertexShader, this.glCntxt.COMPILE_STATUS)) {
+      console.error(this.glCntxt.getShaderInfoLog(shader.glVertexShader))
+    }
+    return shader
+  }
+
+
+  compileFragmentShader(shader) {
+    this.debuglog('..compile fragment shader')
+    shader.glFragmentShader = this.glCntxt.createShader(this.glCntxt.FRAGMENT_SHADER)
+    this.glCntxt.shaderSource(shader.glFragmentShader, shader.fragmentShaderCode)
+    this.glCntxt.compileShader(shader.glFragmentShader)
+    if (!this.glCntxt.getShaderParameter(shader.glFragmentShader, this.glCntxt.COMPILE_STATUS)) {
+      console.error(this.glCntxt.getShaderInfoLog(shader.glFragmentShader))
+    }
+    return shader
+  }
+
+  linkProgram(shader = null) {
     if (shader === null || shader.constructor.name !== 'Plot3DShader') {
       console.error("paramter must be of the type 'Plot3DShader'")
       return null
     }
 
-    this.debuglog('..compile vertex shader')
-    this.glCntxt.createShader(this.glCntxt.VERTEX_SHADER)
-    // this.glCntxt.shaderSource(shader.vertexSource, shader.vertexShaderCode)
-    // this.glCntxt.compileShader(shader.vertexSource)
+    
 
     // this.debugLog('..compile fragment shader')
     // shader.fragmentSource = this.glCntxt.createShader(this.glCntxt.FRAGMENT_SHADER)

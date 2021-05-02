@@ -36,4 +36,12 @@ describe("Plot3DShader", function() {
     expect(typeof myPlot3DShader.name).toEqual('string')
   })
 
+  it("should have an attribute glVertexShader object of type WebGLShader", function() {
+    expect(myPlot3DShader.glVertexShader).toEqual(null)
+  })
+
+  it("should have an attribute glFragmentShader object of type WebGLShader", function() {
+    expect(myPlot3DShader.glFragmentShader).toEqual(null)
+  })
+
 })
