@@ -1,9 +1,9 @@
-describe("Renderable", function() {
+describe("TriangleMesh", function() {
   var canvas
   var glCntxt
   var myPlot3DShaderBuilder
   
-  var myRenderable
+  var myTriangleMesh
   var shader
   
   beforeAll(function() {
@@ -46,26 +46,31 @@ describe("Renderable", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    myRenderable = new Renderable(glCntxt, shader)
+    myTriangleMesh = new TriangleMesh(glCntxt, shader)
   })
   
-   it("has the parent class Plot3DObject", function() {
-    expect(myRenderable.__proto__.__proto__.constructor.name).toEqual('Plot3DObject')
-  })
-
-  it("should take an instance of canvas webgl context webgl2", function() {
-    expect(myRenderable.glCntxt.constructor.name).toEqual('WebGL2RenderingContext')
-  })
-
-  it("should take an instance of a compiled and linked shader", function() {
-    expect(myRenderable.shader.constructor.name).toEqual('Plot3DShader')
+  it("has the parent class Renderable", function() {
+    expect(myTriangleMesh.__proto__.__proto__.constructor.name).toEqual('Renderable')
   })
 
   it("should have a method update", function() {
-    expect(typeof myRenderable.update).toEqual('function')
+    expect(typeof myTriangleMesh.update).toEqual('function')
+  })
+
+  describe("update", function() {
+
   })
 
   it("should have a method draw", function() {
-    expect(typeof myRenderable.draw).toEqual('function')
+    expect(typeof myTriangleMesh.draw).toEqual('function')
   })
+  
+  describe("draw", function() {
+    it("should call gl useProgram", function() {
+      spyOn(myPlot3DShaderBuilder.glCntxt, 'useProgram').withArgs(shader.program).and.callThrough()
+      myTriangleMesh.draw()
+      expect(myPlot3DShaderBuilder.glCntxt.useProgram).toHaveBeenCalled()
+    })
+  })
+
 })

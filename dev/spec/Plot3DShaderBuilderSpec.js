@@ -10,6 +10,10 @@ describe("Plot3DShaderBuilder", function() {
     canvas = document.getElementById("renderCanvas")
     glCntxt = canvas.getContext("webgl2")
     myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
+  })
+
+  beforeEach(function() {
+    shader = new Plot3DShader()
     vertexShaderCode = `
       attribute vec4 a_position;
       attribute vec3 a_normal;
@@ -42,10 +46,6 @@ describe("Plot3DShaderBuilder", function() {
         gl_FragColor.rgb *= light;
       }
     `
-  })
-
-  beforeEach(function() {
-    shader = new Plot3DShader()
     shader.vertexShaderCode = vertexShaderCode
     shader.fragmentShaderCode = fragmentShaderCode
   })
@@ -56,10 +56,6 @@ describe("Plot3DShaderBuilder", function() {
 
   it("should take an instance of canvas webgl context webgl2", function() {
     expect(myPlot3DShaderBuilder.glCntxt.constructor.name).toEqual('WebGL2RenderingContext')
-  })
-
-  it("should has an counter for giving each shader an unique id", function() {
-    expect(myPlot3DShaderBuilder.numberOfCompiledShaders).toEqual(0)
   })
 
   it("should have an attribute shaderList with all compiled shaders", function() {
@@ -120,25 +116,41 @@ describe("Plot3DShaderBuilder", function() {
       let myShader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
       expect(myShader.fragmentUniformList).toEqual([ 'u_reverseLightDirection' ])
     })
+
+    it("should call compileVertexShader", function() {
+      spyOn(myPlot3DShaderBuilder, 'compileVertexShader').and.callThrough()
+      myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+      expect(myPlot3DShaderBuilder.compileVertexShader).toHaveBeenCalled()
+    })
+
+    it("should call compileVertexShader", function() {
+      spyOn(myPlot3DShaderBuilder, 'compileFragmentShader').and.callThrough()
+      myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+      expect(myPlot3DShaderBuilder.compileFragmentShader).toHaveBeenCalled()
+    })
+
+    it("should call link Program", function() {
+      spyOn(myPlot3DShaderBuilder, 'linkProgram').and.callThrough()
+      myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+      expect(myPlot3DShaderBuilder.linkProgram).toHaveBeenCalled()
+    })
+
+    it("map an unique name to the shader", function() {
+      let myExtraPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
+      myExtraPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+      myExtraPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+      myExtraPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+      let myShaderNames = []
+      myExtraPlot3DShaderBuilder.shaderList.forEach((shader) => {
+        myShaderNames.push(shader.name)
+      })
+      expect(myShaderNames).toEqual([ "Shader0", "Shader1", "Shader2" ])
+    })
   })
 
   it("should provide a method linkProgram with one parameter of type Plot3DShader", function() {
     expect(typeof myPlot3DShaderBuilder.linkProgram).toBe("function")
   })
-
-  // describe("linkProgram", function() {
-  //   var shader
-  //   beforeEach(function() {
-  //     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-  //   })
-
-  //   it("should log an error if the parameter shader is not an instance of Plot3DObject", function() {
-  //     spyOn(console, 'error')
-  //     myPlot3DShaderBuilder.linkProgram(null)
-  //     expect(console.error).toHaveBeenCalled()
-  //   })
-
-  // })
 
   it("should provide a method compileVertexShader", function() {
     expect(typeof myPlot3DShaderBuilder.compileVertexShader).toBe("function")
@@ -230,4 +242,43 @@ describe("Plot3DShaderBuilder", function() {
       expect(myCompiledShader.constructor.name).toEqual('Plot3DShader')
     })
   })
+
+  describe("linkProgram", function() {
+    beforeEach(function() {
+      myPlot3DShaderBuilder.compileVertexShader(shader)
+      myPlot3DShaderBuilder.compileFragmentShader(shader)
+    })
+   
+    it("should log an error if the parameter shader is not an instance of Plot3DObject", function() {
+      spyOn(console, 'error')
+      myPlot3DShaderBuilder.linkProgram(null)
+      expect(console.error).toHaveBeenCalled()
+    })
+
+    it("should create a gl program", function() {
+      spyOn(myPlot3DShaderBuilder.glCntxt, 'createProgram').and.callThrough()
+      myPlot3DShaderBuilder.linkProgram(shader)
+      expect(myPlot3DShaderBuilder.glCntxt.createProgram).toHaveBeenCalled()
+    })
+
+    it("should return a Plot3DShader shader object with a shader program", function() {
+      let myShader = myPlot3DShaderBuilder.linkProgram(shader)
+      expect(myShader.program.constructor.name).toEqual('WebGLProgram')
+    })
+
+    it("should attach a compiled shaders to the program", function() {
+      spyOn(myPlot3DShaderBuilder.glCntxt, 'attachShader').and.callThrough()
+      myPlot3DShaderBuilder.linkProgram(shader)
+      expect(myPlot3DShaderBuilder.glCntxt.attachShader).toHaveBeenCalledTimes(2)
+    })
+
+    it("should link the attached compiled shaders", function() {
+      let myTestShader = myPlot3DShaderBuilder.linkProgram(shader) // call link program for make a withArgs prediction
+      spyOn(myPlot3DShaderBuilder.glCntxt, 'linkProgram').withArgs(shader.program).and.callThrough()
+      myPlot3DShaderBuilder.linkProgram(myTestShader)
+      expect(myPlot3DShaderBuilder.glCntxt.linkProgram).toHaveBeenCalled()
+    })
+
+  })
+
 })

@@ -4,7 +4,6 @@ class Plot3DShaderBuilder extends Plot3DBuilder {
     this.glCntxt = glCntxt
     this.numberOfCompiledShaders = 0
     this.shaderList = []
-    this.isInDebugMode = true
   }
 
   buildShader(vertexShaderCode, fragmentShaderCode) {
@@ -25,12 +24,21 @@ class Plot3DShaderBuilder extends Plot3DBuilder {
     let shader = new Plot3DShader()
     shader.vertexShaderCode = vertexShaderCode
     shader.fragmentShaderCode = fragmentShaderCode
-    this.shaderList.push(shader)
     let regExpUnfiromFilter = /(?<=uniform\s+\w+\s+).*(?=\s*;)/g
     shader.vertexUniformList = shader.vertexShaderCode.match(regExpUnfiromFilter)
     shader.fragmentUniformList = shader.fragmentShaderCode.match(regExpUnfiromFilter)
     let regExpAttributeFilter = /(?<=attribute\s+\w+\s+).*(?=\s*;)/g
     shader.attributeList = shader.vertexShaderCode.match(regExpAttributeFilter)
+
+
+    shader = this.compileVertexShader(shader)
+    shader = this.compileFragmentShader(shader)
+    shader = this.linkProgram(shader)
+
+    shader.name = 'Shader' + String(this.numberOfCompiledShaders)
+    this.numberOfCompiledShaders++
+
+    this.shaderList.push(shader)
 
     return shader
   }
@@ -45,7 +53,6 @@ class Plot3DShaderBuilder extends Plot3DBuilder {
     }
     return shader
   }
-
 
   compileFragmentShader(shader) {
     this.debuglog('..compile fragment shader')
@@ -64,37 +71,12 @@ class Plot3DShaderBuilder extends Plot3DBuilder {
       return null
     }
 
-    
+    this.debuglog('..link shader program')
+    shader.program = this.glCntxt.createProgram()
+    this.glCntxt.attachShader(shader.program, shader.glVertexShader)
+    this.glCntxt.attachShader(shader.program, shader.glFragmentShader)
+    this.glCntxt.linkProgram(shader.program)
 
-    // this.debugLog('..compile fragment shader')
-    // shader.fragmentSource = this.glCntxt.createShader(this.glCntxt.FRAGMENT_SHADER)
-    // this.glCntxt.shaderSource(shader.fragmentSource, shader.fragmentShaderCode)
-    // this.glCntxt.compileShader(shader.fragmentSource)
-
-    // if (!this.glCntxt.getShaderParameter(shader.vertexSource, this.glCntxt.COMPILE_STATUS) ||
-    //     !this.glCntxt.getShaderParameter(shader.fragmentSource, this.glCntxt.COMPILE_STATUS)) {
-    //   this.errorLog([
-    //     'An error occurred compiling the shaders: ',
-    //     'vertex log: ' + this.glCntxt.getShaderInfoLog(shader.vertexSource),
-    //     'fragment log: ' + this.glCntxt.getShaderInfoLog(shader.fragmentSource)
-    //   ])
-    //   this.glCntxt.deleteShader(shader.vertexSource)
-    //   this.glCntxt.deleteShader(shader.fragmentSource)
-    // } else {
-    //   this.debugLog('..link shader program')
-    //   shader.program = this.glCntxt.createProgram()
-    //   this.glCntxt.attachShader(shader.program, shader.vertexSource)
-    //   this.glCntxt.attachShader(shader.program, shader.fragmentSource)
-    //   this.glCntxt.linkProgram(shader.program)
-    // }
-
-    // shader.attributeList.forEach((attributeName) => {
-    //   shader.attributes[attributeName] = this.glCntxt.getAttribLocation(shader.program, attributeName)
-    // })
-
-    // shader.uniformList.forEach((uniformName) => {
-    //   shader.uniforms[uniformName] = this.glCntxt.getUniformLocation(shader.program, uniformName)
-    // })
 
     return shader
   }
