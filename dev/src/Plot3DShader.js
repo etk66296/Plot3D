@@ -8,6 +8,10 @@ class Plot3DShader extends Plot3DObject {
     this.attributeList = []
     this.vertexUniformList = []
     this.fragmentUniformList = []
+
+    this.glAttrLocation = {}
+    this.glVertexUniformLocation = {}
+    this.glFragmentUniformLocation = {}
     
     this.vertexShaderCode = ''
     this.fragmentShaderCode = ''

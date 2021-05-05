@@ -44,4 +44,16 @@ describe("Plot3DShader", function() {
     expect(myPlot3DShader.glFragmentShader).toEqual(null)
   })
 
+  it("should have an object shaderAttrLocation", function() {
+    expect(typeof myPlot3DShader.glAttrLocation).toEqual('object')
+  })
+
+  it("should have an object shaderVertexUniformLocation", function() {
+    expect(typeof myPlot3DShader.glVertexUniformLocation).toEqual('object')
+  })
+
+  it("should have an object shaderFragmentUniformLocation", function() {
+    expect(typeof myPlot3DShader.glFragmentUniformLocation).toEqual('object')
+  })
+
 })

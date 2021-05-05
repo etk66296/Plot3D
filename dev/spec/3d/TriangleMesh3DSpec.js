@@ -1,4 +1,4 @@
-describe("TriangleMesh", function() {
+describe("TriangleMesh3D", function() {
   var canvas
   var glCntxt
   var myPlot3DShaderBuilder
@@ -18,16 +18,18 @@ describe("TriangleMesh", function() {
       attribute vec3 a_normal;
 
       varying vec3 v_normal;
-
+      // [View To Projection]x[World To View]x[Model to World]
       uniform vec4 u_color;
-      uniform mat4 u_matrix;
-      uniform mat4 u_normalMatrix;
+      
+      uniform mat4 u_modelToWorld;
+      uniform mat4 u_WorldToView;
+      uniform mat4 u_ViewToProjection;
 
       varying vec4 v_color;
       void main() {
-        gl_Position = u_matrix * a_position;
+        gl_Position = u_ViewToProjection * u_WorldToView * u_modelToWorld * a_position;
         v_color = u_color;
-        v_normal = (u_normalMatrix * vec4(a_normal.xyz, 0.0)).xyz;
+        v_normal = (u_WorldToView * u_modelToWorld * vec4(a_normal.xyz, 0.0)).xyz;
       }
     `
     let fragmentShaderCode = `
@@ -46,11 +48,12 @@ describe("TriangleMesh", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    myTriangleMesh = new TriangleMesh(glCntxt, shader)
+    matrixFactory = new MatrixFactory()
+    myTriangleMesh = new TriangleMesh3D(glCntxt, shader, matrixFactory)
   })
   
   it("has the parent class Renderable", function() {
-    expect(myTriangleMesh.__proto__.__proto__.constructor.name).toEqual('Renderable')
+    expect(myTriangleMesh.__proto__.__proto__.constructor.name).toEqual('Renderable3D')
   })
 
   it("should have a method update", function() {
@@ -63,14 +66,6 @@ describe("TriangleMesh", function() {
 
   it("should have a method draw", function() {
     expect(typeof myTriangleMesh.draw).toEqual('function')
-  })
-  
-  describe("draw", function() {
-    it("should call gl useProgram", function() {
-      spyOn(myPlot3DShaderBuilder.glCntxt, 'useProgram').withArgs(shader.program).and.callThrough()
-      myTriangleMesh.draw()
-      expect(myPlot3DShaderBuilder.glCntxt.useProgram).toHaveBeenCalled()
-    })
   })
 
 })

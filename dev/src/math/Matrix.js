@@ -1,3 +1,13 @@
+class MatrixFactory extends Plot3DFactory {
+  constructor() {
+    super()
+  }
+
+  createIdentityMatrix4x4() {
+    return new Matrix4x4()
+  }
+}
+
 class Matrix extends Plot3DObject {
   constructor(cells = []) {
     super()

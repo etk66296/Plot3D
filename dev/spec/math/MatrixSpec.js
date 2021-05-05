@@ -1,3 +1,26 @@
+describe("MatrixFactory", function() {
+  var myMatrixFactory
+
+  beforeEach(function() {
+    myMatrixFactory = new MatrixFactory()
+  })
+
+  it("has the parent class Plot3DFactory", function() {
+    expect(myMatrixFactory.__proto__.__proto__.constructor.name).toEqual('Plot3DFactory')
+  })
+
+  it("should have a method createIdentityMatrix4x4 wich returns a new Instance of Matrix4x4", function() {
+    let myIdentiyMatrix4x4 =  myMatrixFactory.createIdentityMatrix4x4()
+    expect(myIdentiyMatrix4x4.cells).toEqual([
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ])
+  })
+
+})
+
 describe("Matrix", function() {
   var myMatrix
 

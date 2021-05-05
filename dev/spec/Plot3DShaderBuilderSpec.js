@@ -48,6 +48,9 @@ describe("Plot3DShaderBuilder", function() {
     `
     shader.vertexShaderCode = vertexShaderCode
     shader.fragmentShaderCode = fragmentShaderCode
+    shader.attributeList = [ 'a_position', 'a_normal' ]
+    shader.vertexUniformList = [ 'u_color', 'u_matrix', 'u_normalMatrix' ]
+    shader.fragmentUniformList = [ 'u_reverseLightDirection' ]
   })
 
   it("has the parent class Plot3DObject", function() {
@@ -277,6 +280,26 @@ describe("Plot3DShaderBuilder", function() {
       spyOn(myPlot3DShaderBuilder.glCntxt, 'linkProgram').withArgs(shader.program).and.callThrough()
       myPlot3DShaderBuilder.linkProgram(myTestShader)
       expect(myPlot3DShaderBuilder.glCntxt.linkProgram).toHaveBeenCalled()
+    })
+
+    it("should request all attribute uniform locations", function() {
+      spyOn(myPlot3DShaderBuilder.glCntxt, 'getAttribLocation').and.callThrough()
+      myPlot3DShaderBuilder.linkProgram(shader)
+      expect(myPlot3DShaderBuilder.glCntxt.getAttribLocation).toHaveBeenCalledTimes(shader.attributeList.length)
+      expect(shader.glAttrLocation).toEqual({ a_normal: 1, a_position: 0 })
+    })
+
+    it("should request all vertex and fragment uniform locations", function() {
+      spyOn(myPlot3DShaderBuilder.glCntxt, 'getUniformLocation').and.callThrough()
+      myPlot3DShaderBuilder.linkProgram(shader)
+      expect(myPlot3DShaderBuilder.glCntxt.getUniformLocation).toHaveBeenCalledTimes(
+        shader.vertexUniformList.length + shader.fragmentUniformList.length
+      )
+      expect(typeof shader.glVertexUniformLocation['u_color']).toEqual('object')
+      expect(typeof shader.glVertexUniformLocation['u_matrix']).toEqual('object')
+      expect(typeof shader.glVertexUniformLocation['u_normalMatrix']).toEqual('object')
+
+      expect(typeof shader.glFragmentUniformLocation['u_reverseLightDirection']).toEqual('object')
     })
 
   })
