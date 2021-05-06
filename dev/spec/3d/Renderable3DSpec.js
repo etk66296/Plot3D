@@ -64,6 +64,10 @@ describe("Renderable3D", function() {
     expect(myRenderable3D.modelSpaceRotationInRad).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
   })
 
+  it("has a world translation object which holds a value for all three directions x, y, z", function() {
+    expect(myRenderable3D.worldTranslation).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
+  })
+
   it("should have a injected instance of MatrixFactory", function() {
     expect(myRenderable3D.matrixFactory.constructor.name).toEqual('MatrixFactory')
   })
@@ -82,6 +86,14 @@ describe("Renderable3D", function() {
                                                                0, 1, 0, 0,
                                                                0, 0, 1, 0,
                                                                0, 0, 0, 1 ])
+  })
+
+  it("should have a 4x4 model 'worldTranslationMatrix', wich is initialy the identity matrix", function() {
+    expect(myRenderable3D.worldTranslationMatrix.constructor.name).toEqual('Matrix4x4')
+    expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([ 1, 0, 0, 0,
+                                                       0, 1, 0, 0,
+                                                       0, 0, 1, 0,
+                                                       0, 0, 0, 1 ])
   })
 
   it("should have a method rotateXIncremental", function() {
@@ -107,6 +119,62 @@ describe("Renderable3D", function() {
         0, 0.9950041652780258, -0.09983341664682815, 0,
         0, 0.09983341664682815, 0.9950041652780258, 0,
         0, 0, 0, 1 
+      ])
+    })
+  })
+
+  it("should have a method rotateYIncremental", function() {
+    expect(typeof myRenderable3D.rotateYIncremental).toEqual('function')
+  })
+
+  describe("rotateYIncremental", function() {
+    it("should greate the rotation transformation values", function() {
+      spyOn(Math, 'cos').and.callThrough()
+      spyOn(Math, 'sin').and.callThrough()
+      myRenderable3D.rotateYIncremental(0.1)
+      expect(Math.cos).toHaveBeenCalledTimes(2)
+      expect(Math.sin).toHaveBeenCalledTimes(2)
+    })
+    it("should multipy the y rotation to the modelRotationMatrix", function() {
+      spyOn(myRenderable3D.modelRotationMatrix, 'multiplyM4')
+      myRenderable3D.rotateYIncremental(0.1)
+      expect(myRenderable3D.modelRotationMatrix.multiplyM4).toHaveBeenCalled()
+    })
+    it("should result the expected rotation matrix", function() {
+      myRenderable3D.rotateYIncremental(0.1)
+      expect(myRenderable3D.modelRotationMatrix.cells).toEqual([
+        0.9950041652780258, 0.0, 0.09983341664682815, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        -0.09983341664682815, 0.0, 0.9950041652780258, 0.0,
+        0.0, 0.0, 0.0, 1.0
+      ])
+    })
+  })
+
+  it("should have a method rotateZIncremental", function() {
+    expect(typeof myRenderable3D.rotateZIncremental).toEqual('function')
+  })
+
+  describe("rotateZIncremental", function() {
+    it("should greate the rotation transformation values", function() {
+      spyOn(Math, 'cos').and.callThrough()
+      spyOn(Math, 'sin').and.callThrough()
+      myRenderable3D.rotateZIncremental(0.1)
+      expect(Math.cos).toHaveBeenCalledTimes(2)
+      expect(Math.sin).toHaveBeenCalledTimes(2)
+    })
+    it("should multipy the z rotation to the modelRotationMatrix", function() {
+      spyOn(myRenderable3D.modelRotationMatrix, 'multiplyM4')
+      myRenderable3D.rotateZIncremental(0.1)
+      expect(myRenderable3D.modelRotationMatrix.multiplyM4).toHaveBeenCalled()
+    })
+    it("should result the expected rotation matrix", function() {
+      myRenderable3D.rotateZIncremental(0.1)
+      expect(myRenderable3D.modelRotationMatrix.cells).toEqual([
+        0.9950041652780258, -0.09983341664682815, 0.0, 0.0,
+        0.09983341664682815, 0.9950041652780258, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0
       ])
     })
   })

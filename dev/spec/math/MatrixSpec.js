@@ -35,6 +35,19 @@ describe("Matrix", function() {
   it("has an attribute cells which is an array object", function() {
     expect(myMatrix.cells.constructor.name).toEqual('Array')
   })
+
+  it("sould have a methos log which prints the matrix well formated in the console", function() {
+    expect(typeof myMatrix.log).toEqual('function')
+  })
+
+  describe('log', function() {
+    it("should log the each cell", function() {
+      spyOn(console, 'log')
+      myMatrix.cells = [ '1', '2', '3', '4' ]
+      myMatrix.log()
+      expect(console.log).toHaveBeenCalledTimes(myMatrix.cells.length)
+    })
+  })
 })
 
 describe("Matrix4x4", function() {
@@ -88,48 +101,56 @@ describe("Matrix4x4", function() {
         426, 484,	542, 600
       ])
     })
-    describe("transpose", function() {
-      it("should result the identity matrix when it was called with the identity matrix", function() {
-        myMatrix4x4.transpose()
-        expect(myMatrix4x4.cells).toEqual(myMatrix4x4.cells)
-      })
-      it("should result the correct transposed matrix", function() {
-        myMatrix4x4.cells = [
-          1, 2, 3, 4,
-          5, 6, 7, 8,
-          9, 10, 11, 12,
-          13, 14, 15, 16
-        ]
-        myMatrix4x4.transpose()
-        expect(myMatrix4x4.cells).toEqual([
-          1, 5, 9,  13,
-          2, 6,	10, 14,
-          3, 7,	11, 15,
-          4, 8,	12, 16
-        ])
-      })
+  })
+
+  describe("transpose", function() {
+    it("should result the identity matrix when it was called with the identity matrix", function() {
+      myMatrix4x4.transpose()
+      expect(myMatrix4x4.cells).toEqual(myMatrix4x4.cells)
     })
-    
-    describe("invert", function() {
-      it("should result the identity matrix when it was called with the identity matrix", function() {
-        myMatrix4x4.invert()
-        expect(myMatrix4x4.cells).toEqual(myMatrix4x4.cells)
-      })
-      it("should result the correct inverse matrix", function() {
-        myMatrix4x4.cells = [
-           1,  1,  1, -1,
-           1,  1, -1,  1,
-           1, -1,  1,  1,
-          -1,  1,  1,  1
-        ]
-        myMatrix4x4.invert()
-        expect(myMatrix4x4.cells).toEqual([
-           0.25,  0.25,  0.25, -0.25,
-           0.25,  0.25, -0.25,  0.25,
-           0.25, -0.25,  0.25,  0.25,
-          -0.25,  0.25,  0.25,  0.25
-        ])
-      })
+    it("should result the correct transposed matrix", function() {
+      myMatrix4x4.cells = [
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+        13, 14, 15, 16
+      ]
+      myMatrix4x4.transpose()
+      expect(myMatrix4x4.cells).toEqual([
+        1, 5, 9,  13,
+        2, 6,	10, 14,
+        3, 7,	11, 15,
+        4, 8,	12, 16
+      ])
+    })
+  })
+  
+  describe("invert", function() {
+    it("should result the identity matrix when it was called with the identity matrix", function() {
+      myMatrix4x4.invert()
+      expect(myMatrix4x4.cells).toEqual(myMatrix4x4.cells)
+    })
+    it("should result the correct inverse matrix", function() {
+      myMatrix4x4.cells = [
+         1,  1,  1, -1,
+         1,  1, -1,  1,
+         1, -1,  1,  1,
+        -1,  1,  1,  1
+      ]
+      myMatrix4x4.invert()
+      expect(myMatrix4x4.cells).toEqual([
+         0.25,  0.25,  0.25, -0.25,
+         0.25,  0.25, -0.25,  0.25,
+         0.25, -0.25,  0.25,  0.25,
+        -0.25,  0.25,  0.25,  0.25
+      ])
+    })
+  })
+  describe('log', function() {
+    it("should log the each cell", function() {
+      spyOn(console, 'log')
+      myMatrix4x4.log()
+      expect(console.log).toHaveBeenCalledTimes(myMatrix4x4.cells.length / 4 + 2)
     })
   })
 })

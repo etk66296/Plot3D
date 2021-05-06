@@ -13,6 +13,12 @@ class Matrix extends Plot3DObject {
     super()
     this.cells = cells
   }
+
+  log() {
+    this.cells.forEach(cell => {
+      console.log(cell, ',')
+    })
+  }
 }
 
 class Matrix4x4 extends Matrix {
@@ -23,6 +29,15 @@ class Matrix4x4 extends Matrix {
     0, 0, 0, 1
   ]) {
     super(cells)
+  }
+
+  log() {
+    console.log('---------------------------------------------')
+    console.log(this.cells[0], this.cells[1], this.cells[2], this.cells[3])
+    console.log(this.cells[4], this.cells[5], this.cells[6], this.cells[7])
+    console.log(this.cells[8], this.cells[9], this.cells[10], this.cells[11])
+    console.log(this.cells[12], this.cells[13], this.cells[14], this.cells[15])
+    console.log('---------------------------------------------')
   }
 
   multiplyM4(multiplier) {
