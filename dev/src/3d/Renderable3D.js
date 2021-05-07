@@ -8,8 +8,11 @@ class Renderable3D extends Renderable {
     this.modelRotationMatrix = this.matrixFactory.createIdentityMatrix4x4()
     this.modelSpaceRotationInRad = { x: 0.0, y: 0.0, z: 0.0 }
 
+    this.modelScaleMatrix = this.matrixFactory.createIdentityMatrix4x4()
+    this.modelScale = {x: 0.0, y: 0.0, z: 0.0 }
+
     this.worldTranslationMatrix = this.matrixFactory.createIdentityMatrix4x4()
-    this.worldTranslation = { x: 0.0, y: 0.0, z: 0.0 }
+    this.worldPosition = { x: 0.0, y: 0.0, z: 0.0 }
 
   }
 
@@ -59,6 +62,36 @@ class Renderable3D extends Renderable {
       0.0, 0.0, 0.0, 1.0
     ]
     this.modelRotationMatrix.multiplyM4(zAxisRotation)
+  }
+
+  translateXIncremental(distance) {
+    this.worldPosition.x += distance
+    this.worldTranslationMatrix.cells[3] = this.worldPosition.x
+  }
+
+  translateYIncremental(distance) {
+    this.worldPosition.y += distance
+    this.worldTranslationMatrix.cells[7] = this.worldPosition.y
+  }
+
+  translateZIncremental(distance) {
+    this.worldPosition.z += distance
+    this.worldTranslationMatrix.cells[11] = this.worldPosition.z
+  }
+  
+  scaleX(factor) {
+    this.modelScale.x = factor
+    this.modelScaleMatrix.cells[0] = this.modelScale.x
+  }
+
+  scaleY(factor) {
+    this.modelScale.y = factor
+    this.modelScaleMatrix.cells[5] = this.modelScale.y
+  }
+  
+  scaleZ(factor) {
+    this.modelScale.z = factor
+    this.modelScaleMatrix.cells[10] = this.modelScale.z
   }
 
   update() {

@@ -64,36 +64,29 @@ describe("Renderable3D", function() {
     expect(myRenderable3D.modelSpaceRotationInRad).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
   })
 
-  it("has a world translation object which holds a value for all three directions x, y, z", function() {
-    expect(myRenderable3D.worldTranslation).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
-  })
+  
 
   it("should have a injected instance of MatrixFactory", function() {
     expect(myRenderable3D.matrixFactory.constructor.name).toEqual('MatrixFactory')
   })
 
-  it("should have a 4x4 model 'modelMatrix', wich is initialy the identity matrix", function() {
+  it("should have a 4x4 model 'modelMatrix', which is initialy the identity matrix", function() {
     expect(myRenderable3D.modelMatrix.constructor.name).toEqual('Matrix4x4')
-    expect(myRenderable3D.modelMatrix.cells).toEqual([ 1, 0, 0, 0,
-                                                       0, 1, 0, 0,
-                                                       0, 0, 1, 0,
-                                                       0, 0, 0, 1 ])
+    expect(myRenderable3D.modelMatrix.cells).toEqual([
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ])
   })
 
-  it("should have a 4x4 modelrotation 'modelRotationMatrix', wich is initialy the identity matrix", function() {
+  it("should have a 4x4 modelrotation 'modelRotationMatrix', which is initialy the identity matrix", function() {
     expect(myRenderable3D.modelRotationMatrix.constructor.name).toEqual('Matrix4x4')
-    expect(myRenderable3D.modelRotationMatrix.cells).toEqual([ 1, 0, 0, 0,
-                                                               0, 1, 0, 0,
-                                                               0, 0, 1, 0,
-                                                               0, 0, 0, 1 ])
-  })
-
-  it("should have a 4x4 model 'worldTranslationMatrix', wich is initialy the identity matrix", function() {
-    expect(myRenderable3D.worldTranslationMatrix.constructor.name).toEqual('Matrix4x4')
-    expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([ 1, 0, 0, 0,
-                                                       0, 1, 0, 0,
-                                                       0, 0, 1, 0,
-                                                       0, 0, 0, 1 ])
+    expect(myRenderable3D.modelRotationMatrix.cells).toEqual([
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1 ])
   })
 
   it("should have a method rotateXIncremental", function() {
@@ -115,7 +108,8 @@ describe("Renderable3D", function() {
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotateXIncremental(0.1)
-      expect(myRenderable3D.modelRotationMatrix.cells).toEqual([ 1, 0, 0, 0,
+      expect(myRenderable3D.modelRotationMatrix.cells).toEqual([
+        1, 0, 0, 0,
         0, 0.9950041652780258, -0.09983341664682815, 0,
         0, 0.09983341664682815, 0.9950041652780258, 0,
         0, 0, 0, 1 
@@ -175,6 +169,166 @@ describe("Renderable3D", function() {
         0.09983341664682815, 0.9950041652780258, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
         0.0, 0.0, 0.0, 1.0
+      ])
+    })
+  })
+
+  it("has a world position object which holds a value for all three directions x, y, z", function() {
+    expect(myRenderable3D.worldPosition).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
+  })
+  
+  it("should have a 4x4 model 'worldTranslationMatrix', which is initialy the identity matrix", function() {
+    expect(myRenderable3D.worldTranslationMatrix.constructor.name).toEqual('Matrix4x4')
+    expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ])
+  })
+
+  it("should have a method translateXIncremental", function() {
+    expect(typeof myRenderable3D.translateXIncremental).toEqual('function')
+  })
+
+  describe("translateXIncremental", function() {
+
+    it("should change the model world position x component", function() {
+      myRenderable3D.translateXIncremental(11)
+      expect(myRenderable3D.worldPosition.x).toEqual(11)
+    })
+
+    it("should maipulate the worldTranslationMatrix", function() {
+      myRenderable3D.translateXIncremental(123.456)
+      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+        1, 0, 0, 123.456,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+      ])
+    })
+  })
+
+  it("should have a method translateYIncremental", function() {
+    expect(typeof myRenderable3D.translateYIncremental).toEqual('function')
+  })
+
+  describe("translateYIncremental", function() {
+
+    it("should change the model world position z component", function() {
+      myRenderable3D.translateYIncremental(10)
+      expect(myRenderable3D.worldPosition.y).toEqual(10)
+    })
+
+    it("should maipulate the worldTranslationMatrix", function() {
+      myRenderable3D.translateYIncremental(789.101112)
+      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+        1, 0, 0, 0,
+        0, 1, 0, 789.101112,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+      ])
+    })
+  })
+
+  it("should have a method translateZIncremental", function() {
+    expect(typeof myRenderable3D.translateZIncremental).toEqual('function')
+  })
+
+  describe("translateZIncremental", function() {
+    
+    it("should change the model world position z component", function() {
+      myRenderable3D.translateZIncremental(75)
+      expect(myRenderable3D.worldPosition.z).toEqual(75)
+    })
+
+    it("should maipulate the worldTranslationMatrix", function() {
+      myRenderable3D.translateZIncremental(131415.161718)
+      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 131415.161718,
+        0, 0, 0, 1
+      ])
+    })
+  })
+  
+  it("should have a model Scale Matrix", function() {
+    expect(myRenderable3D.modelScaleMatrix.constructor.name).toEqual('Matrix4x4')
+    expect(myRenderable3D.modelScaleMatrix.cells).toEqual([
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ])
+  })
+
+  it("should have an attribute scale, which is an object holding the scaling in each direction", function() {
+    expect(myRenderable3D.modelScale).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
+  })
+
+  it("should have a method for scaling the model on the x axis", function() {
+    expect(typeof myRenderable3D.scaleX).toEqual('function')
+  })
+
+  describe("scaleX", function() {
+
+    it("should change the model scale value", function() {
+      myRenderable3D.scaleX(1.5)
+      expect(myRenderable3D.modelScale.x).toEqual(1.5)
+    })
+
+    it("should maipulate the model scale matrix in the x component",function() {
+      myRenderable3D.scaleX(1.5)
+      expect(myRenderable3D.modelScaleMatrix.cells).toEqual([
+        1.5, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+      ])
+    })
+  })
+
+  it("should have a method for scaling the model on the y axis", function() {
+    expect(typeof myRenderable3D.scaleY).toEqual('function')
+  })
+
+  describe("scaleY", function() {
+
+    it("should change the model scale value", function() {
+      myRenderable3D.scaleY(8)
+      expect(myRenderable3D.modelScale.y).toEqual(8)
+    })
+
+    it("should maipulate the model scale matrix in the y component",function() {
+      myRenderable3D.scaleY(9)
+      expect(myRenderable3D.modelScaleMatrix.cells).toEqual([
+        1, 0, 0, 0,
+        0, 9, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+      ])
+    })
+  })
+
+  it("should have a method for scaling the model on the z axis", function() {
+    expect(typeof myRenderable3D.scaleZ).toEqual('function')
+  })
+
+  describe("scaleYZ", function() {
+
+    it("should change the model scale value", function() {
+      myRenderable3D.scaleZ(154)
+      expect(myRenderable3D.modelScale.z).toEqual(154)
+    })
+
+    it("should maipulate the model scale matrix in the z component",function() {
+      myRenderable3D.scaleZ(839)
+      expect(myRenderable3D.modelScaleMatrix.cells).toEqual([
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 839, 0,
+        0, 0, 0, 1
       ])
     })
   })
