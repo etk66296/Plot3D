@@ -65,6 +65,28 @@ describe("Matrix4x4", function() {
     expect(myMatrix4x4.cells.length).toEqual(16)
   })
 
+  it("should have a method which rests the matrix to the identity matrix", function() {
+    expect(typeof myMatrix4x4.reset).toEqual('function')
+  })
+
+  describe("reset", function() {
+    it("should reset the cells array to the identity matrix", function() {
+      myMatrix4x4.cells = [
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 8, 7, 6,
+        5, 4, 3, 2
+      ]
+      myMatrix4x4.reset()
+      expect(myMatrix4x4.cells).toEqual([
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+      ])
+    })
+  })
+
   it("should provide a method multiplyM4", function() {
     expect(typeof myMatrix4x4.multiplyM4).toBe("function")
   })

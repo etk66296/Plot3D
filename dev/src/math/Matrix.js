@@ -31,6 +31,15 @@ class Matrix4x4 extends Matrix {
     super(cells)
   }
 
+  reset() {
+    this.cells = [
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ]
+  }
+
   log() {
     console.log('---------------------------------------------')
     console.log(this.cells[0], this.cells[1], this.cells[2], this.cells[3])
