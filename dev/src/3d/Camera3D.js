@@ -1,5 +1,5 @@
 class Camera extends Plot3DObject {
-  constructor(/*glCntxt*/) {
+  constructor(sensorWidth = 100, sensorHeight = 100) {
     super()
     
     /*this.glCntxt = glCntxt*/
@@ -8,6 +8,29 @@ class Camera extends Plot3DObject {
     this.spot = new Vector3([ 0, 0, 0 ])
     this.upDir = new Vector3([ 0, 1, 0 ])
     this.lookAtMatrix = new Matrix4x4()
+
+    this.sensorWidth = sensorWidth
+    this.sensorHeight = sensorHeight
+    this.sensorFar = 100
+    this.sensorNear = 1
+
+
+    this.orthographicProjectionMatrix = new Matrix4x4([
+      1 / this.sensorWidth, 0, 0, 0,
+      0, 1 / this.sensorHeight, 0, 0,
+      0, 0, (-2) / (this.sensorFar - this.sensorNear), (-1) * (this.sensorFar + this.sensorNear) / (this.sensorFar - this.sensorNear),
+      0, 0, 0, 1
+    ])
+
+    this.xFieldOfViewAngle = 60
+    this.yFieldOfViewAngle = 60
+
+    this.perspectiveProjectionMatrix = new Matrix4x4([
+      Math.atan(this.xFieldOfViewAngle / 2), 0, 0, 0,
+      0, Math.atan(this.yFieldOfViewAngle / 2), 0, 0,
+      0, 0, (-1) * (this.sensorFar + this.sensorNear) / (this.sensorFar - this.sensorNear), 2 * this.sensorNear * this.sensorFar / (this.sensorFar - this.sensorNear),
+      0, 0, -1, 0
+    ])
 
     this.EPSILON = 0.000001
   

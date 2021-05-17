@@ -161,4 +161,46 @@ describe("Camera", function() {
     })
   })
 
+  it("should has an attribute which describes the camera sensor width in pixel", function() {
+    expect(myCamera.sensorWidth).toEqual(100)
+  })
+
+  it("should has an attribute which describes the camera sensor height in pixel", function() {
+    expect(myCamera.sensorHeight).toEqual(100)
+  })
+
+  it("should has an attribute render far border", function() {
+    expect(myCamera.sensorFar).toEqual(100)
+  })
+
+  it("should has an attribute render near border", function() {
+    expect(myCamera.sensorNear).toEqual(1)
+  })
+
+  it("should has an orthographic projection matrix", function() {
+    expect(myCamera.orthographicProjectionMatrix.cells).toEqual([
+      0.01, 0, 0, 0,
+      0, 0.01, 0, 0,
+      0, 0, -0.020202020202020204, -1.02020202020202,
+      0, 0, 0, 1
+    ])
+  })
+
+  it("should has a camera field of view angle in degree for the x axis", function() {
+    expect(myCamera.xFieldOfViewAngle).toEqual(60)
+  })
+
+  it("should has a camera field of view angle in degree for the y axis", function() {
+    expect(myCamera.yFieldOfViewAngle).toEqual(60)
+  })
+
+  it("should has an perspective projection matrix", function() {
+    expect(myCamera.perspectiveProjectionMatrix.cells).toEqual([
+      1.5374753309166493, 0, 0, 0,
+      0, 1.5374753309166493, 0, 0,
+      0, 0, -1.02020202020202, 2.0202020202020203,
+      0, 0, -1, 0
+    ])
+  })
+
 })
