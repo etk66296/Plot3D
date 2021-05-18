@@ -33,7 +33,6 @@ class Camera3D extends Plot3DObject {
     ])
 
     this.EPSILON = 0.000001
-  
   }
 
   lookAt() {

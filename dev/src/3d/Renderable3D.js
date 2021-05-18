@@ -125,7 +125,7 @@ class Renderable3D extends Renderable {
     this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)
     this.glCntxt.vertexAttribPointer(
       this.shader.glAttrLocation['a_position'],
-      2,
+      3,
       this.glCntxt.FLOAT,
       false,
       0,
@@ -135,8 +135,9 @@ class Renderable3D extends Renderable {
     this.glCntxt.drawArrays(
       this.glCntxt.TRIANGLES,
       0,
-      1
+      3
     )
+    // this.modelMatrix.log()
     // <-- test
 
   }

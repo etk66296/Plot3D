@@ -5,10 +5,8 @@ class Cycle extends Plot3DObject {
     this.isCycling = clycleInstantly
     this.tickCount = 0
 
-    // this.renderObjectList = renderObjectList
-    this.fps = 60
-
-    // this.ticks = 0
+    this.renderObjectList = []
+    this.fps = 1
 
     this.tickRunner = null
     if (this.isCycling) {
@@ -16,29 +14,25 @@ class Cycle extends Plot3DObject {
     }
   }
 
-  // add(renderObject) {
-  //   this.renderObjectList.push(renderObject)
-  // }
+  addRenderable(object) {
+    this.renderObjectList.push(object)
+  }
 
-  // stop() {
-  //   this.ticks = 0
-  //   this.isStopped = true
-  //   this.intervalFunction = null
-  // }
+  stop() {
+    this.tickCount = 0
+    this.isCycling = false
+    this.tickRunner = null
+  }
 
-  // pause() {
-  //   this.isStopped = true
-  // }
+  pause() {
+    this.isCycling = false
+  }
 
-  // play() {
-  //   this.isStopped = true
-  //   this.intervalFunction = this.interval(this.update, 1000 / this.fps)
-  //   this.isStopped = false
-  // }
-
-  // setFrameRate(framesPerSecond) {
-  //   this.fps = framesPerSecond
-  // }
+  play() {
+    this.isCycling = false
+    this.tickRunner = this.tick(this.update, 1000 / this.fps)
+    this.isCycling = true
+  }
 
   tick(func, wait, times) {
     var cycle = ((w, t) => {
@@ -62,6 +56,9 @@ class Cycle extends Plot3DObject {
   }
 
   update() {
-    console.log('cycle')
+    this.renderObjectList.forEach(renderable => {
+      renderable.update()
+      renderable.draw()
+    })
   }
 }
