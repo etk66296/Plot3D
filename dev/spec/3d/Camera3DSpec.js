@@ -10,7 +10,7 @@ describe("Camera", function() {
   })
 
   beforeEach(function() {
-    myCamera = new Camera(/*glCntxt*/)
+    myCamera = new Camera3D(/*glCntxt*/)
   })
   
   it("has the parent class Plot3DObject", function() {
@@ -141,6 +141,8 @@ describe("Camera", function() {
       myLookAtMatrix.cells[12] = -0
       myLookAtMatrix.cells[13] = -0
 
+      myLookAtMatrix.invert()
+
       myCamera.lookAt()
       expect(myLookAtMatrix.cells[0]).toEqual(myCamera.lookAtMatrix.cells[0])
       expect(myLookAtMatrix.cells[1]).toEqual(myCamera.lookAtMatrix.cells[1])
@@ -154,8 +156,8 @@ describe("Camera", function() {
       expect(myLookAtMatrix.cells[9]).toEqual(myCamera.lookAtMatrix.cells[9])
       expect(myLookAtMatrix.cells[10]).toEqual(myCamera.lookAtMatrix.cells[10])
       expect(myLookAtMatrix.cells[11]).toEqual(myCamera.lookAtMatrix.cells[11])
-      expect(myLookAtMatrix.cells[12]).toEqual(myCamera.lookAtMatrix.cells[12])
-      expect(myLookAtMatrix.cells[13]).toEqual(myCamera.lookAtMatrix.cells[13])
+      expect(myLookAtMatrix.cells[12]).toBeCloseTo(myCamera.lookAtMatrix.cells[12], 6)
+      expect(myLookAtMatrix.cells[13]).toBeCloseTo(myCamera.lookAtMatrix.cells[13], 6)
       expect(myLookAtMatrix.cells[14]).toBeCloseTo(myCamera.lookAtMatrix.cells[14], 6)
       expect(myLookAtMatrix.cells[15]).toEqual(myCamera.lookAtMatrix.cells[15])
     })

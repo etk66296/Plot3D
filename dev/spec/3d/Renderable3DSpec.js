@@ -3,6 +3,7 @@ describe("Renderable3D", function() {
   var glCntxt
   var myPlot3DShaderBuilder
   
+  var camera
   var shader
   var myRenderable3D
   
@@ -52,22 +53,24 @@ describe("Renderable3D", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    matrixFactory = new MatrixFactory()
-    myRenderable3D = new Renderable3D(glCntxt, shader, matrixFactory)
+    camera = new Camera3D()
+    myRenderable3D = new Renderable3D(glCntxt, shader, camera)
   })
   
-  it("has the parent class Renderable", function() {
+  it("should has the parent class Renderable", function() {
     expect(myRenderable3D.__proto__.__proto__.constructor.name).toEqual('Renderable')
+  })
+
+  it("should has a attribute camera, which is passed with thethird argument", function() {
+    expect(myRenderable3D.camera.constructor.name).toEqual('Camera3D')
+  })
+
+  it("should has a a vector with four elements, which represents the current render color", function() {
+    expect(myRenderable3D.color.constructor.name).toEqual('Vector4')
   })
 
   it("has a model rotation object which holds an angle in radian for all three directions x, y, z", function() {
     expect(myRenderable3D.modelSpaceRotationInRad).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
-  })
-
-  
-
-  it("should have a injected instance of MatrixFactory", function() {
-    expect(myRenderable3D.matrixFactory.constructor.name).toEqual('MatrixFactory')
   })
 
   it("should have a 4x4 model 'modelMatrix', which is initialy the identity matrix", function() {
@@ -344,11 +347,18 @@ describe("Renderable3D", function() {
       expect(myRenderable3D.glCntxt.useProgram).toHaveBeenCalled()
     })
 
-    // it("should call uniformMatrix4fv to set the uniform u_modelMatrix", function() {
-    //   spyOn(myRenderable3D.glCntxt, 'uniformMatrix4fv').withArgs('u_modelMatrix', false, myRenderable3D.modelMatrix).and.callThrough()
-    //   myRenderable3D.draw()
-    //   expect(myRenderable3D.glCntxt.uniformMatrix4fv).toHaveBeenCalled()
-    // })
+    it("should call uniformMatrix4fv to set the uniform u_modelMatrix", function() {
+      spyOn(myRenderable3D.glCntxt, 'uniformMatrix4fv').and.callThrough()
+      myRenderable3D.draw()
+      expect(myRenderable3D.glCntxt.uniformMatrix4fv).toHaveBeenCalledTimes(4)
+    })
+
+    it("should pass the current color to a corresponding webgl uniform", function() {
+      spyOn(myRenderable3D.glCntxt, 'uniform4fv').and.callThrough()
+      myRenderable3D.draw()
+      expect(myRenderable3D.glCntxt.uniform4fv).toHaveBeenCalled()
+    })
+
   })
 
   // it("should have a method update", function() {

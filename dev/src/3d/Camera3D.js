@@ -1,4 +1,4 @@
-class Camera extends Plot3DObject {
+class Camera3D extends Plot3DObject {
   constructor(sensorWidth = 100, sensorHeight = 100) {
     super()
     
@@ -110,6 +110,8 @@ class Camera extends Plot3DObject {
     this.lookAtMatrix.cells[13] = (-1) * (y0 * posX + y1 * posY + y2 * posZ)
     this.lookAtMatrix.cells[14] = (-1) * (z0 * posX + z1 * posY + z2 * posZ)
     this.lookAtMatrix.cells[15] = 1
+
+    this.lookAtMatrix.invert()
   }
 
   update() {
