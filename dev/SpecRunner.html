@@ -56,6 +56,8 @@
       () => {
         let canvas = document.getElementById("renderCanvas2")
         let glCntxt = canvas.getContext("webgl2")
+        // glCntxt.cullFace(glCntxt.FRONT_AND_BACK)
+        glCntxt.enable(glCntxt.DEPTH_TEST);
         myBackground = new Background(glCntxt)
         myBackground.clearColor.cells = [ 0.5, 0.5, 0.5, 1.0 ]
         myBackground.draw()
@@ -76,6 +78,7 @@
 
           void main() {
             mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
+            // mat4 modelToProjection = u_ViewToProjectionMatrix * u_modelMatrix * u_modelToWorldMatrix * u_WorldToViewMatrix;
             // mat4 modelToProjection = u_modelMatrix;
             gl_Position = modelToProjection * a_position;
             v_color = u_color;
@@ -103,13 +106,44 @@
         let camera = new Camera3D()
         camera.position.cells[0] = 0
         camera.position.cells[1] = 0
-        camera.position.cells[2] = 20
+        camera.position.cells[2] = 25
+        camera.spot.cells[0] = 0
+        camera.spot.cells[1] = 0
+        camera.spot.cells[2] = 0
         camera.lookAt()
-        myRenderable = new Renderable3D(glCntxt, myShader, camera)
+        let myRenderables = []
+        let colors = [
+          new Vector4([0.0, 0.5, 0.5, 1.0]),
+          new Vector4([0.8, 0.5, 0.5, 1.0]),
+          new Vector4([1.0, 0.5, 0.5, 1.0]),
+          new Vector4([0.0, 1.0, 0.5, 1.0]),
+          new Vector4([0.0, 0.5, 1.0, 1.0]),
+          new Vector4([0.7, 0.2, 0.5, 1.0]),
+          new Vector4([0.4, 0.2, 0.7, 1.0]),
+          new Vector4([0.5, 0.1, 0.9, 1.0]),
+          new Vector4([0.1, 0.7, 0.9, 1.0]),
+          new Vector4([0.1, 1.0, 0.2, 1.0]),
+        ]
+        for(let i = -5; i < 5; i++) {
+          myRenderables.push(new Renderable3D(glCntxt, myShader, camera))
+          myRenderables[myRenderables.length - 1].color = colors[5 + i]
+          myRenderables[myRenderables.length - 1].translateXIncremental(i * 1)
+          myRenderables[myRenderables.length - 1].translateYIncremental(i * 1)
+          myRenderables[myRenderables.length - 1].translateZIncremental(i * 2.5)
+          myRenderables[myRenderables.length - 1].rotateXIncremental(i * 0.1)
+          myRenderables[myRenderables.length - 1].rotateYIncremental(i * 0.1)
+          myRenderables[myRenderables.length - 1].rotateZIncremental(i * 0.1)
+        }
 
         let cycle = new Cycle()
+        cycle.fps = 30
+        cycle.stop()
+        cycle.play()
         cycle.addRenderable(myBackground)
-        cycle.addRenderable(myRenderable)
+
+        myRenderables.forEach(renderable => {
+          cycle.addRenderable(renderable)
+        })
       }
     )
   </script>
@@ -121,7 +155,7 @@
       <canvas id="renderCanvas" width="100" height="100"></canvas>
     </div>
     <div style="display: inline-block;" id="canvasContainer2">
-      <canvas id="renderCanvas2" width="100" height="100"></canvas>
+      <canvas id="renderCanvas2" width="500" height="500"></canvas>
     </div>
   </div>
 </body>

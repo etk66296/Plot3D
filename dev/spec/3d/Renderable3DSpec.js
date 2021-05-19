@@ -83,14 +83,6 @@ describe("Renderable3D", function() {
     ])
   })
 
-  it("should have a 4x4 modelrotation 'modelRotationMatrix', which is initialy the identity matrix", function() {
-    expect(myRenderable3D.modelRotationMatrix.constructor.name).toEqual('Matrix4x4')
-    expect(myRenderable3D.modelRotationMatrix.cells).toEqual([
-      1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1 ])
-  })
 
   it("should have a method rotateXIncremental", function() {
     expect(typeof myRenderable3D.rotateXIncremental).toEqual('function')
@@ -104,14 +96,14 @@ describe("Renderable3D", function() {
       expect(Math.cos).toHaveBeenCalledTimes(2)
       expect(Math.sin).toHaveBeenCalledTimes(2)
     })
-    it("should multipy the x rotation to the modelRotationMatrix", function() {
-      spyOn(myRenderable3D.modelRotationMatrix, 'multiplyM4')
+    it("should multipy the x rotation to the modelMatrix", function() {
+      spyOn(myRenderable3D.modelMatrix, 'multiplyM4')
       myRenderable3D.rotateXIncremental(0.1)
-      expect(myRenderable3D.modelRotationMatrix.multiplyM4).toHaveBeenCalled()
+      expect(myRenderable3D.modelMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotateXIncremental(0.1)
-      expect(myRenderable3D.modelRotationMatrix.cells).toEqual([
+      expect(myRenderable3D.modelMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 0.9950041652780258, -0.09983341664682815, 0,
         0, 0.09983341664682815, 0.9950041652780258, 0,
@@ -132,14 +124,14 @@ describe("Renderable3D", function() {
       expect(Math.cos).toHaveBeenCalledTimes(2)
       expect(Math.sin).toHaveBeenCalledTimes(2)
     })
-    it("should multipy the y rotation to the modelRotationMatrix", function() {
-      spyOn(myRenderable3D.modelRotationMatrix, 'multiplyM4')
+    it("should multipy the y rotation to the modelMatrix", function() {
+      spyOn(myRenderable3D.modelMatrix, 'multiplyM4')
       myRenderable3D.rotateYIncremental(0.1)
-      expect(myRenderable3D.modelRotationMatrix.multiplyM4).toHaveBeenCalled()
+      expect(myRenderable3D.modelMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotateYIncremental(0.1)
-      expect(myRenderable3D.modelRotationMatrix.cells).toEqual([
+      expect(myRenderable3D.modelMatrix.cells).toEqual([
         0.9950041652780258, 0.0, 0.09983341664682815, 0.0,
         0.0, 1.0, 0.0, 0.0,
         -0.09983341664682815, 0.0, 0.9950041652780258, 0.0,
@@ -160,14 +152,14 @@ describe("Renderable3D", function() {
       expect(Math.cos).toHaveBeenCalledTimes(2)
       expect(Math.sin).toHaveBeenCalledTimes(2)
     })
-    it("should multipy the z rotation to the modelRotationMatrix", function() {
-      spyOn(myRenderable3D.modelRotationMatrix, 'multiplyM4')
+    it("should multipy the z rotation to the modelMatrix", function() {
+      spyOn(myRenderable3D.modelMatrix, 'multiplyM4')
       myRenderable3D.rotateZIncremental(0.1)
-      expect(myRenderable3D.modelRotationMatrix.multiplyM4).toHaveBeenCalled()
+      expect(myRenderable3D.modelMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotateZIncremental(0.1)
-      expect(myRenderable3D.modelRotationMatrix.cells).toEqual([
+      expect(myRenderable3D.modelMatrix.cells).toEqual([
         0.9950041652780258, -0.09983341664682815, 0.0, 0.0,
         0.09983341664682815, 0.9950041652780258, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
@@ -204,10 +196,10 @@ describe("Renderable3D", function() {
     it("should maipulate the worldTranslationMatrix", function() {
       myRenderable3D.translateXIncremental(123.456)
       expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
-        1, 0, 0, 123.456,
+        1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
-        0, 0, 0, 1
+        123.456, 0, 0, 1
       ])
     })
   })
@@ -227,9 +219,9 @@ describe("Renderable3D", function() {
       myRenderable3D.translateYIncremental(789.101112)
       expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
         1, 0, 0, 0,
-        0, 1, 0, 789.101112,
+        0, 1, 0, 0,
         0, 0, 1, 0,
-        0, 0, 0, 1
+        0, 789.101112, 0, 1
       ])
     })
   })
@@ -250,20 +242,10 @@ describe("Renderable3D", function() {
       expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 1, 0, 0,
-        0, 0, 1, 131415.161718,
-        0, 0, 0, 1
+        0, 0, 1, 0,
+        0, 0, 131415.161718, 1
       ])
     })
-  })
-  
-  it("should have a model Scale Matrix", function() {
-    expect(myRenderable3D.modelScaleMatrix.constructor.name).toEqual('Matrix4x4')
-    expect(myRenderable3D.modelScaleMatrix.cells).toEqual([
-      1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1
-    ])
   })
 
   it("should have an attribute scale, which is an object holding the scaling in each direction", function() {
@@ -283,7 +265,7 @@ describe("Renderable3D", function() {
 
     it("should maipulate the model scale matrix in the x component",function() {
       myRenderable3D.scaleX(1.5)
-      expect(myRenderable3D.modelScaleMatrix.cells).toEqual([
+      expect(myRenderable3D.modelMatrix.cells).toEqual([
         1.5, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
@@ -305,7 +287,7 @@ describe("Renderable3D", function() {
 
     it("should maipulate the model scale matrix in the y component",function() {
       myRenderable3D.scaleY(9)
-      expect(myRenderable3D.modelScaleMatrix.cells).toEqual([
+      expect(myRenderable3D.modelMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 9, 0, 0,
         0, 0, 1, 0,
@@ -327,7 +309,7 @@ describe("Renderable3D", function() {
 
     it("should maipulate the model scale matrix in the z component",function() {
       myRenderable3D.scaleZ(839)
-      expect(myRenderable3D.modelScaleMatrix.cells).toEqual([
+      expect(myRenderable3D.modelMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 839, 0,

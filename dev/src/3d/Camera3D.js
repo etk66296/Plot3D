@@ -114,6 +114,9 @@ class Camera3D extends Plot3DObject {
   }
 
   update() {
-
+    // this.position.cells[0] -= 0.1
+    // this.position.cells[1] -= 0.1
+    // this.position.cells[2] += 0.1
+    // this.lookAt()
   }
 }

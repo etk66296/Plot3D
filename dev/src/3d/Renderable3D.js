@@ -5,11 +5,7 @@ class Renderable3D extends Renderable {
     this.color = new Vector4([ 1.0, 0.0, 1.0, 1.0 ])
     
     this.modelMatrix = new Matrix4x4()
-    
-    this.modelRotationMatrix = new Matrix4x4()
     this.modelSpaceRotationInRad = { x: 0.0, y: 0.0, z: 0.0 }
-
-    this.modelScaleMatrix = new Matrix4x4()
     this.modelScale = {x: 0.0, y: 0.0, z: 0.0 }
 
     this.worldTranslationMatrix = new Matrix4x4()
@@ -18,11 +14,44 @@ class Renderable3D extends Renderable {
     //test -->
     this.glVertexBuffer = this.glCntxt.createBuffer()
     this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)
-    this.vertices3fv = [
-      -10, -10, 0,
-      10, -10, 0,
-      0, 10, 0
-    ]
+    this.vertices3fv =  [
+      1.0,-1.0,-1.0,
+		  -1.0,-1.0, 1.0,
+		  -1.0, 1.0, 1.0,
+		  1.0, 1.0,-1.0,
+		  -1.0,-1.0,-1.0,
+		  -1.0, 1.0,-1.0,
+		  1.0,-1.0, 1.0,
+		  -1.0,-1.0,-1.0,
+		  1.0,-1.0,-1.0,
+		  1.0, 1.0,-1.0,
+		  1.0,-1.0,-1.0,
+		  -1.0,-1.0,-1.0,
+		  -1.0,-1.0,-1.0,
+		  -1.0, 1.0, 1.0,
+		  -1.0, 1.0,-1.0,
+		  1.0,-1.0, 1.0,
+		  -1.0,-1.0, 1.0,
+  		-1.0,-1.0,-1.0,
+		  -1.0, 1.0, 1.0,
+		  -1.0,-1.0, 1.0,
+		  1.0,-1.0, 1.0,
+		  1.0, 1.0, 1.0,
+		  1.0,-1.0,-1.0,
+		  1.0, 1.0,-1.0,
+		  1.0,-1.0,-1.0,
+		  1.0, 1.0, 1.0,
+		  1.0,-1.0, 1.0,
+		  1.0, 1.0, 1.0,
+		  1.0, 1.0,-1.0,
+		- 1.0, 1.0,-1.0,
+		  1.0, 1.0, 1.0,
+		  -1.0, 1.0,-1.0,
+		  -1.0, 1.0, 1.0,
+		  1.0, 1.0, 1.0,
+		  -1.0, 1.0, 1.0,
+		  1.0,-1.0, 1.0
+  ]
     this.glCntxt.bufferData(glCntxt.ARRAY_BUFFER, new Float32Array(this.vertices3fv), glCntxt.STATIC_DRAW)
     //<-- test
   }
@@ -40,7 +69,7 @@ class Renderable3D extends Renderable {
       0.0, tyz, tzz, 0.0,
       0.0, 0.0, 0.0, 1.0
     ]
-    this.modelRotationMatrix.multiplyM4(xAxisRotation)
+    this.modelMatrix.multiplyM4(xAxisRotation)
   }
 
   rotateYIncremental(angleInRadian) {
@@ -56,7 +85,7 @@ class Renderable3D extends Renderable {
       txz, 0.0, tzz, 0.0,
       0.0, 0.0, 0.0, 1.0
     ]
-    this.modelRotationMatrix.multiplyM4(yAxisRotation)
+    this.modelMatrix.multiplyM4(yAxisRotation)
   }
 
   rotateZIncremental(angleInRadian) {
@@ -72,41 +101,54 @@ class Renderable3D extends Renderable {
       0.0, 0.0, 1.0, 0.0,
       0.0, 0.0, 0.0, 1.0
     ]
-    this.modelRotationMatrix.multiplyM4(zAxisRotation)
+    this.modelMatrix.multiplyM4(zAxisRotation)
   }
 
   translateXIncremental(distance) {
     this.worldPosition.x += distance
-    this.worldTranslationMatrix.cells[3] = this.worldPosition.x
+    this.worldTranslationMatrix.cells[12] = this.worldPosition.x
   }
 
   translateYIncremental(distance) {
     this.worldPosition.y += distance
-    this.worldTranslationMatrix.cells[7] = this.worldPosition.y
+    this.worldTranslationMatrix.cells[13] = this.worldPosition.y
   }
 
   translateZIncremental(distance) {
     this.worldPosition.z += distance
-    this.worldTranslationMatrix.cells[11] = this.worldPosition.z
+    this.worldTranslationMatrix.cells[14] = this.worldPosition.z
   }
   
   scaleX(factor) {
     this.modelScale.x = factor
-    this.modelScaleMatrix.cells[0] = this.modelScale.x
+    this.modelMatrix.cells[0] = this.modelScale.x
   }
 
   scaleY(factor) {
     this.modelScale.y = factor
-    this.modelScaleMatrix.cells[5] = this.modelScale.y
+    this.modelMatrix.cells[5] = this.modelScale.y
   }
   
   scaleZ(factor) {
     this.modelScale.z = factor
-    this.modelScaleMatrix.cells[10] = this.modelScale.z
+    this.modelMatrix.cells[10] = this.modelScale.z
   }
 
   update() {
+    this.camera.update()
+    this.modelMatrix.reset()
+    // this.worldTranslationMatrix.reset()
+    this.rotateXIncremental(0.01)
+    // this.rotateYIncremental(0.01)
+    this.rotateZIncremental(0.01)
 
+    // this.translateXIncremental(0.1)
+    // this.translateYIncremental(0.1)
+    // this.translateZIncremental(0.1)
+
+    // this.scaleX(10)
+    // this.scaleY(10)
+    // this.scaleZ(10)
   }
 
   draw() {
@@ -115,6 +157,7 @@ class Renderable3D extends Renderable {
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.worldTranslationMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_WorldToViewMatrix'], false, this.camera.lookAtMatrix.cells)
+    // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.camera.orthographicProjectionMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.camera.perspectiveProjectionMatrix.cells)
     
     this.glCntxt.uniform4fv(this.shader.glVertexUniformLocation['u_color'], this.color.cells)
@@ -135,7 +178,7 @@ class Renderable3D extends Renderable {
     this.glCntxt.drawArrays(
       this.glCntxt.TRIANGLES,
       0,
-      3
+      36
     )
     // this.modelMatrix.log()
     // <-- test
