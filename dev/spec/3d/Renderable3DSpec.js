@@ -3,7 +3,6 @@ describe("Renderable3D", function() {
   var glCntxt
   var myPlot3DShaderBuilder
   
-  var camera
   var shader
   var myRenderable3D
   
@@ -53,23 +52,18 @@ describe("Renderable3D", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    camera = new Camera3D()
-    myRenderable3D = new Renderable3D(glCntxt, shader, camera)
+    myRenderable3D = new Renderable3D(glCntxt, shader)
   })
   
-  it("should has the parent class Renderable", function() {
+  it("should have the parent class Renderable", function() {
     expect(myRenderable3D.__proto__.__proto__.constructor.name).toEqual('Renderable')
   })
 
-  it("should has a attribute camera, which is passed with thethird argument", function() {
-    expect(myRenderable3D.camera.constructor.name).toEqual('Camera3D')
-  })
-
-  it("should has a a vector with four elements, which represents the current render color", function() {
+  it("should have a a vector with four elements, which represents the current render color", function() {
     expect(myRenderable3D.color.constructor.name).toEqual('Vector4')
   })
 
-  it("has a model rotation object which holds an angle in radian for all three directions x, y, z", function() {
+  it("have a model rotation object which holds an angle in radian for all three directions x, y, z", function() {
     expect(myRenderable3D.modelSpaceRotationInRad).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
   })
 
@@ -168,7 +162,7 @@ describe("Renderable3D", function() {
     })
   })
 
-  it("has a world position object which holds a value for all three directions x, y, z", function() {
+  it("have a world position object which holds a value for all three directions x, y, z", function() {
     expect(myRenderable3D.worldPosition).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
   })
   
@@ -323,44 +317,24 @@ describe("Renderable3D", function() {
   })
 
   describe("draw", function() {
-    it("should call gl useProgram", function() {
-      spyOn(myRenderable3D.glCntxt, 'useProgram').withArgs(shader.program).and.callThrough()
-      myRenderable3D.draw()
-      expect(myRenderable3D.glCntxt.useProgram).toHaveBeenCalled()
-    })
+    // it("should call gl useProgram", function() {
+    //   spyOn(myRenderable3D.glCntxt, 'useProgram').withArgs(shader.program).and.callThrough()
+    //   myRenderable3D.draw()
+    //   expect(myRenderable3D.glCntxt.useProgram).toHaveBeenCalled()
+    // })
 
-    it("should call uniformMatrix4fv to set the uniform u_modelMatrix", function() {
-      spyOn(myRenderable3D.glCntxt, 'uniformMatrix4fv').and.callThrough()
-      myRenderable3D.draw()
-      expect(myRenderable3D.glCntxt.uniformMatrix4fv).toHaveBeenCalledTimes(4)
-    })
+    // it("should call uniformMatrix4fv to set the uniform u_modelMatrix", function() {
+    //   spyOn(myRenderable3D.glCntxt, 'uniformMatrix4fv').and.callThrough()
+    //   myRenderable3D.draw()
+    //   expect(myRenderable3D.glCntxt.uniformMatrix4fv).toHaveBeenCalledTimes(4)
+    // })
 
-    it("should pass the current color to a corresponding webgl uniform", function() {
-      spyOn(myRenderable3D.glCntxt, 'uniform4fv').and.callThrough()
-      myRenderable3D.draw()
-      expect(myRenderable3D.glCntxt.uniform4fv).toHaveBeenCalled()
-    })
+    // it("should pass the current color to a corresponding webgl uniform", function() {
+    //   spyOn(myRenderable3D.glCntxt, 'uniform4fv').and.callThrough()
+    //   myRenderable3D.draw()
+    //   expect(myRenderable3D.glCntxt.uniform4fv).toHaveBeenCalled()
+    // })
 
   })
-
-  // it("should have a method update", function() {
-  //   expect(typeof myTriangleMesh.update).toEqual('function')
-  // })
-
-  // describe("update", function() {
-
-  // })
-
-  // it("should have a method draw", function() {
-  //   expect(typeof myTriangleMesh.draw).toEqual('function')
-  // })
-  
-  // describe("draw", function() {
-  //   it("should call gl useProgram", function() {
-  //     spyOn(myPlot3DShaderBuilder.glCntxt, 'useProgram').withArgs(shader.program).and.callThrough()
-  //     myTriangleMesh.draw()
-  //     expect(myPlot3DShaderBuilder.glCntxt.useProgram).toHaveBeenCalled()
-  //   })
-  // })
 
 })
