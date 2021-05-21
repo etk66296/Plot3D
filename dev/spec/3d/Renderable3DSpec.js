@@ -163,7 +163,7 @@ describe("Renderable3D", function() {
   })
 
   it("have a world position object which holds a value for all three directions x, y, z", function() {
-    expect(myRenderable3D.worldPosition).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
+    expect(myRenderable3D.worldPosition.cells).toEqual([ 0.0, 0.0, 0.0 ])
   })
   
   it("should have a 4x4 model 'worldTranslationMatrix', which is initialy the identity matrix", function() {
@@ -184,7 +184,7 @@ describe("Renderable3D", function() {
 
     it("should change the model world position x component", function() {
       myRenderable3D.translateXIncremental(11)
-      expect(myRenderable3D.worldPosition.x).toEqual(11)
+      expect(myRenderable3D.worldPosition.cells[0]).toEqual(11)
     })
 
     it("should maipulate the worldTranslationMatrix", function() {
@@ -206,7 +206,7 @@ describe("Renderable3D", function() {
 
     it("should change the model world position z component", function() {
       myRenderable3D.translateYIncremental(10)
-      expect(myRenderable3D.worldPosition.y).toEqual(10)
+      expect(myRenderable3D.worldPosition.cells[1]).toEqual(10)
     })
 
     it("should maipulate the worldTranslationMatrix", function() {
@@ -228,7 +228,7 @@ describe("Renderable3D", function() {
     
     it("should change the model world position z component", function() {
       myRenderable3D.translateZIncremental(75)
-      expect(myRenderable3D.worldPosition.z).toEqual(75)
+      expect(myRenderable3D.worldPosition.cells[2]).toEqual(75)
     })
 
     it("should maipulate the worldTranslationMatrix", function() {
@@ -312,8 +312,19 @@ describe("Renderable3D", function() {
     })
   })
 
+  it("should have a method for setting the position", function() {
+    expect(typeof myRenderable3D.setWorldPosition).toEqual('function')
+  })
+
   it("should have a method draw", function() {
     expect(typeof myRenderable3D.draw).toEqual('function')
+  })
+
+  describe("setWorldPosition", function() {
+    it("should set the correct position attribute and the translation matrix", function() {
+      myRenderable3D.setWorldPosition(1, 2, 3)
+      expect(myRenderable3D.worldPosition.cells).toEqual([ 1, 2, 3 ])
+    })
   })
 
   describe("draw", function() {

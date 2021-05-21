@@ -113,10 +113,177 @@ describe("Camera", function() {
 
   describe("frustum", function() {
     it("should hold a value wich defines the field of view angle on the x axis", function() {
-      expect(myCamera.frustum.fovAngleX).toEqual(60)
+      expect(myCamera.frustum.fovAngleX).toEqual(myCamera.convertDegToRad(60))
+    })
+    it("should hold a value wich defines the field of view angle on the y axis", function() {
+      expect(myCamera.frustum.fovAngleY).toEqual(myCamera.convertDegToRad(60))
+    })
+    it("should have an attribute far", function() {
+      expect(myCamera.frustum.far).toEqual(1000)
+    })
+    it("should have an attribute near", function() {
+      expect(myCamera.frustum.near).toEqual(1)
     })
   })
+
+  it("should have a perspective projection matrix", function() {
+    expect(myCamera.perspectiveProjectionMatrix.constructor.name).toEqual('Matrix4x4')
+  })
+
+  describe("perspectiveProjectionMatrix", function() {
+    //   Math.atan(this.xFieldOfViewAngle / 2), 0, 0, 0,
+    //   0, Math.atan(this.yFieldOfViewAngle / 2), 0, 0,
+    //   0, 0, (-1) * (this.sensorFar + this.sensorNear) / (this.sensorFar - this.sensorNear), 2 * this.sensorNear * this.sensorFar / (this.sensorFar - this.sensorNear),
+    //   0, 0, -1, 0
+    it("should be composed out of the orthoSpace data", function() {
+      expect(myCamera.perspectiveProjectionMatrix.cells[0]).toEqual(Math.atan(myCamera.convertDegToRad(60) / 2))
+      expect(myCamera.perspectiveProjectionMatrix.cells[1]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[2]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[3]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[4]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[5]).toEqual(Math.atan(myCamera.convertDegToRad(60) / 2))
+      expect(myCamera.perspectiveProjectionMatrix.cells[6]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[7]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[8]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[9]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[10]).toEqual((-1) * (1000 + 1) / (1000 - 1))
+      expect(myCamera.perspectiveProjectionMatrix.cells[11]).toEqual((2 * 1000 * 1) / (1000 - 1))
+      expect(myCamera.perspectiveProjectionMatrix.cells[12]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[13]).toEqual(0)
+      expect(myCamera.perspectiveProjectionMatrix.cells[14]).toEqual(-1)
+      expect(myCamera.perspectiveProjectionMatrix.cells[15]).toEqual(0)
+    })
+
+  })
   
+  it("should have a point to view at", function() {
+    expect(myCamera.spot.constructor.name).toEqual('Vector3')
+  })
+
+  it("should have a direction vector, which is pointing to the cameras up direction", function() {
+    expect(myCamera.upDir.constructor.name).toEqual('Vector3')
+  })
+
+  it("should have a look at matrix", function() {
+    expect(myCamera.lookAtMatrix.constructor.name).toEqual('Matrix4x4')
+  })
+
+  it("should has a minimum range of allowed values", function() {
+    expect(myCamera.EPSILON).toEqual(0.000001)
+  })
+
+  it("should have a method lookAt", function() {
+    expect(typeof myCamera.lookAt).toEqual('function')
+  })
+
+  describe("lookAt", function() {
+    it(`
+      should reset the lookAtMatrix to identity matrix
+      when the delta between camera worldPosition and the sport
+      worldPosition is less than the defined minimum range
+    `
+    , function() {
+        myCamera.worldPosition.cells = [ 0.0000000001, 0.0000000001, 0 ]
+        myCamera.spot.cells = [ 0.0, 0.0, 0.0 ]
+        myCamera.lookAtMatrix.cells = [
+          1, 2, 3, 4,
+          5, 6, 7, 8,
+          9, 8, 7, 6,
+          5, 4, 3, 2
+        ]
+        myCamera.lookAt()
+        expect(myCamera.lookAtMatrix.cells).toEqual([
+          1, 0, 0, 0,
+          0, 1, 0, 0,
+          0, 0, 1, 0,
+          0, 0, 0, 1
+        ])
+    })
+
+    it("should calculate the correct look at matrix", function() {
+    // [      1       0       0      0 ]   [ xaxis.x  yaxis.x  zaxis.x 0 ]
+    // |      0       1       0      0 | * | xaxis.y  yaxis.y  zaxis.y 0 |
+    // |      0       0       1      0 |   | xaxis.z  yaxis.z  zaxis.z 0 |
+    // [     -POSX   -POSY   -POSZ   1 ]   [       0        0        0 1 ]
+      let cameraPosition = new Vector3([
+        myCamera.worldPosition.cells[0],
+        myCamera.worldPosition.cells[1],
+        myCamera.worldPosition.cells[2]
+      ])
+      let cameraSpot = new Vector3([
+        myCamera.spot.cells[0],
+        myCamera.spot.cells[1],
+        myCamera.spot.cells[2]
+      ])
+      let cameraUpDirection = new Vector3([
+        myCamera.upDir.cells[0],
+        myCamera.upDir.cells[1],
+        myCamera.upDir.cells[2],
+      ])
+      let zaxis = (new Vector3([
+        cameraPosition.cells[0],
+        cameraPosition.cells[1],
+        cameraPosition.cells[2]
+      ])).subtract(cameraSpot).normalize()
+      let xaxis = (new Vector3([
+        zaxis.cells[0],
+        zaxis.cells[1],
+        zaxis.cells[2]
+      ])).cross(cameraUpDirection).normalize()
+      let yaxis = (new Vector3([
+        xaxis.cells[0],
+        xaxis.cells[1],
+        xaxis.cells[2]
+      ])).cross(zaxis)
+
+      let cameraTranslation = new Matrix4x4()
+      cameraTranslation.cells[12] = (-1) * cameraPosition.cells[0]
+      cameraTranslation.cells[13] = (-1) * cameraPosition.cells[1]
+      cameraTranslation.cells[14] = (-1) * cameraPosition.cells[2]
+
+      let transformationMatrix = new Matrix4x4()
+      transformationMatrix.cells[0] = (-1) * xaxis.cells[0]
+      transformationMatrix.cells[4] = xaxis.cells[1]
+      transformationMatrix.cells[8] = xaxis.cells[2]
+
+      transformationMatrix.cells[1] = yaxis.cells[0]
+      transformationMatrix.cells[5] = yaxis.cells[1]
+      transformationMatrix.cells[9] = yaxis.cells[2]
+
+      transformationMatrix.cells[2] = zaxis.cells[0]
+      transformationMatrix.cells[6] = zaxis.cells[1]
+      transformationMatrix.cells[10] = zaxis.cells[2]
+
+      let myLookAtMatrix = cameraTranslation.multiplyM4(transformationMatrix)
+      // myLookAtMatrix.cells[8] = (-1) * myLookAtMatrix.cells[8]
+      // myLookAtMatrix.cells[14] = (-1) * Math.sqrt(myLookAtMatrix.cells[12] * myLookAtMatrix.cells[12] + myLookAtMatrix.cells[13] * myLookAtMatrix.cells[13])
+      // myLookAtMatrix.cells[12] = -0
+      // myLookAtMatrix.cells[13] = -0
+
+      myLookAtMatrix.invert()
+
+      myCamera.lookAt()
+      expect(myLookAtMatrix.cells[0]).toEqual(myCamera.lookAtMatrix.cells[0])
+      expect(myLookAtMatrix.cells[1]).toEqual(myCamera.lookAtMatrix.cells[1])
+      expect(myLookAtMatrix.cells[2]).toEqual(myCamera.lookAtMatrix.cells[2])
+      expect(myLookAtMatrix.cells[3]).toEqual(myCamera.lookAtMatrix.cells[3])
+      expect(myLookAtMatrix.cells[4]).toEqual(myCamera.lookAtMatrix.cells[4])
+      expect(myLookAtMatrix.cells[5]).toEqual(myCamera.lookAtMatrix.cells[5])
+      expect(myLookAtMatrix.cells[6]).toBeCloseTo(myCamera.lookAtMatrix.cells[6], 1)
+      expect(myLookAtMatrix.cells[7]).toEqual(myCamera.lookAtMatrix.cells[7])
+      expect(myLookAtMatrix.cells[8]).toEqual(myCamera.lookAtMatrix.cells[8])
+      expect(myLookAtMatrix.cells[9]).toEqual(myCamera.lookAtMatrix.cells[9])
+      expect(myLookAtMatrix.cells[10]).toEqual(myCamera.lookAtMatrix.cells[10])
+      expect(myLookAtMatrix.cells[11]).toEqual(myCamera.lookAtMatrix.cells[11])
+      expect(myLookAtMatrix.cells[12]).toBeCloseTo(myCamera.lookAtMatrix.cells[12], 6)
+      expect(myLookAtMatrix.cells[13]).toBeCloseTo(myCamera.lookAtMatrix.cells[13], 6)
+      expect(myLookAtMatrix.cells[14]).toBeCloseTo(myCamera.lookAtMatrix.cells[14], 6)
+      expect(myLookAtMatrix.cells[15]).toEqual(myCamera.lookAtMatrix.cells[15])
+    })
+  })
+
+
+
   // it("has the parent class Renderable3D", function() {
   //   expect(myCamera.__proto__.__proto__.constructor.name).toEqual('Renderable3D')
   // })
@@ -125,12 +292,12 @@ describe("Camera", function() {
   // //   expect(myCamera.glCntxt.constructor.name).toEqual('WebGL2RenderingContext')
   // // })
 
-  // it("should has an attribute position of type Vector3", function() {
-  //   expect(myCamera.position.constructor.name).toEqual('Vector3')
+  // it("should has an attribute worldPosition of type Vector3", function() {
+  //   expect(myCamera.worldPosition.constructor.name).toEqual('Vector3')
   // })
 
-  // it("should has a default position in the xy layer ", function() {
-  //   expect(myCamera.position.cells).toEqual([ 10, 10, 0 ])
+  // it("should has a default worldPosition in the xy layer ", function() {
+  //   expect(myCamera.worldPosition.cells).toEqual([ 10, 10, 0 ])
   // })
 
   // it("should has a vector3 attribute which represents a point to view in world space", function() {
@@ -153,120 +320,9 @@ describe("Camera", function() {
   //   expect(myCamera.lookAtMatrix.constructor.name).toEqual('Matrix4x4')
   // })
 
-  // it("should has a minimum range of allowed values", function() {
-  //   expect(myCamera.EPSILON).toEqual(0.000001)
-  // })
 
-  // it("should have a method lookAt", function() {
-  //   expect(typeof myCamera.lookAt).toEqual('function')
-  // })
 
-  // describe("lookAt", function() {
-  //   it(`
-  //     should reset the lookAtMatrix to identity matrix
-  //     when the delta between camera position and the sport
-  //     position is less than the defined minimum range
-  //   `
-  //   , function() {
-  //       myCamera.position.cells = [ 0.0000000001, 0.0000000001, 0 ]
-  //       myCamera.spot.cells = [ 0.0, 0.0, 0.0 ]
-  //       myCamera.lookAtMatrix.cells = [
-  //         1, 2, 3, 4,
-  //         5, 6, 7, 8,
-  //         9, 8, 7, 6,
-  //         5, 4, 3, 2
-  //       ]
-  //       myCamera.lookAt()
-  //       expect(myCamera.lookAtMatrix.cells).toEqual([
-  //         1, 0, 0, 0,
-  //         0, 1, 0, 0,
-  //         0, 0, 1, 0,
-  //         0, 0, 0, 1
-  //       ])
-  //   })
-
-  //   it("should calculate the correct look at matrix", function() {
-  //   // [      1       0       0      0 ]   [ xaxis.x  yaxis.x  zaxis.x 0 ]
-  //   // |      0       1       0      0 | * | xaxis.y  yaxis.y  zaxis.y 0 |
-  //   // |      0       0       1      0 |   | xaxis.z  yaxis.z  zaxis.z 0 |
-  //   // [     -POSX   -POSY   -POSZ   1 ]   [       0        0        0 1 ]
-  //     let cameraPosition = new Vector3([
-  //       myCamera.position.cells[0],
-  //       myCamera.position.cells[1],
-  //       myCamera.position.cells[2]
-  //     ])
-  //     let cameraSpot = new Vector3([
-  //       myCamera.spot.cells[0],
-  //       myCamera.spot.cells[1],
-  //       myCamera.spot.cells[2]
-  //     ])
-  //     let cameraUpDirection = new Vector3([
-  //       myCamera.upDir.cells[0],
-  //       myCamera.upDir.cells[1],
-  //       myCamera.upDir.cells[2],
-  //     ])
-  //     let zaxis = (new Vector3([
-  //       cameraPosition.cells[0],
-  //       cameraPosition.cells[1],
-  //       cameraPosition.cells[2]
-  //     ])).subtract(cameraSpot).normalize()
-  //     let xaxis = (new Vector3([
-  //       zaxis.cells[0],
-  //       zaxis.cells[1],
-  //       zaxis.cells[2]
-  //     ])).cross(cameraUpDirection).normalize()
-  //     let yaxis = (new Vector3([
-  //       xaxis.cells[0],
-  //       xaxis.cells[1],
-  //       xaxis.cells[2]
-  //     ])).cross(zaxis)
-
-  //     let cameraTranslation = new Matrix4x4()
-  //     cameraTranslation.cells[12] = (-1) * cameraPosition.cells[0]
-  //     cameraTranslation.cells[13] = (-1) * cameraPosition.cells[1]
-  //     cameraTranslation.cells[14] = (-1) * cameraPosition.cells[2]
-
-  //     let transformationMatrix = new Matrix4x4()
-  //     transformationMatrix.cells[0] = xaxis.cells[0]
-  //     transformationMatrix.cells[4] = xaxis.cells[1]
-  //     transformationMatrix.cells[8] = xaxis.cells[2]
-
-  //     transformationMatrix.cells[1] = yaxis.cells[0]
-  //     transformationMatrix.cells[5] = yaxis.cells[1]
-  //     transformationMatrix.cells[9] = yaxis.cells[2]
-
-  //     transformationMatrix.cells[2] = zaxis.cells[0]
-  //     transformationMatrix.cells[6] = zaxis.cells[1]
-  //     transformationMatrix.cells[10] = zaxis.cells[2]
-
-  //     let myLookAtMatrix = cameraTranslation.multiplyM4(transformationMatrix)
-  //     myLookAtMatrix.cells[8] = (-1) * myLookAtMatrix.cells[8]
-  //     myLookAtMatrix.cells[14] = (-1) * Math.sqrt(myLookAtMatrix.cells[12] * myLookAtMatrix.cells[12] + myLookAtMatrix.cells[13] * myLookAtMatrix.cells[13])
-  //     myLookAtMatrix.cells[12] = -0
-  //     myLookAtMatrix.cells[13] = -0
-
-  //     myLookAtMatrix.invert()
-
-  //     myCamera.lookAt()
-  //     expect(myLookAtMatrix.cells[0]).toEqual(myCamera.lookAtMatrix.cells[0])
-  //     expect(myLookAtMatrix.cells[1]).toEqual(myCamera.lookAtMatrix.cells[1])
-  //     expect(myLookAtMatrix.cells[2]).toEqual(myCamera.lookAtMatrix.cells[2])
-  //     expect(myLookAtMatrix.cells[3]).toEqual(myCamera.lookAtMatrix.cells[3])
-  //     expect(myLookAtMatrix.cells[4]).toEqual(myCamera.lookAtMatrix.cells[4])
-  //     expect(myLookAtMatrix.cells[5]).toEqual(myCamera.lookAtMatrix.cells[5])
-  //     expect(myLookAtMatrix.cells[6]).toEqual(myCamera.lookAtMatrix.cells[6])
-  //     expect(myLookAtMatrix.cells[7]).toEqual(myCamera.lookAtMatrix.cells[7])
-  //     expect(myLookAtMatrix.cells[8]).toEqual(myCamera.lookAtMatrix.cells[8])
-  //     expect(myLookAtMatrix.cells[9]).toEqual(myCamera.lookAtMatrix.cells[9])
-  //     expect(myLookAtMatrix.cells[10]).toEqual(myCamera.lookAtMatrix.cells[10])
-  //     expect(myLookAtMatrix.cells[11]).toEqual(myCamera.lookAtMatrix.cells[11])
-  //     expect(myLookAtMatrix.cells[12]).toBeCloseTo(myCamera.lookAtMatrix.cells[12], 6)
-  //     expect(myLookAtMatrix.cells[13]).toBeCloseTo(myCamera.lookAtMatrix.cells[13], 6)
-  //     expect(myLookAtMatrix.cells[14]).toBeCloseTo(myCamera.lookAtMatrix.cells[14], 6)
-  //     expect(myLookAtMatrix.cells[15]).toEqual(myCamera.lookAtMatrix.cells[15])
-  //   })
-  // })
-
+  
   // it("should has an attribute which describes the camera sensor width in pixel", function() {
   //   expect(myCamera.sensorWidth).toEqual(100)
   // })

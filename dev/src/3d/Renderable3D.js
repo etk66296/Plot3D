@@ -8,7 +8,54 @@ class Renderable3D extends Renderable {
     this.modelScale = {x: 0.0, y: 0.0, z: 0.0 }
 
     this.worldTranslationMatrix = new Matrix4x4()
-    this.worldPosition = { x: 0.0, y: 0.0, z: 0.0 }
+    this.worldPosition = new Vector3([ 0.0, 0.0, 0.0 ])
+
+    this.glVertexBuffer = this.glCntxt.createBuffer()
+    this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)
+    this.vertices3fv = [
+      -10, -10, 0,
+      10, -10, 0,
+      0, 10, 0
+    ]
+    this.vertices3fv =  [
+      1.0,-1.0,-1.0,
+		  -1.0,-1.0, 1.0,
+		  -1.0, 1.0, 1.0,
+		  1.0, 1.0,-1.0,
+		  -1.0,-1.0,-1.0,
+		  -1.0, 1.0,-1.0,
+		  1.0,-1.0, 1.0,
+		  -1.0,-1.0,-1.0,
+		  1.0,-1.0,-1.0,
+		  1.0, 1.0,-1.0,
+		  1.0,-1.0,-1.0,
+		  -1.0,-1.0,-1.0,
+		  -1.0,-1.0,-1.0,
+		  -1.0, 1.0, 1.0,
+		  -1.0, 1.0,-1.0,
+		  1.0,-1.0, 1.0,
+		  -1.0,-1.0, 1.0,
+  		-1.0,-1.0,-1.0,
+		  -1.0, 1.0, 1.0,
+		  -1.0,-1.0, 1.0,
+		  1.0,-1.0, 1.0,
+		  1.0, 1.0, 1.0,
+		  1.0,-1.0,-1.0,
+		  1.0, 1.0,-1.0,
+		  1.0,-1.0,-1.0,
+		  1.0, 1.0, 1.0,
+		  1.0,-1.0, 1.0,
+		  1.0, 1.0, 1.0,
+		  1.0, 1.0,-1.0,
+		- 1.0, 1.0,-1.0,
+		  1.0, 1.0, 1.0,
+		  -1.0, 1.0,-1.0,
+		  -1.0, 1.0, 1.0,
+		  1.0, 1.0, 1.0,
+		  -1.0, 1.0, 1.0,
+		  1.0,-1.0, 1.0
+  ]
+    this.glCntxt.bufferData(glCntxt.ARRAY_BUFFER, new Float32Array(this.vertices3fv), glCntxt.STATIC_DRAW)
 
   }
 
@@ -61,18 +108,18 @@ class Renderable3D extends Renderable {
   }
 
   translateXIncremental(distance) {
-    this.worldPosition.x += distance
-    this.worldTranslationMatrix.cells[12] = this.worldPosition.x
+    this.worldPosition.cells[0] += distance
+    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
   }
 
   translateYIncremental(distance) {
-    this.worldPosition.y += distance
-    this.worldTranslationMatrix.cells[13] = this.worldPosition.y
+    this.worldPosition.cells[1] += distance
+    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
   }
 
   translateZIncremental(distance) {
-    this.worldPosition.z += distance
-    this.worldTranslationMatrix.cells[14] = this.worldPosition.z
+    this.worldPosition.cells[2] += distance
+    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
   }
   
   scaleX(factor) {
@@ -90,40 +137,51 @@ class Renderable3D extends Renderable {
     this.modelMatrix.cells[10] = this.modelScale.z
   }
 
+  setWorldPosition(x, y, z) {
+    this.worldPosition.cells[0] = x
+    this.worldPosition.cells[1] = y
+    this.worldPosition.cells[2] = z
+    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+  }
+
   update() {
-    
+    this.modelMatrix.reset()
+    this.rotateXIncremental(0.01)
+    this.rotateYIncremental(0.01)
+    this.rotateZIncremental(0.01)
   }
 
   draw() {
-    // this.glCntxt.useProgram(this.shader.program)
+    this.glCntxt.useProgram(this.shader.program)
 
-    // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
-    // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.worldTranslationMatrix.cells)
+    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
+    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.worldTranslationMatrix.cells)
     // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_WorldToViewMatrix'], false, this.camera.lookAtMatrix.cells)
     // // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.camera.orthographicProjectionMatrix.cells)
     // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.camera.perspectiveProjectionMatrix.cells)
     
-    // this.glCntxt.uniform4fv(this.shader.glVertexUniformLocation['u_color'], this.color.cells)
+    this.glCntxt.uniform4fv(this.shader.glVertexUniformLocation['u_color'], this.color.cells)
 
 
-    // // test -->
-    // this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
-    // this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)
-    // this.glCntxt.vertexAttribPointer(
-    //   this.shader.glAttrLocation['a_position'],
-    //   3,
-    //   this.glCntxt.FLOAT,
-    //   false,
-    //   0,
-    //   0
-    // )
+    // test -->
+    this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
+    this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)
+    this.glCntxt.vertexAttribPointer(
+      this.shader.glAttrLocation['a_position'],
+      3,
+      this.glCntxt.FLOAT,
+      false,
+      0,
+      0
+    )
 
-    // this.glCntxt.drawArrays(
-    //   this.glCntxt.TRIANGLES,
-    //   0,
-    //   36
-    // )
-    // this.modelMatrix.log()
+    this.glCntxt.drawArrays(
+      this.glCntxt.TRIANGLES,
+      0,
+      36
+    )
     // <-- test
 
   }
