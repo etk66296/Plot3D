@@ -59,8 +59,7 @@
         // glCntxt.cullFace(glCntxt.FRONT_AND_BACK)
         glCntxt.enable(glCntxt.DEPTH_TEST);
         myBackground = new Background(glCntxt)
-        myBackground.clearColor.cells = [ 0.5, 0.5, 0.5, 1.0 ]
-        myBackground.draw()
+        myBackground.clearColor.cells = [ 0.0, 0.0, 0.0, 1.0 ]
         let vertexShaderCode = `
           attribute vec4 a_position;
           // attribute vec3 a_normal;
@@ -103,8 +102,26 @@
         let myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
         let myShader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
 
+
+        // let myCube = new TriangleMesh3D(glCntxt, myShader)
+
         let camera = new Camera3D(glCntxt, myShader)
-        camera.setWorldPosition(0, 0, 10)
+        camera.setWorldPosition(10, 0, 0)
+        camera.lookAt()
+        let cycle = new Cycle()
+        cycle.fps = 30
+        cycle.stop()
+        cycle.play()
+        cycle.addRenderable(myBackground)
+        cycle.addRenderable(camera)
+        // cycle.addRenderable(myCube)
+
+        // cycle.addRenderable(center)
+        // myRenderables.forEach(renderable => {
+        //   cycle.addRenderable(renderable)
+        // camera.setWorldPosition(0, 0, -10)
+        // camera.rotateXIncremental(Math.PI / 2)
+        // camera.worldTranslationMatrix.multiplyM4(camera.modelMatrix)
         // camera.lookAt()
         let myRenderables = []
         let colors = [
@@ -120,11 +137,11 @@
           new Vector4([0.1, 1.0, 0.2, 1.0]),
         ]
         for(let i = -5; i < 5; i++) {
-          myRenderables.push(new Renderable3D(glCntxt, myShader, camera))
+          myRenderables.push(new TriangleMesh3D(glCntxt, myShader))
           myRenderables[myRenderables.length - 1].color = colors[5 + i]
-          myRenderables[myRenderables.length - 1].translateXIncremental(i * 4)
+          myRenderables[myRenderables.length - 1].translateXIncremental(i * 6)
           if (i === 0) {
-            myRenderables[myRenderables.length - 1].translateYIncremental(4)
+            myRenderables[myRenderables.length - 1].translateYIncremental(6)
           }
           // myRenderables[myRenderables.length - 1].translateYIncremental(i * 1)
           // myRenderables[myRenderables.length - 1].translateZIncremental(i * 2.5)
@@ -134,17 +151,17 @@
         }
 
 
-        let center = new Renderable3D(glCntxt, myShader, camera)
-        center.update = () => {}
-        center.scaleX(0.1)
-        center.scaleY(0.1)
-        center.scaleZ(0.1)
-        let cycle = new Cycle()
-        cycle.fps = 30
-        cycle.stop()
-        cycle.play()
-        cycle.addRenderable(myBackground)
-        cycle.addRenderable(camera)
+        let center = new TriangleMesh3D(glCntxt, myShader, camera)
+        // center.update = () => {}
+        // center.scaleX(0.1)
+        // center.scaleY(0.1)
+        // center.scaleZ(0.1)
+        // let cycle = new Cycle()
+        // cycle.fps = 30
+        // cycle.stop()
+        // cycle.play()
+        // cycle.addRenderable(myBackground)
+        // cycle.addRenderable(camera)
 
         cycle.addRenderable(center)
         myRenderables.forEach(renderable => {
@@ -161,7 +178,7 @@
       <canvas id="renderCanvas" width="100" height="100"></canvas>
     </div>
     <div style="display: inline-block;" id="canvasContainer2">
-      <canvas id="renderCanvas2" width="500" height="500"></canvas>
+      <canvas id="renderCanvas2" width="100" height="100"></canvas>
     </div>
   </div>
 </body>

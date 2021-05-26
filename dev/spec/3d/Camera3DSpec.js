@@ -177,28 +177,6 @@ describe("Camera", function() {
   })
 
   describe("lookAt", function() {
-    it(`
-      should reset the lookAtMatrix to identity matrix
-      when the delta between camera worldPosition and the sport
-      worldPosition is less than the defined minimum range
-    `
-    , function() {
-        myCamera.worldPosition.cells = [ 0.0000000001, 0.0000000001, 0 ]
-        myCamera.spot.cells = [ 0.0, 0.0, 0.0 ]
-        myCamera.lookAtMatrix.cells = [
-          1, 2, 3, 4,
-          5, 6, 7, 8,
-          9, 8, 7, 6,
-          5, 4, 3, 2
-        ]
-        myCamera.lookAt()
-        expect(myCamera.lookAtMatrix.cells).toEqual([
-          1, 0, 0, 0,
-          0, 1, 0, 0,
-          0, 0, 1, 0,
-          0, 0, 0, 1
-        ])
-    })
 
     it("should calculate the correct look at matrix", function() {
     // [      1       0       0      0 ]   [ xaxis.x  yaxis.x  zaxis.x 0 ]
@@ -238,8 +216,7 @@ describe("Camera", function() {
 
       let cameraTranslation = new Matrix4x4()
       cameraTranslation.cells[12] = (-1) * cameraPosition.cells[0]
-      cameraTranslation.cells[13] = (-1) * cameraPosition.cells[1]
-      cameraTranslation.cells[14] = (-1) * cameraPosition.cells[2]
+
 
       let transformationMatrix = new Matrix4x4()
       transformationMatrix.cells[0] = (-1) * xaxis.cells[0]
@@ -277,8 +254,8 @@ describe("Camera", function() {
       expect(myLookAtMatrix.cells[11]).toEqual(myCamera.lookAtMatrix.cells[11])
       expect(myLookAtMatrix.cells[12]).toBeCloseTo(myCamera.lookAtMatrix.cells[12], 6)
       expect(myLookAtMatrix.cells[13]).toBeCloseTo(myCamera.lookAtMatrix.cells[13], 6)
-      expect(myLookAtMatrix.cells[14]).toBeCloseTo(myCamera.lookAtMatrix.cells[14], 6)
-      expect(myLookAtMatrix.cells[15]).toEqual(myCamera.lookAtMatrix.cells[15])
+      expect(myLookAtMatrix.cells[14]).toBeCloseTo(0, 6)
+      expect(myLookAtMatrix.cells[15]).toEqual(1)
     })
   })
 

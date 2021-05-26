@@ -22,7 +22,7 @@ describe("Renderable3D", function() {
       uniform vec4 u_color;
 
 
-      uniform mat4 u_modelMatrix;
+      uniform mat4 u_modelTransformationMatrix;
       uniform mat4 u_modelToWorldMatrix;
       uniform mat4 u_WorldToViewMatrix;
       uniform mat4 u_ViewToProjectionMatrix;
@@ -30,7 +30,7 @@ describe("Renderable3D", function() {
       varying vec4 v_color;
 
       void main() {
-        mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
+        mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelTransformationMatrix;
         gl_Position = modelToProjection * a_position;
         v_color = u_color;
         v_normal = (modelToProjection * vec4(a_normal.xyz, 0.0)).xyz;
@@ -67,9 +67,9 @@ describe("Renderable3D", function() {
     expect(myRenderable3D.modelSpaceRotationInRad).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
   })
 
-  it("should have a 4x4 model 'modelMatrix', which is initialy the identity matrix", function() {
-    expect(myRenderable3D.modelMatrix.constructor.name).toEqual('Matrix4x4')
-    expect(myRenderable3D.modelMatrix.cells).toEqual([
+  it("should have a 4x4 model 'modelTransformationMatrix', which is initialy the identity matrix", function() {
+    expect(myRenderable3D.modelTransformationMatrix.constructor.name).toEqual('Matrix4x4')
+    expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
       1, 0, 0, 0,
       0, 1, 0, 0,
       0, 0, 1, 0,
@@ -90,14 +90,14 @@ describe("Renderable3D", function() {
       expect(Math.cos).toHaveBeenCalledTimes(2)
       expect(Math.sin).toHaveBeenCalledTimes(2)
     })
-    it("should multipy the x rotation to the modelMatrix", function() {
-      spyOn(myRenderable3D.modelMatrix, 'multiplyM4')
+    it("should multipy the x rotation to the modelTransformationMatrix", function() {
+      spyOn(myRenderable3D.modelTransformationMatrix, 'multiplyM4')
       myRenderable3D.rotateXIncremental(0.1)
-      expect(myRenderable3D.modelMatrix.multiplyM4).toHaveBeenCalled()
+      expect(myRenderable3D.modelTransformationMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotateXIncremental(0.1)
-      expect(myRenderable3D.modelMatrix.cells).toEqual([
+      expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 0.9950041652780258, -0.09983341664682815, 0,
         0, 0.09983341664682815, 0.9950041652780258, 0,
@@ -118,14 +118,14 @@ describe("Renderable3D", function() {
       expect(Math.cos).toHaveBeenCalledTimes(2)
       expect(Math.sin).toHaveBeenCalledTimes(2)
     })
-    it("should multipy the y rotation to the modelMatrix", function() {
-      spyOn(myRenderable3D.modelMatrix, 'multiplyM4')
+    it("should multipy the y rotation to the modelTransformationMatrix", function() {
+      spyOn(myRenderable3D.modelTransformationMatrix, 'multiplyM4')
       myRenderable3D.rotateYIncremental(0.1)
-      expect(myRenderable3D.modelMatrix.multiplyM4).toHaveBeenCalled()
+      expect(myRenderable3D.modelTransformationMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotateYIncremental(0.1)
-      expect(myRenderable3D.modelMatrix.cells).toEqual([
+      expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
         0.9950041652780258, 0.0, 0.09983341664682815, 0.0,
         0.0, 1.0, 0.0, 0.0,
         -0.09983341664682815, 0.0, 0.9950041652780258, 0.0,
@@ -146,14 +146,14 @@ describe("Renderable3D", function() {
       expect(Math.cos).toHaveBeenCalledTimes(2)
       expect(Math.sin).toHaveBeenCalledTimes(2)
     })
-    it("should multipy the z rotation to the modelMatrix", function() {
-      spyOn(myRenderable3D.modelMatrix, 'multiplyM4')
+    it("should multipy the z rotation to the modelTransformationMatrix", function() {
+      spyOn(myRenderable3D.modelTransformationMatrix, 'multiplyM4')
       myRenderable3D.rotateZIncremental(0.1)
-      expect(myRenderable3D.modelMatrix.multiplyM4).toHaveBeenCalled()
+      expect(myRenderable3D.modelTransformationMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotateZIncremental(0.1)
-      expect(myRenderable3D.modelMatrix.cells).toEqual([
+      expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
         0.9950041652780258, -0.09983341664682815, 0.0, 0.0,
         0.09983341664682815, 0.9950041652780258, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
@@ -259,7 +259,7 @@ describe("Renderable3D", function() {
 
     it("should maipulate the model scale matrix in the x component",function() {
       myRenderable3D.scaleX(1.5)
-      expect(myRenderable3D.modelMatrix.cells).toEqual([
+      expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
         1.5, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
@@ -281,7 +281,7 @@ describe("Renderable3D", function() {
 
     it("should maipulate the model scale matrix in the y component",function() {
       myRenderable3D.scaleY(9)
-      expect(myRenderable3D.modelMatrix.cells).toEqual([
+      expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 9, 0, 0,
         0, 0, 1, 0,
@@ -303,7 +303,7 @@ describe("Renderable3D", function() {
 
     it("should maipulate the model scale matrix in the z component",function() {
       myRenderable3D.scaleZ(839)
-      expect(myRenderable3D.modelMatrix.cells).toEqual([
+      expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 839, 0,
@@ -334,7 +334,7 @@ describe("Renderable3D", function() {
     //   expect(myRenderable3D.glCntxt.useProgram).toHaveBeenCalled()
     // })
 
-    // it("should call uniformMatrix4fv to set the uniform u_modelMatrix", function() {
+    // it("should call uniformMatrix4fv to set the uniform u_modelTransformationMatrix", function() {
     //   spyOn(myRenderable3D.glCntxt, 'uniformMatrix4fv').and.callThrough()
     //   myRenderable3D.draw()
     //   expect(myRenderable3D.glCntxt.uniformMatrix4fv).toHaveBeenCalledTimes(4)

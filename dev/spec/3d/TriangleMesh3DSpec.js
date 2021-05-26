@@ -20,16 +20,20 @@ describe("TriangleMesh3D", function() {
       varying vec3 v_normal;
       // [View To Projection]x[World To View]x[Model to World]
       uniform vec4 u_color;
-      
-      uniform mat4 u_modelToWorld;
-      uniform mat4 u_WorldToView;
-      uniform mat4 u_ViewToProjection;
+
+
+      uniform mat4 u_modelMatrix;
+      uniform mat4 u_modelToWorldMatrix;
+      uniform mat4 u_WorldToViewMatrix;
+      uniform mat4 u_ViewToProjectionMatrix;
 
       varying vec4 v_color;
+
       void main() {
-        gl_Position = u_ViewToProjection * u_WorldToView * u_modelToWorld * a_position;
+        mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
+        gl_Position = modelToProjection * a_position;
         v_color = u_color;
-        v_normal = (u_WorldToView * u_modelToWorld * vec4(a_normal.xyz, 0.0)).xyz;
+        v_normal = (modelToProjection * vec4(a_normal.xyz, 0.0)).xyz;
       }
     `
     let fragmentShaderCode = `
@@ -48,16 +52,33 @@ describe("TriangleMesh3D", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    matrixFactory = new MatrixFactory()
-    myTriangleMesh = new TriangleMesh3D(glCntxt, shader, matrixFactory)
+    myTriangleMesh = new TriangleMesh3D(glCntxt, shader)
   })
   
   it("has the parent class Renderable", function() {
     expect(myTriangleMesh.__proto__.__proto__.constructor.name).toEqual('Renderable3D')
   })
 
+  it("should have a web gl buffer object", function() {
+    expect(myTriangleMesh.glVertexBuffer.constructor.name).toEqual('WebGLBuffer')
+  })
+
+  it("should have an array for the vertices position data", function() {
+    expect(myTriangleMesh.vertices.constructor.name).toEqual('Array')
+  })
+
   it("should have a method update", function() {
     expect(typeof myTriangleMesh.update).toEqual('function')
+  })
+
+  it("should have a 4x4 model 'modelMatrix', which is initialy the identity matrix", function() {
+    expect(myTriangleMesh.modelMatrix.constructor.name).toEqual('Matrix4x4')
+    expect(myTriangleMesh.modelMatrix.cells).toEqual([
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    ])
   })
 
   describe("update", function() {
@@ -66,6 +87,10 @@ describe("TriangleMesh3D", function() {
 
   it("should have a method draw", function() {
     expect(typeof myTriangleMesh.draw).toEqual('function')
+  })
+
+  describe("draw", function() {
+    
   })
 
 })

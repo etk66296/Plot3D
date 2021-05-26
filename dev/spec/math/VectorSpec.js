@@ -91,6 +91,56 @@ describe("Vector3", function() {
   })
 })
 
+describe("Vector3Math", function() {
+  var myVector3Math
+  beforeEach(function() {
+    myVector3Math = new Vector3Math()
+  })
+
+  it("should have a method for calculating the cross product of two vector3 instances", function() {
+    expect(typeof myVector3Math.cross).toEqual('function')
+  })
+
+  describe("cross", function() {
+    it("should take two vector3 instgance as parameters and return a new Vector3 instance with the correct caluclated vector ceslls", function() {
+      let myVectorA = new Vector3([ 1, 0, 0 ])
+      let myVectorB = new Vector3([ 0, 1, 0 ])
+      let result = myVector3Math.cross(myVectorA, myVectorB)
+      expect(result.cells).toEqual([ 0, 0, 1 ])
+      myVectorA = new Vector3([ 0, 1, 0 ])
+      myVectorB = new Vector3([ 0, 0, 1 ])
+      result = myVector3Math.cross(myVectorA, myVectorB)
+      expect(result.cells).toEqual([ 1, 0, 0 ])
+    })
+  })
+
+  it("should have a method for calculating the vector between two vector3 instances", function() {
+    expect(typeof myVector3Math.subtract).toEqual('function')
+  })
+
+  describe("subtract", function() {
+    it("should calculate the correct result", function() {
+      let myVectorA = new Vector3([ 1, 1, 1 ])
+      let myVectorB = new Vector3([ -1, -1, -1 ])
+      let result = myVector3Math.subtract(myVectorA, myVectorB)
+      expect(result.cells).toEqual([ 2, 2, 2 ])
+    })
+  })
+
+  it("should have a method for normalize a vector and return the result in a new Vector3 instance", function() {
+    expect(typeof myVector3Math.normalize).toEqual('function')
+  })
+
+  describe("normalize", function() {
+    it("should caluclate the normalized vector and return a new Vector3 instance", function() {
+      let myVectorA = new Vector3([ Math.sqrt(2), Math.sqrt(2), 0 ])
+      let result = myVector3Math.normalize(myVectorA)
+      expect(result.cells).toEqual([ 0.5 * Math.sqrt(2), 0.5 * Math.sqrt(2), 0 ])
+    })
+  })
+
+})
+
 describe("Vector4", function() {
   var myVector4
 
