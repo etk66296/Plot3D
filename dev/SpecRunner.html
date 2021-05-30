@@ -30,6 +30,7 @@
   <script src="src/3d/Renderable3D.js"></script>
   <script src="src/3d/TriangleMesh3D.js"></script>
   <script src="src/3d/Camera3D.js"></script>
+  <script src="src/3d/MeshFactory3D.js"></script>
 
   <!-- include spec files here... -->
   <script src="spec/Plot3DObjectSpec.js"></script>
@@ -49,17 +50,12 @@
   <script src="spec/3d/Renderable3DSpec.js"></script>
   <script src="spec/3d/TriangleMesh3DSpec.js"></script>
   <script src="spec/3d/Camera3DSpec.js"></script>
+  <script src="spec/3d/MeshFactory3DSpec.js"></script>
 
 
   <script>
     window.addEventListener("load",
       () => {
-        let canvas = document.getElementById("renderCanvas2")
-        let glCntxt = canvas.getContext("webgl2")
-        // glCntxt.cullFace(glCntxt.FRONT_AND_BACK)
-        glCntxt.enable(glCntxt.DEPTH_TEST);
-        myBackground = new Background(glCntxt)
-        myBackground.clearColor.cells = [ 0.0, 0.0, 0.0, 1.0 ]
         let vertexShaderCode = `
           attribute vec4 a_position;
           // attribute vec3 a_normal;
@@ -99,74 +95,6 @@
             // gl_FragColor.rgb *= light;
           }
         `
-        let myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
-        let myShader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-
-
-        // let myCube = new TriangleMesh3D(glCntxt, myShader)
-
-        let camera = new Camera3D(glCntxt, myShader)
-        camera.setWorldPosition(10, 0, 0)
-        camera.lookAt()
-        let cycle = new Cycle()
-        cycle.fps = 30
-        cycle.stop()
-        cycle.play()
-        cycle.addRenderable(myBackground)
-        cycle.addRenderable(camera)
-        // cycle.addRenderable(myCube)
-
-        // cycle.addRenderable(center)
-        // myRenderables.forEach(renderable => {
-        //   cycle.addRenderable(renderable)
-        // camera.setWorldPosition(0, 0, -10)
-        // camera.rotateXIncremental(Math.PI / 2)
-        // camera.worldTranslationMatrix.multiplyM4(camera.modelMatrix)
-        // camera.lookAt()
-        let myRenderables = []
-        let colors = [
-          new Vector4([0.0, 0.5, 0.5, 1.0]),
-          new Vector4([0.8, 0.5, 0.5, 1.0]),
-          new Vector4([1.0, 0.5, 0.5, 1.0]),
-          new Vector4([0.0, 1.0, 0.5, 1.0]),
-          new Vector4([0.0, 0.5, 1.0, 1.0]),
-          new Vector4([0.7, 0.2, 0.5, 1.0]),
-          new Vector4([0.4, 0.2, 0.7, 1.0]),
-          new Vector4([0.5, 0.1, 0.9, 1.0]),
-          new Vector4([0.1, 0.7, 0.9, 1.0]),
-          new Vector4([0.1, 1.0, 0.2, 1.0]),
-        ]
-        for(let i = -5; i < 5; i++) {
-          myRenderables.push(new TriangleMesh3D(glCntxt, myShader))
-          myRenderables[myRenderables.length - 1].color = colors[5 + i]
-          myRenderables[myRenderables.length - 1].translateXIncremental(i * 6)
-          if (i === 0) {
-            myRenderables[myRenderables.length - 1].translateYIncremental(6)
-          }
-          // myRenderables[myRenderables.length - 1].translateYIncremental(i * 1)
-          // myRenderables[myRenderables.length - 1].translateZIncremental(i * 2.5)
-          // myRenderables[myRenderables.length - 1].rotateXIncremental(i * 0.1)
-          // myRenderables[myRenderables.length - 1].rotateYIncremental(i * 0.1)
-          // myRenderables[myRenderables.length - 1].rotateZIncremental(i * 0.1)
-        }
-
-
-        let center = new TriangleMesh3D(glCntxt, myShader, camera)
-        // center.update = () => {}
-        // center.scaleX(0.1)
-        // center.scaleY(0.1)
-        // center.scaleZ(0.1)
-        // let cycle = new Cycle()
-        // cycle.fps = 30
-        // cycle.stop()
-        // cycle.play()
-        // cycle.addRenderable(myBackground)
-        // cycle.addRenderable(camera)
-
-        cycle.addRenderable(center)
-        myRenderables.forEach(renderable => {
-          cycle.addRenderable(renderable)
-        })
       }
     )
   </script>

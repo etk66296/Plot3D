@@ -2,6 +2,7 @@ describe("TriangleMesh3D", function() {
   var canvas
   var glCntxt
   var myPlot3DShaderBuilder
+  var math
   
   var myTriangleMesh
   var shader
@@ -9,6 +10,10 @@ describe("TriangleMesh3D", function() {
   beforeAll(function() {
     canvas = document.getElementById("renderCanvas")
     glCntxt = canvas.getContext("webgl2")
+    math = {
+      vector3: new Vector3Math(),
+      matrix4x4: new Matrix4x4Math()
+    }
     myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
   })
 
@@ -52,7 +57,7 @@ describe("TriangleMesh3D", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    myTriangleMesh = new TriangleMesh3D(glCntxt, shader)
+    myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
   })
   
   it("has the parent class Renderable", function() {

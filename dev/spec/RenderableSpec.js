@@ -57,6 +57,10 @@ describe("Renderable", function() {
     expect(myRenderable.glCntxt.constructor.name).toEqual('WebGL2RenderingContext')
   })
 
+  it("should have an object math, which is injected by the constructor and holds methods for calculation stuff", function() {
+    expect(myRenderable.math).toEqual(null)
+  })
+
   it("should take an instance of a compiled and linked shader", function() {
     expect(myRenderable.shader.constructor.name).toEqual('Plot3DShader')
   })

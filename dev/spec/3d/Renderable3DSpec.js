@@ -2,6 +2,7 @@ describe("Renderable3D", function() {
   var canvas
   var glCntxt
   var myPlot3DShaderBuilder
+  var math
   
   var shader
   var myRenderable3D
@@ -9,6 +10,10 @@ describe("Renderable3D", function() {
   beforeAll(function() {
     canvas = document.getElementById("renderCanvas")
     glCntxt = canvas.getContext("webgl2")
+    math = {
+      vector3: new Vector3Math(),
+      matrix4x4: new Matrix4x4Math()
+    }
     myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
   })
 
@@ -52,11 +57,16 @@ describe("Renderable3D", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    myRenderable3D = new Renderable3D(glCntxt, shader)
+    myRenderable3D = new Renderable3D(glCntxt, shader, math)
   })
   
   it("should have the parent class Renderable", function() {
     expect(myRenderable3D.__proto__.__proto__.constructor.name).toEqual('Renderable')
+  })
+
+  it("should have the ability to call necessary calculation methods", function() {
+    expect(typeof myRenderable3D.math.vector3).toEqual('object')
+    expect(typeof myRenderable3D.math.matrix4x4).toEqual('object')
   })
 
   it("should have a a vector with four elements, which represents the current render color", function() {

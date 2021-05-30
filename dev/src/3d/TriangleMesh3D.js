@@ -1,6 +1,6 @@
 class TriangleMesh3D extends Renderable3D {
-  constructor(glCntxt, shader) {
-    super(glCntxt, shader)
+  constructor(glCntxt, shader, math) {
+    super(glCntxt, shader, math)
 
     this.modelMatrix = new Matrix4x4()
 

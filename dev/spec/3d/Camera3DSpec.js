@@ -2,12 +2,16 @@ describe("Camera", function() {
   var canvas
   var glCntxt
   var myPlot3DShaderBuilder
-
+  var math
   var myCamera
   
   beforeAll(function() {
     canvas = document.getElementById("renderCanvas")
     glCntxt = canvas.getContext("webgl2")
+    math = {
+      vector3: new Vector3Math(),
+      matrix4x4: new Matrix4x4Math()
+    }
     myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
   })
 
@@ -51,8 +55,8 @@ describe("Camera", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    myRenderable3D = new Renderable3D(glCntxt, shader)
-    myCamera = new Camera3D(glCntxt, shader)
+    myRenderable3D = new Renderable3D(glCntxt, shader, math)
+    myCamera = new Camera3D(glCntxt, shader, math)
   })
 
   it("should have the parent class Renderable3D", function() {
@@ -166,10 +170,6 @@ describe("Camera", function() {
 
   it("should have a look at matrix", function() {
     expect(myCamera.lookAtMatrix.constructor.name).toEqual('Matrix4x4')
-  })
-
-  it("should has a minimum range of allowed values", function() {
-    expect(myCamera.EPSILON).toEqual(0.000001)
   })
 
   it("should have a method lookAt", function() {

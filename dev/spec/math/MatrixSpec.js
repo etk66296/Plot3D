@@ -106,21 +106,21 @@ describe("Matrix4x4", function() {
       var myMultiplierMatrix4x4 = new Matrix4x4([
         1, 2, 3, 4,
         5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
+        9, 8, 7, 6,
+        5, 4, 3, 2
       ])
       myMatrix4x4.cells = [
-        1, 2, 3, 4,
-        5, 6, 7, 8,
-        9, 10, 11, 12,
-        13, 14, 15, 16
+        2, 3, 4, 5,
+        6, 7, 8, 9,
+        8, 7, 6, 5,
+        4, 3, 2, 1
       ]
       myMatrix4x4.multiplyM4(myMultiplierMatrix4x4)
       expect(myMatrix4x4.cells).toEqual([
-        90,  100, 110, 120,
-        202, 228,	254, 280,
-        314, 356,	398, 440,
-        426, 484,	542, 600
+        54 , 50 , 46 , 42 ,
+        134, 130, 126, 122,
+        146, 150, 154, 158,
+        66 , 70 , 74 , 78
       ])
     })
   })
@@ -173,6 +173,98 @@ describe("Matrix4x4", function() {
       spyOn(console, 'log')
       myMatrix4x4.log()
       expect(console.log).toHaveBeenCalledTimes(myMatrix4x4.cells.length / 4 + 2)
+    })
+  })
+})
+
+describe("Matrix4x4Math", function() {
+  var myMatrix4x4Math
+
+  beforeEach(function() {
+    myMatrix4x4Math = new Matrix4x4Math()
+  })
+
+  it("Should have a method for calulation the product of two 4x4 matrices", function() {
+    expect(typeof myMatrix4x4Math.multiplyTwoM4x4).toBe('function')
+  })
+
+  describe("multiplyTwoM4x4", function() {
+    
+    var mA
+    var mB
+
+    beforeEach(function() {
+      mA = new Matrix4x4([
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 8, 7, 6,
+        5, 4, 3, 2
+      ])
+      mB = new Matrix4x4([
+        2, 3, 4, 5,
+        6, 7, 8, 9,
+        8, 7, 6, 5,
+        4, 3, 2, 1
+      ])
+    })
+    
+    it("should return a new Matrix4x4 object instance", function() {
+      let result = myMatrix4x4Math.multiplyTwoM4x4(mA, mB)
+      expect(result.constructor.name).toEqual('Matrix4x4')
+    })
+
+    it("should calculate the correct result", function() {
+      let result = myMatrix4x4Math.multiplyTwoM4x4(mA, mB)
+      expect(result.cells).toEqual([
+        54 , 50 , 46 , 42 ,
+        134, 130, 126, 122,
+        146, 150, 154, 158,
+        66 , 70 , 74 , 78
+      ])
+    })
+
+  })
+
+  it("should have a method for building the transpose matrix", function() {
+    expect(typeof myMatrix4x4Math.transpose).toBe('function')
+  })
+
+  describe("transpose", function() {
+    it("should build the correct transposed matrix", function() {
+      let m = new Matrix4x4([
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 8, 7, 6,
+        5, 4, 3, 2
+      ])
+      expect(myMatrix4x4Math.transpose(m).cells).toEqual([
+        1, 5, 9, 5,
+        2, 6, 8, 4,
+        3, 7, 7, 3,
+        4, 8, 6, 2
+      ])
+    })
+  })
+
+  it("should have a method for inverting a matrix", function() {
+    expect(typeof myMatrix4x4Math.invert).toBe('function')
+  })
+
+  describe("invert", function() {
+    it("should calculate the correct inverted matrix", function() {
+      let m = new Matrix4x4([
+        1,  1,  1, -1,
+        1,  1, -1,  1,
+        1, -1,  1,  1,
+       -1,  1,  1,  1
+     ])
+     
+     expect(myMatrix4x4Math.invert(m).cells).toEqual([
+        0.25,  0.25,  0.25, -0.25,
+        0.25,  0.25, -0.25,  0.25,
+        0.25, -0.25,  0.25,  0.25,
+       -0.25,  0.25,  0.25,  0.25
+     ])
     })
   })
 })

@@ -1,5 +1,5 @@
 class Renderable3D extends Renderable {
-  constructor(glCntxt, shader) {
+  constructor(glCntxt, shader, math) {
     super(glCntxt, shader)
     this.color = new Vector4([ 1.0, 0.0, 1.0, 1.0 ])
     
@@ -10,7 +10,7 @@ class Renderable3D extends Renderable {
     this.worldTranslationMatrix = new Matrix4x4()
     this.worldPosition = new Vector3([ 0.0, 0.0, 0.0 ])
 
- 
+    this.math = math
   }
 
   rotateXIncremental(angleInRadian) {

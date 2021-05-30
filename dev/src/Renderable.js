@@ -3,6 +3,7 @@ class Renderable extends Plot3DObject {
     super()
     this.glCntxt = glCntxt
     this.shader = shader
+    this.math = null
   }
 
   update() {
