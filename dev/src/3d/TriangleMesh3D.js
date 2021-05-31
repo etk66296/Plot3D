@@ -1,49 +1,16 @@
 class TriangleMesh3D extends Renderable3D {
-  constructor(glCntxt, shader, math) {
+  constructor(glCntxt, shader, math, vertices = [
+      1.0,-1.0,-1.0,
+      -1.0,-1.0, 1.0,
+      -1.0, 1.0, 1.0
+    ]) {
     super(glCntxt, shader, math)
 
     this.modelMatrix = new Matrix4x4()
 
     this.glVertexBuffer = this.glCntxt.createBuffer()
     this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)
-    this.vertices =  [
-       1.0,-1.0,-1.0,
-		  -1.0,-1.0, 1.0,
-		  -1.0, 1.0, 1.0,
-		   1.0, 1.0,-1.0,
-		  -1.0,-1.0,-1.0,
-		  -1.0, 1.0,-1.0,
-		   1.0,-1.0, 1.0,
-		  -1.0,-1.0,-1.0,
-		   1.0,-1.0,-1.0,
-		   1.0, 1.0,-1.0,
-		   1.0,-1.0,-1.0,
-		  -1.0,-1.0,-1.0,
-		  -1.0,-1.0,-1.0,
-		  -1.0, 1.0, 1.0,
-		  -1.0, 1.0,-1.0,
-		   1.0,-1.0, 1.0,
-		  -1.0,-1.0, 1.0,
-  		-1.0,-1.0,-1.0,
-		  -1.0, 1.0, 1.0,
-		  -1.0,-1.0, 1.0,
-		   1.0,-1.0, 1.0,
-		   1.0, 1.0, 1.0,
-		   1.0,-1.0,-1.0,
-		   1.0, 1.0,-1.0,
-		   1.0,-1.0,-1.0,
-		   1.0, 1.0, 1.0,
-		   1.0,-1.0, 1.0,
-		   1.0, 1.0, 1.0,
-		   1.0, 1.0,-1.0,
-		  -1.0, 1.0,-1.0,
-		   1.0, 1.0, 1.0,
-		  -1.0, 1.0,-1.0,
-		  -1.0, 1.0, 1.0,
-		   1.0, 1.0, 1.0,
-		  -1.0, 1.0, 1.0,
-		   1.0,-1.0, 1.0
-  ]
+    this.vertices =  vertices
     this.glCntxt.bufferData(glCntxt.ARRAY_BUFFER, new Float32Array(this.vertices), glCntxt.STATIC_DRAW)
 
   }
