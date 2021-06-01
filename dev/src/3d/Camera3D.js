@@ -38,51 +38,38 @@ class Camera3D extends Renderable3D {
     this.upDir = new Vector3([ 0, 1, 0 ])
     this.lookAtMatrix = new Matrix4x4()
 
-    this.worldPosition.cells[2] = 10
+    this.translateZIncremental(10)
 
     this.lookAt()
   }
 
   lookAt() {
-    let zAxis = new Vector3([
-      this.worldPosition.cells[0],
-      this.worldPosition.cells[1],
-      this.worldPosition.cells[2]
-    ])
-    let xAxis = new Vector3([
-      this.upDir.cells[0],
-      this.upDir.cells[1],
-      this.upDir.cells[2]
-    ])
-    let spot = new Vector3([
-      this.spot.cells[0],
-      this.spot.cells[1],
-      this.spot.cells[2]
-    ])
-    zAxis.subtract(spot).normalize()
-    xAxis.cross(zAxis).normalize
-    let yAxis = new Vector3([
-      zAxis.cells[0],
-      zAxis.cells[1],
-      zAxis.cells[2]
-    ])
-    yAxis.cross(xAxis).normalize()
+    let zAxis = this.math.vector3.subtract(this.worldPosition, this.spot)
+    zAxis.normalize()
+    let xAxis = this.math.vector3.cross(this.upDir, zAxis)
+    xAxis.normalize()
+    let yAxis = this.math.vector3.cross(zAxis, xAxis)
+    yAxis.normalize()
+
     this.lookAtMatrix.cells[0] = xAxis.cells[0]
     this.lookAtMatrix.cells[1] = xAxis.cells[1]
     this.lookAtMatrix.cells[2] = xAxis.cells[2]
-    this.lookAtMatrix.cells[3] = 0
+    this.lookAtMatrix.cells[3] = 0.0
+
     this.lookAtMatrix.cells[4] = yAxis.cells[0]
     this.lookAtMatrix.cells[5] = yAxis.cells[1]
     this.lookAtMatrix.cells[6] = yAxis.cells[2]
-    this.lookAtMatrix.cells[7] = 0
+    this.lookAtMatrix.cells[7] = 0.0
+
     this.lookAtMatrix.cells[8] = zAxis.cells[0]
     this.lookAtMatrix.cells[9] = zAxis.cells[1]
     this.lookAtMatrix.cells[10] = zAxis.cells[2]
-    this.lookAtMatrix.cells[11] = 0
+    this.lookAtMatrix.cells[11] = 0.0
+
     this.lookAtMatrix.cells[12] = this.worldPosition.cells[0]
-    this.lookAtMatrix.cells[13] = this.worldPosition.cells[0]
-    this.lookAtMatrix.cells[14] = this.worldPosition.cells[0]
-    this.lookAtMatrix.cells[15] = 0
+    this.lookAtMatrix.cells[13] = this.worldPosition.cells[1]
+    this.lookAtMatrix.cells[14] = this.worldPosition.cells[2]
+    this.lookAtMatrix.cells[15] = 1.0
 
   }
 

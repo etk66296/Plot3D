@@ -1,7 +1,7 @@
 class Renderable3D extends Renderable {
   constructor(glCntxt, shader, math) {
     super(glCntxt, shader)
-    this.color = new Vector4([ 1.0, 0.0, 1.0, 1.0 ])
+    this.color = new Vector4([ 0.3, 0.0, 1.0, 1.0 ])
     
     this.modelTransformationMatrix = new Matrix4x4()
     this.modelSpaceRotationInRad = { x: 0.0, y: 0.0, z: 0.0 }

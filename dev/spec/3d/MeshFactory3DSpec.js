@@ -2,21 +2,12 @@ describe("Plot3DFactory", function() {
   var canvas
   var glCntxt
   var myPlot3DShaderBuilder
-  var math
-  var myCamera
   var myMeshFactory3D
   
   beforeAll(function() {
     canvas = document.getElementById("renderCanvas")
     glCntxt = canvas.getContext("webgl2")
-    math = {
-      vector3: new Vector3Math(),
-      matrix4x4: new Matrix4x4Math()
-    }
     myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
-  })
-
-  beforeEach(function() {
     let vertexShaderCode = `
       attribute vec4 a_position;
       attribute vec3 a_normal;
@@ -56,9 +47,10 @@ describe("Plot3DFactory", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    myRenderable3D = new Renderable3D(glCntxt, shader, math)
-    myCamera = new Camera3D(glCntxt, shader, math)
-    myMeshFactory3D = new MeshFactory3D()
+  })
+
+  beforeEach(function() {
+    myMeshFactory3D = new MeshFactory3D(glCntxt, shader)
   })
 
   it("has the parent class Plot3DObject", function() {
@@ -86,12 +78,12 @@ describe("Plot3DFactory", function() {
   describe("createAStandardCamera3D", function() {
     it("should take two arguments a compilsed shader an a web gl context", function() {
       spyOn(myMeshFactory3D, "createAStandardCamera3D")
-      myMeshFactory3D.createAStandardCamera3D(glCntxt, shader)
-      expect(myMeshFactory3D.createAStandardCamera3D).toHaveBeenCalledWith(glCntxt, shader)
+      myMeshFactory3D.createAStandardCamera3D()
+      expect(myMeshFactory3D.createAStandardCamera3D).toHaveBeenCalled()
     })
 
     it("returns a instantiated Camera3D object", function() {
-      let tmpCamera = myMeshFactory3D.createAStandardCamera3D(glCntxt, shader)
+      let tmpCamera = myMeshFactory3D.createAStandardCamera3D()
       expect(tmpCamera.constructor.name).toEqual('Camera3D')
     })
   })
@@ -102,11 +94,11 @@ describe("Plot3DFactory", function() {
 
   describe("createACube3D", function() {
     it("should create an instance of TriangleMesh3D", function() {
-      expect(myMeshFactory3D.createACube3D(glCntxt, shader).constructor.name).toEqual('TriangleMesh3D')
+      expect(myMeshFactory3D.createACube3D().constructor.name).toEqual('TriangleMesh3D')
     })
 
     it("should have vertices for building a cube out of triangles", function() {
-      let cube = myMeshFactory3D.createACube3D(glCntxt, shader)
+      let cube = myMeshFactory3D.createACube3D()
       expect(cube.vertices).toEqual([
         1.0,-1.0,-1.0,
      -1.0,-1.0, 1.0,

@@ -56,6 +56,9 @@
   <script>
     window.addEventListener("load",
       () => {
+        let canvas = document.getElementById("renderCanvas2")
+        let glCntxt = canvas.getContext("webgl2")
+        let myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
         let vertexShaderCode = `
           attribute vec4 a_position;
           // attribute vec3 a_normal;
@@ -95,6 +98,21 @@
             // gl_FragColor.rgb *= light;
           }
         `
+        let shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+
+        let myCycle = new Cycle(true)
+
+        let myMeshFactory3D = new MeshFactory3D(glCntxt, shader)
+
+        let myBackground = new Background(glCntxt)
+        myCycle.addRenderable(myBackground)
+
+        let aCamera = myMeshFactory3D.createAStandardCamera3D()
+        myCycle.addRenderable(aCamera)
+
+        let aCube = myMeshFactory3D.createACube3D()
+        myCycle.addRenderable(aCube)
+
       }
     )
   </script>
