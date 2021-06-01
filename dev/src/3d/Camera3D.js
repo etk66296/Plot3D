@@ -22,25 +22,27 @@ class Camera3D extends Renderable3D {
       fovAngleX: this.convertDegToRad(60),
       fovAngleY: this.convertDegToRad(60),
       far: 1000,
-      near: 1
+      near: 1,
+      aspect: glCntxt.canvas.clientWidth / glCntxt.canvas.clientHeight
     }
 
     this.v = 1
 
+    let f = Math.tan(Math.PI * 0.5 - 0.5 * this.frustum.fovAngleX)
     this.perspectiveProjectionMatrix = new Matrix4x4([
-      Math.atan(this.frustum.fovAngleX / 2), 0, 0, 0,
-      0, Math.atan(this.frustum.fovAngleY / 2), 0, 0,
-      0, 0, (-1) * (this.frustum.far + this.frustum.near) / (this.frustum.far - this.frustum.near), 2 * this.frustum.near * this.frustum.far / (this.frustum.far - this.frustum.near),
-      0, 0, -1, 0
+      f / this.frustum.aspect, 0, 0, 0,
+      0, f, 0, 0,
+      0, 0, (this.frustum.far + this.frustum.near) / (this.frustum.far - this.frustum.near), -1,
+      0, 0, this.frustum.far * this.frustum.near * (2 / (this.frustum.far - this.frustum.near)), 0
     ])
     
     this.spot = new Vector3([ 0, 0, 0 ])
     this.upDir = new Vector3([ 0, 1, 0 ])
     this.lookAtMatrix = new Matrix4x4()
+    this.worldMatrix = new Matrix4x4()
 
-    this.translateZIncremental(10)
+    this.translateZIncremental(-10)
 
-    this.lookAt()
   }
 
   lookAt() {
@@ -71,15 +73,26 @@ class Camera3D extends Renderable3D {
     this.lookAtMatrix.cells[14] = this.worldPosition.cells[2]
     this.lookAtMatrix.cells[15] = 1.0
 
+    this.lookAtMatrix.invert()
+
   }
 
   update() {
-    
+    this.worldMatrix.reset()
+    this.modelTransformationMatrix.reset()
+    // this.translateZIncremental(-0.1)
+    // this.translateXIncremental(-0.1)
+    this.rotateXIncremental(0.1)
+    this.rotateYIncremental(0.1)
+    // this.lookAt()
+    // this.worldMatrix.multiplyM4(this.lookAtMatrix)
+    this.worldMatrix.multiplyM4(this.modelTransformationMatrix)
+    this.worldMatrix.multiplyM4(this.worldTranslationMatrix)
   }
 
   draw() {
     this.glCntxt.useProgram(this.shader.program)
-    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_WorldToViewMatrix'], false, this.lookAtMatrix.cells)
+    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_WorldToViewMatrix'], false, this.worldMatrix.cells)
        // // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.camera.orthographicProjectionMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.perspectiveProjectionMatrix.cells)
   }

@@ -101,6 +101,9 @@
         let shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
 
         let myCycle = new Cycle(true)
+        myCycle.stop()
+        myCycle.fps = 30
+        myCycle.play()
 
         let myMeshFactory3D = new MeshFactory3D(glCntxt, shader)
 

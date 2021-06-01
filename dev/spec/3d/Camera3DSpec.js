@@ -128,6 +128,9 @@ describe("Camera", function() {
     it("should have an attribute near", function() {
       expect(myCamera.frustum.near).toEqual(1)
     })
+    it("should have an attribute aspect", function() {
+      expect(myCamera.frustum.aspect).toEqual(glCntxt.canvas.clientWidth / glCntxt.canvas.clientHeight)
+    })
   })
 
   it("should have a perspective projection matrix", function() {
@@ -140,21 +143,21 @@ describe("Camera", function() {
     //   0, 0, (-1) * (this.sensorFar + this.sensorNear) / (this.sensorFar - this.sensorNear), 2 * this.sensorNear * this.sensorFar / (this.sensorFar - this.sensorNear),
     //   0, 0, -1, 0
     it("should be composed out of the orthoSpace data", function() {
-      expect(myCamera.perspectiveProjectionMatrix.cells[0]).toEqual(Math.atan(myCamera.convertDegToRad(60) / 2))
+      expect(myCamera.perspectiveProjectionMatrix.cells[0]).toEqual(1.7320508075688776)
       expect(myCamera.perspectiveProjectionMatrix.cells[1]).toEqual(0)
       expect(myCamera.perspectiveProjectionMatrix.cells[2]).toEqual(0)
       expect(myCamera.perspectiveProjectionMatrix.cells[3]).toEqual(0)
       expect(myCamera.perspectiveProjectionMatrix.cells[4]).toEqual(0)
-      expect(myCamera.perspectiveProjectionMatrix.cells[5]).toEqual(Math.atan(myCamera.convertDegToRad(60) / 2))
+      expect(myCamera.perspectiveProjectionMatrix.cells[5]).toEqual(1.7320508075688776)
       expect(myCamera.perspectiveProjectionMatrix.cells[6]).toEqual(0)
       expect(myCamera.perspectiveProjectionMatrix.cells[7]).toEqual(0)
       expect(myCamera.perspectiveProjectionMatrix.cells[8]).toEqual(0)
       expect(myCamera.perspectiveProjectionMatrix.cells[9]).toEqual(0)
-      expect(myCamera.perspectiveProjectionMatrix.cells[10]).toEqual((-1) * (1000 + 1) / (1000 - 1))
-      expect(myCamera.perspectiveProjectionMatrix.cells[11]).toEqual((2 * 1000 * 1) / (1000 - 1))
+      expect(myCamera.perspectiveProjectionMatrix.cells[10]).toEqual((1000 + 1) / (1000 - 1))
+      expect(myCamera.perspectiveProjectionMatrix.cells[11]).toEqual(-1)
       expect(myCamera.perspectiveProjectionMatrix.cells[12]).toEqual(0)
       expect(myCamera.perspectiveProjectionMatrix.cells[13]).toEqual(0)
-      expect(myCamera.perspectiveProjectionMatrix.cells[14]).toEqual(-1)
+      expect(myCamera.perspectiveProjectionMatrix.cells[14]).toEqual((2 * 1000 * 1) / (1000 - 1))
       expect(myCamera.perspectiveProjectionMatrix.cells[15]).toEqual(0)
     })
 
@@ -166,6 +169,10 @@ describe("Camera", function() {
 
   it("should have a direction vector, which is pointing to the cameras up direction", function() {
     expect(myCamera.upDir.constructor.name).toEqual('Vector3')
+  })
+
+  it("should have a world matrix", function() {
+    expect(myCamera.worldMatrix.constructor.name).toEqual('Matrix4x4')
   })
 
   it("should have a look at matrix", function() {
