@@ -1,5 +1,9 @@
 class TriangleMesh3D extends Renderable3D {
-  constructor(glCntxt, shader, math, vertices = [
+  constructor(
+    glCntxt,
+    shader,
+    math,
+    vertices = [
       1.0,-1.0,-1.0,
       -1.0,-1.0, 1.0,
       -1.0, 1.0, 1.0
