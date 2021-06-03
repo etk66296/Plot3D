@@ -3,13 +3,20 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     super()
 
     this.gltfRequester = new XMLHttpRequest()
+    this.gltfRequester.onreadystatechange = (event) => {
+      if (this.gltfRequester.readyState === 4) {
+        if (this.gltfRequester.status === 200) {
+          console.log(this.gltfRequester.responseText)
+        } else {
+           console.error(this.gltfRequester.statusText)
+        }
+    }
+    }
   }
 
   requestGlTf(url) {
-    this.gltfRequester.open('GET', url, false)
+    this.gltfRequester.open('GET', url, true)
     this.gltfRequester.send(null)
-    if (this.gltfRequester.status === 200) {
-      console.log(this.gltfRequester)
-    }
+    console.log("send request")
   }
 }

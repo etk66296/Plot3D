@@ -17,12 +17,16 @@ describe("Plot3DGlTfLoader", function() {
     expect(typeof myPlot3DGlTfLoader.requestGlTf).toBe('function')
   })
 
+  it("should have an on ready state change function in the requester instance for saving the gltf data", function() {
+    expect(typeof myPlot3DGlTfLoader.gltfRequester.onreadystatechange).toBe('function')
+  })
+
   describe("requestGlTf", function() {
     it("should call open with the url given in parameter 1", function() {
       spyOn(myPlot3DGlTfLoader.gltfRequester, 'open').and.callThrough()
-      let url = './assets/mesh3d/cube.gltf'
+      let url = './spec/assets/mesh3d/cube.gltf'
       myPlot3DGlTfLoader.requestGlTf(url)
-      expect(myPlot3DGlTfLoader.gltfRequester.open).toHaveBeenCalledWith('GET', url, false)
+      expect(myPlot3DGlTfLoader.gltfRequester.open).toHaveBeenCalledWith('GET', url, true)
     })
   })
 

@@ -5,7 +5,7 @@ require 'openssl'
 
 class Plot3DDevServer  < Sinatra::Base
     get '/' do
-      
+      '<a href="https://localhost:9999/dev/SpecRunner.html">plot 3d specrunner</a>'
     end            
 end
 
