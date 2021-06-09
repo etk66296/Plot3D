@@ -1,6 +1,15 @@
 class Plot3DGlTfLoader extends Plot3DLoader{
-  constructor() {
+  constructor(glCntxt) {
     super()
+
+    this.glCntxt = glCntxt
+
+    // component Type 	            Size in bytes
+    // 5120      (BYTE) 	          1
+    // 5121      (UNSIGNED_BYTE)    1
+    // 5122      (SHORT)   	        2
+    // 5123      (UNSIGNED_SHORT)   2
+    // 5126      (FLOAT) 	          4
 
     this.loaded = []
 
@@ -28,12 +37,50 @@ class Plot3DGlTfLoader extends Plot3DLoader{
       console.error('check your gltf file, version must be 2.0')
     }
     let data = this.rawBufDataRegExMatcher.exec(gltfObject.buffers[0].uri)[0]
-    let raw = window.atob(data)
-    // let len = raw.length
-    // let bytes = new Uint8Array(len)
-    // for (var i = 0; i < len; i++) {
-    //   bytes[i] = raw.charCodeAt(i)
-    // }
-    // console.log(bytes)
+    gltfObject.bufferViews.forEach((view) => {
+      view.uri = data.substring(view.byteOffset, view.byteOffset + view.byteLength)
+    })
+    
+    gltfObject.accessors.forEach((accessor) => {
+      let  rawBinaryData = window.atob(gltfObject.bufferViews[accessor.bufferView].uri)
+      if (this.glCntxt.FLOAT === accessor.componentType) {
+        gltfObject.bufferViews[accessor.bufferView].cells = this.binToFloat(rawBinaryData)
+      }
+
+      if (this.glCntxt.UNSIGNED_SHORT === accessor.componentType) {
+        gltfObject.bufferViews[accessor.bufferView].cells = this.binToUShort(rawBinaryData)
+      }
+    })
+    console.log(gltfObject)
+  }
+
+  binToFloat(rawBinaryData) {
+    let numOfCells =  rawBinaryData.length / Float32Array.BYTES_PER_ELEMENT
+    let dataView	= new DataView( new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT) )
+    let cells	= new Float32Array(numOfCells)
+    let cellPointer = 0
+    for(let i = 0; i < numOfCells; i++) {
+      cellPointer = i * Float32Array.BYTES_PER_ELEMENT
+      dataView.setUint8(0, rawBinaryData.charCodeAt(cellPointer))
+      dataView.setUint8(1, rawBinaryData.charCodeAt(cellPointer + 1))
+      dataView.setUint8(2, rawBinaryData.charCodeAt(cellPointer + 2))
+      dataView.setUint8(3, rawBinaryData.charCodeAt(cellPointer + 3))
+      cells[i] = dataView.getFloat32(0, true)
+    }
+    return cells
+  }
+
+  binToUShort(rawBinaryData) {
+    let numOfCells =  rawBinaryData.length / Uint16Array.BYTES_PER_ELEMENT
+    let dataView	= new DataView( new ArrayBuffer(Uint16Array.BYTES_PER_ELEMENT) )
+    let cells	= new Uint16Array(numOfCells)
+    let cellPointer = 0
+    for(let i = 0; i < numOfCells; i++) {
+      cellPointer = i * Uint16Array.BYTES_PER_ELEMENT
+      dataView.setUint8(0, rawBinaryData.charCodeAt(cellPointer))
+      dataView.setUint8(1, rawBinaryData.charCodeAt(cellPointer + 1))
+      cells[i] = dataView.getUint16(0, true)
+    }
+    return cells
   }
 }

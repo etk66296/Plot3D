@@ -1,12 +1,25 @@
 describe("Plot3DGlTfLoader", function() {
+
+  var canvas
+  var glCntxt
+
   var myPlot3DGlTfLoader
 
+  beforeAll(function() {
+    canvas = document.getElementById("renderCanvas")
+    glCntxt = canvas.getContext("webgl2")
+  })
+
   beforeEach(function() {
-    myPlot3DGlTfLoader = new Plot3DGlTfLoader()
+    myPlot3DGlTfLoader = new Plot3DGlTfLoader(glCntxt)
   })
 
   it("has the parent class Plot3DLoader", function() {
     expect(myPlot3DGlTfLoader.__proto__.__proto__.constructor.name).toEqual('Plot3DLoader')
+  })
+
+  it("should have a reference to the active web gl context", function() {
+    expect(myPlot3DGlTfLoader.glCntxt.constructor.name).toEqual('WebGL2RenderingContext')
   })
 
   it("should have a xmlhttprequester for gltf files", function() {
@@ -79,7 +92,7 @@ describe("Plot3DGlTfLoader", function() {
 
     it("should extract the raw data from the base64 string", function(done) {
       spyOn(window, 'atob').and.callThrough()
-      let url = './spec/assets/mesh3d/cube.gltf'
+      let url = './spec/assets/mesh3d/square.gltf'
       myPlot3DGlTfLoader.requestGlTf(url)
       setTimeout(() => {
         expect(atob).toHaveBeenCalled()
