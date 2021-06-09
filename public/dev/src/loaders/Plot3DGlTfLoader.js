@@ -36,49 +36,57 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     if (gltfObject.asset.version !== '2.0') {
       console.error('check your gltf file, version must be 2.0')
     }
-    let data = this.rawBufDataRegExMatcher.exec(gltfObject.buffers[0].uri)[0]
+    let binaryData = window.atob(this.rawBufDataRegExMatcher.exec(gltfObject.buffers[0].uri)[0])
+    let bytes = new Uint8Array(binaryData.length)
+    for (var i = 0; i < binaryData.length; i++) {
+      bytes[i] = binaryData.charCodeAt(i)
+    }
     gltfObject.bufferViews.forEach((view) => {
-      view.uri = data.substring(view.byteOffset, view.byteOffset + view.byteLength)
+      view.data = bytes.slice(view.byteOffset, view.byteOffset + view.byteLength)
     })
     
+    
     gltfObject.accessors.forEach((accessor) => {
-      let  rawBinaryData = window.atob(gltfObject.bufferViews[accessor.bufferView].uri)
+      let selectedByteData = gltfObject.bufferViews[accessor.bufferView].data
       if (this.glCntxt.FLOAT === accessor.componentType) {
-        gltfObject.bufferViews[accessor.bufferView].cells = this.binToFloat(rawBinaryData)
+        gltfObject.bufferViews[accessor.bufferView].cells = this.binToFloat(selectedByteData)
+        delete gltfObject.bufferViews[accessor.bufferView].data
       }
 
       if (this.glCntxt.UNSIGNED_SHORT === accessor.componentType) {
-        gltfObject.bufferViews[accessor.bufferView].cells = this.binToUShort(rawBinaryData)
+        gltfObject.bufferViews[accessor.bufferView].cells = this.binToUShort(selectedByteData)
+        delete gltfObject.bufferViews[accessor.bufferView].data
       }
     })
+
     console.log(gltfObject)
   }
 
-  binToFloat(rawBinaryData) {
-    let numOfCells =  rawBinaryData.length / Float32Array.BYTES_PER_ELEMENT
+  binToFloat(bytes) {
+    let numOfCells =  bytes.length / Float32Array.BYTES_PER_ELEMENT
     let dataView	= new DataView( new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT) )
     let cells	= new Float32Array(numOfCells)
     let cellPointer = 0
     for(let i = 0; i < numOfCells; i++) {
       cellPointer = i * Float32Array.BYTES_PER_ELEMENT
-      dataView.setUint8(0, rawBinaryData.charCodeAt(cellPointer))
-      dataView.setUint8(1, rawBinaryData.charCodeAt(cellPointer + 1))
-      dataView.setUint8(2, rawBinaryData.charCodeAt(cellPointer + 2))
-      dataView.setUint8(3, rawBinaryData.charCodeAt(cellPointer + 3))
+      dataView.setUint8(0, bytes[cellPointer])
+      dataView.setUint8(1, bytes[cellPointer + 1])
+      dataView.setUint8(2, bytes[cellPointer + 2])
+      dataView.setUint8(3, bytes[cellPointer + 3])
       cells[i] = dataView.getFloat32(0, true)
     }
     return cells
   }
 
-  binToUShort(rawBinaryData) {
-    let numOfCells =  rawBinaryData.length / Uint16Array.BYTES_PER_ELEMENT
+  binToUShort(bytes) {
+    let numOfCells =  bytes.length / Uint16Array.BYTES_PER_ELEMENT
     let dataView	= new DataView( new ArrayBuffer(Uint16Array.BYTES_PER_ELEMENT) )
     let cells	= new Uint16Array(numOfCells)
     let cellPointer = 0
     for(let i = 0; i < numOfCells; i++) {
       cellPointer = i * Uint16Array.BYTES_PER_ELEMENT
-      dataView.setUint8(0, rawBinaryData.charCodeAt(cellPointer))
-      dataView.setUint8(1, rawBinaryData.charCodeAt(cellPointer + 1))
+      dataView.setUint8(0, bytes[cellPointer])
+      dataView.setUint8(1, bytes[cellPointer + 1])
       cells[i] = dataView.getUint16(0, true)
     }
     return cells

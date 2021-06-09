@@ -50,7 +50,7 @@ describe("Plot3DGlTfLoader", function() {
 
     it("should call the class internal method for extracting the data from the gltf data", function(done) {
       spyOn(myPlot3DGlTfLoader, "extractDataFromGltfJson")
-      let url = './spec/assets/mesh3d/cube.gltf'
+      let url = './spec/assets/mesh3d/triangle.gltf'
       myPlot3DGlTfLoader.requestGlTf(url)
       setTimeout(() => {
         expect(myPlot3DGlTfLoader.extractDataFromGltfJson).toHaveBeenCalled()
@@ -68,7 +68,7 @@ describe("Plot3DGlTfLoader", function() {
     it("should call open with the url given in parameter 1", function() {
       spyOn(myPlot3DGlTfLoader.gltfRequester, 'open').and.callThrough()
       spyOn(myPlot3DGlTfLoader.gltfRequester, 'send').and.callThrough()
-      let url = './spec/assets/mesh3d/cube.gltf'
+      let url = './spec/assets/mesh3d/triangle.gltf'
       myPlot3DGlTfLoader.requestGlTf(url)
       expect(myPlot3DGlTfLoader.gltfRequester.open).toHaveBeenCalledWith('GET', url, true)
       expect(myPlot3DGlTfLoader.gltfRequester.send).toHaveBeenCalledWith(null)
@@ -92,7 +92,7 @@ describe("Plot3DGlTfLoader", function() {
 
     it("should extract the raw data from the base64 string", function(done) {
       spyOn(window, 'atob').and.callThrough()
-      let url = './spec/assets/mesh3d/square.gltf'
+      let url = './spec/assets/mesh3d/triangle.gltf'
       myPlot3DGlTfLoader.requestGlTf(url)
       setTimeout(() => {
         expect(atob).toHaveBeenCalled()
