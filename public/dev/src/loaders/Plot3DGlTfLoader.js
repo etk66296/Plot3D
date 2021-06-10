@@ -19,11 +19,16 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     this.gltfRequester.onreadystatechange = (event) => {
       if (this.gltfRequester.readyState === 4) {
         if (this.gltfRequester.status === 200) {
-          this.extractDataFromGltfJson(JSON.parse(this.gltfRequester.responseText))
+          // this.loaded.push(this.extractDataFromGltfJson(JSON.parse(this.gltfRequester.responseText)))
+          let gltfObject = JSON.parse(this.gltfRequester.responseText)
+          if (gltfObject.asset.version !== '2.0') {
+            console.error('check your gltf file, version must be 2.0')
+          }
+          this.loaded.push(this.extractDataFromGltfJson(gltfObject))
         } else {
            console.error(this.gltfRequester.statusText)
         }
-    }
+      }
     }
   }
 
@@ -33,9 +38,6 @@ class Plot3DGlTfLoader extends Plot3DLoader{
   }
 
   extractDataFromGltfJson(gltfObject) {
-    if (gltfObject.asset.version !== '2.0') {
-      console.error('check your gltf file, version must be 2.0')
-    }
     let binaryData = window.atob(this.rawBufDataRegExMatcher.exec(gltfObject.buffers[0].uri)[0])
     let bytes = new Uint8Array(binaryData.length)
     for (var i = 0; i < binaryData.length; i++) {
@@ -49,20 +51,20 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     gltfObject.accessors.forEach((accessor) => {
       let selectedByteData = gltfObject.bufferViews[accessor.bufferView].data
       if (this.glCntxt.FLOAT === accessor.componentType) {
-        gltfObject.bufferViews[accessor.bufferView].cells = this.binToFloat(selectedByteData)
+        gltfObject.bufferViews[accessor.bufferView].cells = this.bytesToFloats(selectedByteData)
         delete gltfObject.bufferViews[accessor.bufferView].data
       }
 
       if (this.glCntxt.UNSIGNED_SHORT === accessor.componentType) {
-        gltfObject.bufferViews[accessor.bufferView].cells = this.binToUShort(selectedByteData)
+        gltfObject.bufferViews[accessor.bufferView].cells = this.bytesToUShorts(selectedByteData)
         delete gltfObject.bufferViews[accessor.bufferView].data
       }
     })
 
-    console.log(gltfObject)
+    return gltfObject
   }
 
-  binToFloat(bytes) {
+  bytesToFloats(bytes) {
     let numOfCells =  bytes.length / Float32Array.BYTES_PER_ELEMENT
     let dataView	= new DataView( new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT) )
     let cells	= new Float32Array(numOfCells)
@@ -78,7 +80,7 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     return cells
   }
 
-  binToUShort(bytes) {
+  bytesToUShorts(bytes) {
     let numOfCells =  bytes.length / Uint16Array.BYTES_PER_ELEMENT
     let dataView	= new DataView( new ArrayBuffer(Uint16Array.BYTES_PER_ELEMENT) )
     let cells	= new Uint16Array(numOfCells)
