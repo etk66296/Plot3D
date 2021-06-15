@@ -19,7 +19,6 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     this.gltfRequester.onreadystatechange = (event) => {
       if (this.gltfRequester.readyState === 4) {
         if (this.gltfRequester.status === 200) {
-          // this.loaded.push(this.extractDataFromGltfJson(JSON.parse(this.gltfRequester.responseText)))
           let gltfObject = JSON.parse(this.gltfRequester.responseText)
           if (gltfObject.asset.version !== '2.0') {
             console.error('check your gltf file, version must be 2.0')
