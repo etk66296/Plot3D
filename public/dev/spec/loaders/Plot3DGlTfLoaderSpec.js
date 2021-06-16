@@ -23,7 +23,7 @@ describe("Plot3DGlTfLoader", function() {
     }
     gltfRequester.open('GET', './spec/assets/mesh3d/triangle.gltf', true)
     gltfRequester.send(null)
-    setTimeout(() => {}, 1500)
+    setTimeout(() => {}, 2000)
   })
 
   beforeEach(function() {
@@ -159,6 +159,43 @@ describe("Plot3DGlTfLoader", function() {
       expect(myData.bufferViews[2].cells).toEqual(myExpectedArray)
     })
     
+  })
+
+  it("should have a function bytesToFloats", function() {
+    expect(typeof myPlot3DGlTfLoader.bytesToFloats).toBe('function')
+  })
+
+  describe("bytesToFloats", function() {
+    it("should create a four bytes array buffer", function() {
+      let bytes = new Uint8Array(16)
+      spyOn(window, 'ArrayBuffer').and.callThrough()
+      myPlot3DGlTfLoader.bytesToFloats(bytes)
+      expect(window.ArrayBuffer).toHaveBeenCalledWith(4)
+    })
+
+    it("should create a data view with the four bytes array buffer", function() {
+      let bytes = new Uint8Array(16)
+      spyOn(window, 'DataView').and.callThrough()
+      myPlot3DGlTfLoader.bytesToFloats(bytes)
+      expect(window.DataView).toHaveBeenCalled()
+    })
+
+    it("should create a float32 array with the neccessary size", function() {
+      let bytes = new Uint8Array(16)
+      spyOn(window, 'Float32Array')
+      myPlot3DGlTfLoader.bytesToFloats(bytes)
+      expect(window.Float32Array).toHaveBeenCalled()
+    })
+
+    it("should return the expected float values", function() {
+      let cells = myPlot3DGlTfLoader.bytesToFloats(new Uint8Array(16))
+      let expectedArray = new Float32Array([ 0, 0, 0, 0])
+      expect(cells).toEqual(expectedArray)
+    })
+  })
+
+  it("should have a function bytesToUShorts", function() {
+    expect(typeof myPlot3DGlTfLoader.bytesToUShorts).toBe('function')
   })
 
 })
