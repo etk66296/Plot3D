@@ -99,44 +99,61 @@ describe("Plot3DFactory", function() {
 
     it("should have vertices for building a cube out of triangles", function() {
       let cube = myMeshFactory3D.createACube3D()
-      expect(cube.vertices).toEqual([
+      let expected = new Float32Array([
         1.0,-1.0,-1.0,
-     -1.0,-1.0, 1.0,
-     -1.0, 1.0, 1.0,
-      1.0, 1.0,-1.0,
-     -1.0,-1.0,-1.0,
-     -1.0, 1.0,-1.0,
-      1.0,-1.0, 1.0,
-     -1.0,-1.0,-1.0,
-      1.0,-1.0,-1.0,
-      1.0, 1.0,-1.0,
-      1.0,-1.0,-1.0,
-     -1.0,-1.0,-1.0,
-     -1.0,-1.0,-1.0,
-     -1.0, 1.0, 1.0,
-     -1.0, 1.0,-1.0,
-      1.0,-1.0, 1.0,
-     -1.0,-1.0, 1.0,
-     -1.0,-1.0,-1.0,
-     -1.0, 1.0, 1.0,
-     -1.0,-1.0, 1.0,
-      1.0,-1.0, 1.0,
-      1.0, 1.0, 1.0,
-      1.0,-1.0,-1.0,
-      1.0, 1.0,-1.0,
-      1.0,-1.0,-1.0,
-      1.0, 1.0, 1.0,
-      1.0,-1.0, 1.0,
-      1.0, 1.0, 1.0,
-      1.0, 1.0,-1.0,
-     -1.0, 1.0,-1.0,
-      1.0, 1.0, 1.0,
-     -1.0, 1.0,-1.0,
-     -1.0, 1.0, 1.0,
-      1.0, 1.0, 1.0,
-     -1.0, 1.0, 1.0,
-      1.0,-1.0, 1.0
+       -1.0,-1.0, 1.0,
+       -1.0, 1.0, 1.0,
+        1.0, 1.0,-1.0,
+       -1.0,-1.0,-1.0,
+       -1.0, 1.0,-1.0,
+        1.0,-1.0, 1.0,
+       -1.0,-1.0,-1.0,
+        1.0,-1.0,-1.0,
+        1.0, 1.0,-1.0,
+        1.0,-1.0,-1.0,
+       -1.0,-1.0,-1.0,
+       -1.0,-1.0,-1.0,
+       -1.0, 1.0, 1.0,
+       -1.0, 1.0,-1.0,
+        1.0,-1.0, 1.0,
+       -1.0,-1.0, 1.0,
+       -1.0,-1.0,-1.0,
+       -1.0, 1.0, 1.0,
+       -1.0,-1.0, 1.0,
+        1.0,-1.0, 1.0,
+        1.0, 1.0, 1.0,
+        1.0,-1.0,-1.0,
+        1.0, 1.0,-1.0,
+        1.0,-1.0,-1.0,
+        1.0, 1.0, 1.0,
+        1.0,-1.0, 1.0,
+        1.0, 1.0, 1.0,
+        1.0, 1.0,-1.0,
+       -1.0, 1.0,-1.0,
+        1.0, 1.0, 1.0,
+       -1.0, 1.0,-1.0,
+       -1.0, 1.0, 1.0,
+        1.0, 1.0, 1.0,
+       -1.0, 1.0, 1.0,
+        1.0,-1.0, 1.0
       ])
+      expect(cube.vertices).toEqual(expected)
+    })
+  })
+
+  it("should have a instance of Plot3DGlTfLoader", function() {
+    expect(myMeshFactory3D.loaders.gltf.constructor.name).toEqual('Plot3DGlTfLoader')
+  })
+
+  it("should have a method for creating a mesh from gltf file", function() {
+    expect(typeof myMeshFactory3D.createFromGltfFile).toBe('function')
+  })
+
+  describe("createFromGltfFile", function() {
+    it("should call the gltfloader", function() {
+      spyOn(myMeshFactory3D.loaders.gltf, 'requestGlTf')
+      myMeshFactory3D.createFromGltfFile('./assets/mesh3d/cube.gltf')
+      expect(myMeshFactory3D.loaders.gltf.requestGlTf).toHaveBeenCalled()
     })
   })
 

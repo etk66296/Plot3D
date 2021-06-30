@@ -101,7 +101,7 @@ class Renderable3D extends Renderable {
   }
 
   update() {
-
+    
   }
 
   draw() {

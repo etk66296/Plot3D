@@ -166,7 +166,7 @@ describe("Plot3DGlTfLoader", function() {
   })
 
   describe("bytesToFloats", function() {
-    it("should create a four bytes array buffer", function() {
+    it("should create a bytes array buffer", function() {
       let bytes = new Uint8Array(16)
       spyOn(window, 'ArrayBuffer').and.callThrough()
       myPlot3DGlTfLoader.bytesToFloats(bytes)
@@ -196,6 +196,35 @@ describe("Plot3DGlTfLoader", function() {
 
   it("should have a function bytesToUShorts", function() {
     expect(typeof myPlot3DGlTfLoader.bytesToUShorts).toBe('function')
+  })
+
+  describe("bytesToUShorts", function() {
+    it("should create a bytes array buffer", function() {
+      let bytes = new Uint8Array(16)
+      spyOn(window, 'ArrayBuffer').and.callThrough()
+      myPlot3DGlTfLoader.bytesToUShorts(bytes)
+      expect(window.ArrayBuffer).toHaveBeenCalledWith(2)
+    })
+
+    it("should create a data view with the four bytes array buffer", function() {
+      let bytes = new Uint8Array(16)
+      spyOn(window, 'DataView').and.callThrough()
+      myPlot3DGlTfLoader.bytesToUShorts(bytes)
+      expect(window.DataView).toHaveBeenCalled()
+    })
+
+    it("should create a float32 array with the neccessary size", function() {
+      let bytes = new Uint8Array(16)
+      spyOn(window, 'Uint16Array')
+      myPlot3DGlTfLoader.bytesToUShorts(bytes)
+      expect(window.Uint16Array).toHaveBeenCalled()
+    })
+
+    it("should return the expected float values", function() {
+      let cells = myPlot3DGlTfLoader.bytesToUShorts(new Uint8Array(16))
+      let expectedArray = new Uint16Array([ 0, 0, 0, 0, 0, 0, 0, 0 ])
+      expect(cells).toEqual(expectedArray)
+    })
   })
 
 })

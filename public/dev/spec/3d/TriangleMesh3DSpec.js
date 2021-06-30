@@ -69,7 +69,7 @@ describe("TriangleMesh3D", function() {
   })
 
   it("should have an array for the vertices position data", function() {
-    expect(myTriangleMesh.vertices.constructor.name).toEqual('Array')
+    expect(myTriangleMesh.vertices.constructor.name).toEqual('Float32Array')
   })
 
   it("should have a method update", function() {

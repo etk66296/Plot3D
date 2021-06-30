@@ -14,13 +14,21 @@ class TriangleMesh3D extends Renderable3D {
 
     this.glVertexBuffer = this.glCntxt.createBuffer()
     this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)
-    this.vertices =  vertices
-    this.glCntxt.bufferData(glCntxt.ARRAY_BUFFER, new Float32Array(this.vertices), glCntxt.STATIC_DRAW)
+    this.vertices = (vertices.constructor.name === 'Float32Array') ? vertices : new Float32Array(this.vertices)
+    this.glCntxt.bufferData(glCntxt.ARRAY_BUFFER, this.vertices, glCntxt.STATIC_DRAW)
 
   }
 
 
   update() {
+    super.update()
+    this.modelTransformationMatrix.reset()
+    this.worldTranslationMatrix.reset()
+    // this.translateXIncremental(0.001)
+    this.rotateXIncremental(0.01)
+    this.rotateYIncremental(0.01)
+    this.rotateZIncremental(0.01)
+    this.worldTranslationMatrix.multiplyM4(this.modelTransformationMatrix)
   }
 
   draw() {
@@ -44,11 +52,11 @@ class TriangleMesh3D extends Renderable3D {
       0,
       0
     )
-
+    
     this.glCntxt.drawArrays(
       this.glCntxt.TRIANGLES,
       0,
-      36
+      this.vertices.length / 3
     )
 
   }

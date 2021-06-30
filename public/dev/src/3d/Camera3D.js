@@ -80,10 +80,10 @@ class Camera3D extends Renderable3D {
   update() {
     this.worldMatrix.reset()
     this.modelTransformationMatrix.reset()
-    // this.translateZIncremental(-0.1)
+    // this.translateZIncremental(0.01)
     // this.translateXIncremental(-0.1)
-    this.rotateXIncremental(0.1)
-    this.rotateYIncremental(0.1)
+    // this.rotateXIncremental(0.1)
+    // this.rotateYIncremental(0.1)
     // this.lookAt()
     // this.worldMatrix.multiplyM4(this.lookAtMatrix)
     this.worldMatrix.multiplyM4(this.modelTransformationMatrix)
