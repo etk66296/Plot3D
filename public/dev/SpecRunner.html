@@ -64,13 +64,12 @@
         let canvas = document.getElementById("renderCanvas2")
         let glCntxt = canvas.getContext("webgl2")
         glCntxt.enable(glCntxt.DEPTH_TEST)
-        // glCntxt.cullFace(glCntxt.FRONT_AND_BACK)
+        glCntxt.cullFace(glCntxt.FRONT_AND_BACK)
         let myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
         let vertexShaderCode = `
           attribute vec4 a_position;
-          // attribute vec3 a_normal;
+          attribute vec3 a_normal;
 
-          // varying vec3 v_normal;
           // [View To Projection]x[World To View]x[Model to World]
           uniform vec4 u_color;
 
@@ -80,6 +79,7 @@
           uniform mat4 u_ViewToProjectionMatrix;
 
           varying vec4 v_color;
+          varying vec3 v_normal;
 
           void main() {
             mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
@@ -87,20 +87,21 @@
             // mat4 modelToProjection = u_modelMatrix;
             gl_Position = modelToProjection * a_position;
             v_color = u_color;
-            // v_normal = (modelToProjection * vec4(a_normal.xyz, 0.0)).xyz;
+            v_normal = mat3(u_modelToWorldMatrix * u_modelMatrix) * a_normal;
+            // v_normal = a_normal;
           }
         `
         let fragmentShaderCode = `
           precision mediump float;
 
           varying vec4 v_color;
-          // varying vec3 v_normal;
+          varying vec3 v_normal;
 
-          // uniform vec3 u_reverseLightDirection;
+          uniform vec3 u_reverseLightDirection;
 
           void main() {
             // vec3 normal = normalize(v_normal);
-            // float light = dot(normal, u_reverseLightDirection);
+            float light = dot(v_normal, u_reverseLightDirection);
             gl_FragColor = v_color;
             // gl_FragColor.rgb *= light;
           }
@@ -133,9 +134,18 @@
         }
         myGlTFLoader.requestGlTf(urlToGltfFile)
         setTimeout(() => {
-          let loadedVertices = myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[1].cells
-          monkeyVertices = new TriangleMesh3D(glCntxt, shader, math, loadedVertices)
-          myCycle.addRenderable(monkeyVertices)
+          let meshData = {
+            vertices: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[0].cells,
+            normals: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[1].cells,
+            indices: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[2].cells
+          }
+          // console.log('vertices: ', loadedVertices)
+          // console.log('normals: ', loadedNormals)
+          // console.log('colors', myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[2].cells)
+          
+          let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math, meshData)
+          // let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math)
+          myCycle.addRenderable(monkeyMesh)
           // let aCube = myMeshFactory3D.createACube3D()
           // myCycle.addRenderable(aCube)
         }, 2000)

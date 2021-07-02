@@ -66,53 +66,53 @@
         {
             "bufferView" : 0,
             "componentType" : 5126,
-            "count" : 4,
+            "count" : 9,
             "max" : [
-                0,
+                1,
                 0,
                 1
             ],
             "min" : [
                 -1,
                 0,
-                0
+                -1
             ],
             "type" : "VEC3"
         },
         {
             "bufferView" : 1,
             "componentType" : 5126,
-            "count" : 4,
+            "count" : 9,
             "type" : "VEC3"
         },
         {
             "bufferView" : 2,
             "componentType" : 5123,
-            "count" : 6,
+            "count" : 24,
             "type" : "SCALAR"
         }
     ],
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 48,
+            "byteLength" : 108,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
-            "byteLength" : 48,
-            "byteOffset" : 48
+            "byteLength" : 108,
+            "byteOffset" : 108
         },
         {
             "buffer" : 0,
-            "byteLength" : 12,
-            "byteOffset" : 96
+            "byteLength" : 48,
+            "byteOffset" : 216
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 108,
-            "uri" : "data:application/octet-stream;base64,AACAvwAAAAAAAIA/AACAvwAAAAAAAACAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAgABAAAAAgADAAEA"
+            "byteLength" : 264,
+            "uri" : "data:application/octet-stream;base64,AACAvwAAAAAAAIA/AACAPwAAAAAAAIA/AACAvwAAAAAAAIC/AACAPwAAAAAAAIC/AACAvwAAAAAAAACAAAAAAAAAAAAAAIA/AACAPwAAAAAAAACAAAAAAAAAAAAAAIC/AAAAAAAAAAAAAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACABgAHAAgACAACAAQABQAEAAAAAQAIAAUABgADAAcACAAHAAIABQAIAAQAAQAGAAgA"
         }
     ]
 }

@@ -3,19 +3,45 @@ class TriangleMesh3D extends Renderable3D {
     glCntxt,
     shader,
     math,
-    vertices = [
-      1.0,-1.0,-1.0,
-      -1.0,-1.0, 1.0,
-      -1.0, 1.0, 1.0
-    ]) {
+    meshData = {
+      vertices: [
+        -1, 0, 1,
+        -1,0,0,
+        0,0,1,
+        0,0,0
+      ],
+      normals: [
+        0,1,0,
+        0,1,0,
+        0,1,0,
+        0,1,0
+      ],
+      indices: [
+        2,1,0,
+        2,3,1
+      ]
+    }
+  ) {
     super(glCntxt, shader, math)
 
     this.modelMatrix = new Matrix4x4()
 
+    this.reverseLightDirection = (new Vector3([ 0.5, 0.7, 1 ])).normalize()
+  
     this.glVertexBuffer = this.glCntxt.createBuffer()
     this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)
-    this.vertices = (vertices.constructor.name === 'Float32Array') ? vertices : new Float32Array(this.vertices)
+    this.vertices = (meshData.vertices.constructor.name === 'Float32Array') ? meshData.vertices : new Float32Array(meshData.vertices)
     this.glCntxt.bufferData(glCntxt.ARRAY_BUFFER, this.vertices, glCntxt.STATIC_DRAW)
+
+    this.glNormalsBuffer = this.glCntxt.createBuffer()
+    this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glNormalsBuffer)
+    this.normals = (meshData.normals.constructor.name === 'Float32Array') ? meshData.normals : new Float32Array(meshData.normals)
+    this.glCntxt.bufferData(glCntxt.ARRAY_BUFFER, this.normals, glCntxt.STATIC_DRAW)
+
+    this.glIndicesBuffer = this.glCntxt.createBuffer()
+    this.glCntxt.bindBuffer(this.glCntxt.ELEMENT_ARRAY_BUFFER, this.glIndicesBuffer)
+    this.indices = (meshData.indices.constructor.name === 'Uint16Array') ? meshData.indices : new Uint16Array(meshData.indices)
+    this.glCntxt.bufferData(glCntxt.ELEMENT_ARRAY_BUFFER, this.indices, glCntxt.STATIC_DRAW)
 
   }
 
@@ -41,6 +67,7 @@ class TriangleMesh3D extends Renderable3D {
     // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.camera.perspectiveProjectionMatrix.cells)
     
     this.glCntxt.uniform4fv(this.shader.glVertexUniformLocation['u_color'], this.color.cells)
+    this.glCntxt.uniform4fv(this.shader.glVertexUniformLocation['u_reverseLightDirection'], this.reverseLightDirection.cells)
 
     this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
     this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffer)
@@ -52,12 +79,24 @@ class TriangleMesh3D extends Renderable3D {
       0,
       0
     )
-    
-    this.glCntxt.drawArrays(
-      this.glCntxt.TRIANGLES,
+
+    this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_normal'])
+    this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glNormalsBuffer)
+    this.glCntxt.vertexAttribPointer(
+      this.shader.glAttrLocation['a_normal'],
+      3,
+      this.glCntxt.FLOAT,
+      false,
       0,
-      this.vertices.length / 3
+      0
     )
+
+    this.glCntxt.bindBuffer(this.glCntxt.ELEMENT_ARRAY_BUFFER, this.glIndicesBuffer)
+    
+    const vertexCount = this.indices.length
+    const type = this.glCntxt.UNSIGNED_SHORT
+    const offset = 0
+    this.glCntxt.drawElements(this.glCntxt.TRIANGLES, vertexCount, type, offset)
 
   }
 }
