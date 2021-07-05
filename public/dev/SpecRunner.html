@@ -69,9 +69,7 @@
         let vertexShaderCode = `
           attribute vec4 a_position;
           attribute vec3 a_normal;
-
-          // [View To Projection]x[World To View]x[Model to World]
-          uniform vec4 u_color;
+          attribute vec4 a_color;
 
           uniform mat4 u_modelMatrix;
           uniform mat4 u_modelToWorldMatrix;
@@ -79,31 +77,32 @@
           uniform mat4 u_ViewToProjectionMatrix;
 
           varying vec4 v_color;
-          varying vec3 v_normal;
+          varying vec3 v_lighting;
 
           void main() {
             mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
-            // mat4 modelToProjection = u_ViewToProjectionMatrix * u_modelMatrix * u_modelToWorldMatrix * u_WorldToViewMatrix;
-            // mat4 modelToProjection = u_modelMatrix;
             gl_Position = modelToProjection * a_position;
-            v_color = u_color;
-            v_normal = mat3(u_modelToWorldMatrix * u_modelMatrix) * a_normal;
-            // v_normal = a_normal;
+            v_color = a_color;
+            
+            vec3 ambientLight = vec3(0.6, 0.6, 0.6);
+            vec3 directionalLightColor = vec3(0.5, 0.5, 0.75);
+            vec3 directionalVector = vec3(0.85, 0.8, 0.75);
+
+            vec4 transformedNormal = (u_modelToWorldMatrix * u_modelMatrix) * vec4(a_normal, 1.0);
+
+            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+            v_lighting = ambientLight + (directionalLightColor * directional);
           }
         `
         let fragmentShaderCode = `
           precision mediump float;
 
           varying vec4 v_color;
-          varying vec3 v_normal;
+          varying vec3 v_lighting;
 
-          uniform vec3 u_reverseLightDirection;
 
           void main() {
-            // vec3 normal = normalize(v_normal);
-            float light = dot(v_normal, u_reverseLightDirection);
-            gl_FragColor = v_color;
-            // gl_FragColor.rgb *= light;
+            gl_FragColor = vec4(v_color.rgb * v_lighting, 1.0);
           }
         `
         let shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
@@ -126,7 +125,7 @@
         // myCycle.addRenderable(aCube)
 
         myGlTFLoader = new Plot3DGlTfLoader(glCntxt)
-        let urlToGltfFile = './spec/assets/mesh3d/blenderMonkey.gltf'
+        let urlToGltfFile = './spec/assets/mesh3d/square.gltf'
         let loadedMesh = undefined
         let math = {
           vector3: new Vector3Math(),
@@ -134,6 +133,7 @@
         }
         myGlTFLoader.requestGlTf(urlToGltfFile)
         setTimeout(() => {
+          console.log(myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1])
           let meshData = {
             vertices: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[0].cells,
             normals: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[1].cells,
@@ -143,8 +143,8 @@
           // console.log('normals: ', loadedNormals)
           // console.log('colors', myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[2].cells)
           
-          let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math, meshData)
-          // let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math)
+          // let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math, meshData)
+          let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math)
           myCycle.addRenderable(monkeyMesh)
           // let aCube = myMeshFactory3D.createACube3D()
           // myCycle.addRenderable(aCube)

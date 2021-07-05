@@ -85,9 +85,11 @@ class Plot3DShaderBuilder extends Plot3DBuilder {
       shader.glVertexUniformLocation[vertexUniform] = this.glCntxt.getUniformLocation(shader.program, vertexUniform)
     })
 
-    shader.fragmentUniformList.forEach((fragmentUniform) => {
-      shader.glFragmentUniformLocation[fragmentUniform] = this.glCntxt.getUniformLocation(shader.program, fragmentUniform)
-    })
+    if (shader.fragmentUniformList != null) {
+      shader.fragmentUniformList.forEach((fragmentUniform) => {
+        shader.glFragmentUniformLocation[fragmentUniform] = this.glCntxt.getUniformLocation(shader.program, fragmentUniform)
+      })
+    }
 
     return shader
   }
