@@ -17,6 +17,7 @@ class Background extends Renderable {
       this.clearColor.cells[2],
       this.clearColor.cells[3]
     )
-    this.glCntxt.clear(this.glCntxt.COLOR_BUFFER_BIT)
+    this.glCntxt.clearDepth(1.0)
+    this.glCntxt.clear(this.glCntxt.COLOR_BUFFER_BIT | this.DEPTH_BUFFER_BIT)
   }
 }

@@ -88,58 +88,58 @@ describe("Plot3DFactory", function() {
     })
   })
 
-  it("should have a method for creating a cube", function() {
-    expect(typeof myMeshFactory3D.createACube3D).toBe('function')
-  })
+  // it("should have a method for creating a cube", function() {
+  //   expect(typeof myMeshFactory3D.createACube3D).toBe('function')
+  // })
 
-  describe("createACube3D", function() {
-    it("should create an instance of TriangleMesh3D", function() {
-      expect(myMeshFactory3D.createACube3D().constructor.name).toEqual('TriangleMesh3D')
-    })
+  // describe("createACube3D", function() {
+  //   it("should create an instance of TriangleMesh3D", function() {
+  //     expect(myMeshFactory3D.createACube3D().constructor.name).toEqual('TriangleMesh3D')
+  //   })
 
-    it("should have vertices for building a cube out of triangles", function() {
-      let cube = myMeshFactory3D.createACube3D()
-      let expected = new Float32Array([
-        1.0,-1.0,-1.0,
-       -1.0,-1.0, 1.0,
-       -1.0, 1.0, 1.0,
-        1.0, 1.0,-1.0,
-       -1.0,-1.0,-1.0,
-       -1.0, 1.0,-1.0,
-        1.0,-1.0, 1.0,
-       -1.0,-1.0,-1.0,
-        1.0,-1.0,-1.0,
-        1.0, 1.0,-1.0,
-        1.0,-1.0,-1.0,
-       -1.0,-1.0,-1.0,
-       -1.0,-1.0,-1.0,
-       -1.0, 1.0, 1.0,
-       -1.0, 1.0,-1.0,
-        1.0,-1.0, 1.0,
-       -1.0,-1.0, 1.0,
-       -1.0,-1.0,-1.0,
-       -1.0, 1.0, 1.0,
-       -1.0,-1.0, 1.0,
-        1.0,-1.0, 1.0,
-        1.0, 1.0, 1.0,
-        1.0,-1.0,-1.0,
-        1.0, 1.0,-1.0,
-        1.0,-1.0,-1.0,
-        1.0, 1.0, 1.0,
-        1.0,-1.0, 1.0,
-        1.0, 1.0, 1.0,
-        1.0, 1.0,-1.0,
-       -1.0, 1.0,-1.0,
-        1.0, 1.0, 1.0,
-       -1.0, 1.0,-1.0,
-       -1.0, 1.0, 1.0,
-        1.0, 1.0, 1.0,
-       -1.0, 1.0, 1.0,
-        1.0,-1.0, 1.0
-      ])
-      expect(cube.vertices).toEqual(expected)
-    })
-  })
+  //   it("should have vertices for building a cube out of triangles", function() {
+  //     let cube = myMeshFactory3D.createACube3D()
+  //     let expected = new Float32Array([
+  //       1.0,-1.0,-1.0,
+  //      -1.0,-1.0, 1.0,
+  //      -1.0, 1.0, 1.0,
+  //       1.0, 1.0,-1.0,
+  //      -1.0,-1.0,-1.0,
+  //      -1.0, 1.0,-1.0,
+  //       1.0,-1.0, 1.0,
+  //      -1.0,-1.0,-1.0,
+  //       1.0,-1.0,-1.0,
+  //       1.0, 1.0,-1.0,
+  //       1.0,-1.0,-1.0,
+  //      -1.0,-1.0,-1.0,
+  //      -1.0,-1.0,-1.0,
+  //      -1.0, 1.0, 1.0,
+  //      -1.0, 1.0,-1.0,
+  //       1.0,-1.0, 1.0,
+  //      -1.0,-1.0, 1.0,
+  //      -1.0,-1.0,-1.0,
+  //      -1.0, 1.0, 1.0,
+  //      -1.0,-1.0, 1.0,
+  //       1.0,-1.0, 1.0,
+  //       1.0, 1.0, 1.0,
+  //       1.0,-1.0,-1.0,
+  //       1.0, 1.0,-1.0,
+  //       1.0,-1.0,-1.0,
+  //       1.0, 1.0, 1.0,
+  //       1.0,-1.0, 1.0,
+  //       1.0, 1.0, 1.0,
+  //       1.0, 1.0,-1.0,
+  //      -1.0, 1.0,-1.0,
+  //       1.0, 1.0, 1.0,
+  //      -1.0, 1.0,-1.0,
+  //      -1.0, 1.0, 1.0,
+  //       1.0, 1.0, 1.0,
+  //      -1.0, 1.0, 1.0,
+  //       1.0,-1.0, 1.0
+  //     ])
+  //     expect(cube.vertices).toEqual(expected)
+  //   })
+  // })
 
   it("should have a instance of Plot3DGlTfLoader", function() {
     expect(myMeshFactory3D.loaders.gltf.constructor.name).toEqual('Plot3DGlTfLoader')
