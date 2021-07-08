@@ -125,7 +125,7 @@
         // myCycle.addRenderable(aCube)
 
         myGlTFLoader = new Plot3DGlTfLoader(glCntxt)
-        let urlToGltfFile = './spec/assets/mesh3d/coloredCube.gltf'
+        let urlToGltfFile = './spec/assets/mesh3d/blenderMonkey.gltf'
         let loadedMesh = undefined
         let math = {
           vector3: new Vector3Math(),
@@ -134,27 +134,29 @@
         myGlTFLoader.requestGlTf(urlToGltfFile)
         setTimeout(() => {
           console.log(myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1])
-          let meshData = {
-            vertices: [],
-            normals: [],
-            indices: [],
-            colors: []
-          }
+          let meshData = []
           let loadedData = myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1]
           loadedData.meshes.forEach(mesh => {
             mesh.primitives.forEach(primitive => {
+              meshData.push({
+                  vertices: [],
+                  normals: [],
+                  indices: [],
+                  colors: []
+                }
+              )
               let verticeIndex = primitive.attributes.POSITION
               let normalsIndex = primitive.attributes.NORMAL
               let indicesIndex = primitive.indices
               let colorIndex = primitive.material
-              loadedData.bufferViews[verticeIndex].cells.forEach(cell => { meshData.vertices.push(cell) })
-              loadedData.bufferViews[normalsIndex].cells.forEach(cell => { meshData.normals.push(cell) })
-              loadedData.bufferViews[indicesIndex].cells.forEach(cell => { meshData.indices.push(cell) })
-              for (let i = 0; i < 1; i++) {
-                meshData.colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[0])
-                meshData.colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[1])
-                meshData.colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[2])
-                meshData.colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[3])
+              loadedData.bufferViews[verticeIndex].cells.forEach(cell => { meshData[meshData.length - 1].vertices.push(cell) })
+              loadedData.bufferViews[normalsIndex].cells.forEach(cell => { meshData[meshData.length - 1].normals.push(cell) })
+              loadedData.bufferViews[indicesIndex].cells.forEach(cell => { meshData[meshData.length - 1].indices.push(cell) })
+              for (let i = 0; i < loadedData.bufferViews[indicesIndex].cells.length; i++) {
+                meshData[meshData.length - 1].colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[0])
+                meshData[meshData.length - 1].colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[1])
+                meshData[meshData.length - 1].colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[2])
+                meshData[meshData.length - 1].colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[3])
               }
             })
           })
@@ -168,8 +170,8 @@
           // console.log('normals: ', loadedNormals)
           // console.log('colors', myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[2].cells)
           
-          // let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math, meshData)
-          let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math)
+          let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math, meshData)
+          // let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math)
           myCycle.addRenderable(monkeyMesh)
           // let aCube = myMeshFactory3D.createACube3D()
           // myCycle.addRenderable(aCube)
