@@ -9,15 +9,13 @@ class Background extends Renderable {
   }
 
   draw() {
-    this.glCntxt.clear(this.glCntxt.COLOR_BUFFER_BIT | this.glCntxt.DEPTH_BUFFER_BIT)
     this.glCntxt.viewport(0, 0, this.glCntxt.canvas.width, this.glCntxt.canvas.height)
     this.glCntxt.clearColor(
       this.clearColor.cells[0],
       this.clearColor.cells[1],
       this.clearColor.cells[2],
       this.clearColor.cells[3]
-    )
-    this.glCntxt.clearDepth(1.0)
-    this.glCntxt.clear(this.glCntxt.COLOR_BUFFER_BIT | this.DEPTH_BUFFER_BIT)
+      )
+    this.glCntxt.clear(this.glCntxt.COLOR_BUFFER_BIT | this.glCntxt.DEPTH_BUFFER_BIT)
   }
 }

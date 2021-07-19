@@ -29,7 +29,7 @@ describe("Background", function() {
     it("should clear the screen with the defined color", function() {
       spyOn(myBackground.glCntxt, 'clear').and.callThrough()
       myBackground.draw()
-      expect(myBackground.glCntxt.clear).toHaveBeenCalledTimes(2)
+      expect(myBackground.glCntxt.clear).toHaveBeenCalledTimes(1)
     })
     it("should set the viewport", function() {
       spyOn(myBackground.glCntxt, 'viewport')

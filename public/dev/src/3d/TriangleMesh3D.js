@@ -63,7 +63,7 @@ class TriangleMesh3D extends Renderable3D {
 
     this.meshData = meshData
 
-    this.glVertexBuffers = []
+    this.glVerticesBuffers = []
     this.primitivesVertices = []
 
     this.glNormalsBuffers = []
@@ -72,14 +72,14 @@ class TriangleMesh3D extends Renderable3D {
     this.glIndicesBuffers = []
     this.primitivesIndices = []
 
-    this.glColorsBuffers = []
+    this.glColorBuffers = []
     this.primitivesColors = []
 
     this.meshData.forEach(primitiveData => {
-      this.glVertexBuffers.push(this.glCntxt.createBuffer())
+      this.glVerticesBuffers.push(this.glCntxt.createBuffer())
       this.glCntxt.bindBuffer(
         this.glCntxt.ARRAY_BUFFER,
-        this.glVertexBuffers[this.glVertexBuffers.length -1]
+        this.glVerticesBuffers[this.glVerticesBuffers.length -1]
       )
       this.primitivesVertices.push(
         (primitiveData.vertices.constructor.name === 'Float32Array') ?
@@ -124,10 +124,10 @@ class TriangleMesh3D extends Renderable3D {
         glCntxt.STATIC_DRAW
       )
 
-      this.glColorsBuffers.push(this.glCntxt.createBuffer())
+      this.glColorBuffers.push(this.glCntxt.createBuffer())
       this.glCntxt.bindBuffer(
         this.glCntxt.ARRAY_BUFFER,
-        this.glColorsBuffers[this.glColorsBuffers.length -1]
+        this.glColorBuffers[this.glColorBuffers.length -1]
       )
       this.primitivesColors.push(
         (primitiveData.indices.constructor.name === 'Float32Array') ?
@@ -148,7 +148,7 @@ class TriangleMesh3D extends Renderable3D {
     this.modelTransformationMatrix.reset()
     this.worldTranslationMatrix.reset()
     // this.translateXIncremental(0.001)
-    this.rotateXIncremental(0.01)
+    // this.rotateXIncremental(0.01)
     this.rotateYIncremental(0.01)
     this.rotateZIncremental(0.01)
     this.worldTranslationMatrix.multiplyM4(this.modelTransformationMatrix)
@@ -165,7 +165,7 @@ class TriangleMesh3D extends Renderable3D {
     
     this.meshData.forEach((primitive, primitiveIndex) => { 
       this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
-      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVertexBuffers[primitiveIndex])
+      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticesBuffers[primitiveIndex])
       this.glCntxt.vertexAttribPointer(
         this.shader.glAttrLocation['a_position'],
         3,
@@ -187,7 +187,7 @@ class TriangleMesh3D extends Renderable3D {
       )
           
       this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_color'])
-      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorsBuffers[primitiveIndex])
+      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorBuffers[primitiveIndex])
       this.glCntxt.vertexAttribPointer(
         this.shader.glAttrLocation['a_color'],
         4,

@@ -63,8 +63,9 @@
       () => {
         let canvas = document.getElementById("renderCanvas2")
         let glCntxt = canvas.getContext("webgl2")
+        glCntxt.enable(glCntxt.CULL_FACE)
+        glCntxt.cullFace(glCntxt.BACK)
         glCntxt.enable(glCntxt.DEPTH_TEST)
-        glCntxt.cullFace(glCntxt.FRONT_AND_BACK)
         let myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
         let vertexShaderCode = `
           attribute vec3 a_position;
@@ -125,7 +126,7 @@
         // myCycle.addRenderable(aCube)
 
         myGlTFLoader = new Plot3DGlTfLoader(glCntxt)
-        let urlToGltfFile = './spec/assets/mesh3d/blenderMonkey.gltf'
+        let urlToGltfFile = './spec/assets/mesh3d/cube.gltf'
         let loadedMesh = undefined
         let math = {
           vector3: new Vector3Math(),
@@ -188,7 +189,7 @@
       <canvas id="renderCanvas" width="100" height="100"></canvas>
     </div>
     <div style="display: inline-block;" id="canvasContainer2">
-      <canvas id="renderCanvas2" width="500" height="500"></canvas>
+      <canvas id="renderCanvas2" width="100" height="100"></canvas>
     </div>
   </div>
 </body>

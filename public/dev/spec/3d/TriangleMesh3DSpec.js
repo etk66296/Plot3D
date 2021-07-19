@@ -64,12 +64,52 @@ describe("TriangleMesh3D", function() {
     expect(myTriangleMesh.__proto__.__proto__.constructor.name).toEqual('Renderable3D')
   })
 
-  it("should have a web gl buffer object", function() {
-    expect(myTriangleMesh.glVertexBuffer.constructor.name).toEqual('WebGLBuffer')
+  it("should have a list of web gl buffer objects for the vertices buffers", function() {
+    myTriangleMesh.glVerticesBuffers.forEach((buffer) => {
+      expect(buffer.constructor.name).toEqual('WebGLBuffer')
+    })
   })
 
-  it("should have an array for the vertices position data", function() {
-    expect(myTriangleMesh.vertices.constructor.name).toEqual('Float32Array')
+  it("should have a list of arrays for the vertices position data", function() {
+    myTriangleMesh.primitivesVertices.forEach((vertices) => {
+      expect(vertices.constructor.name).toEqual('Float32Array')
+    })
+  })
+
+  it("should have a list of web gl buffer objects for the normals buffers", function() {
+    myTriangleMesh.glNormalsBuffers.forEach((buffer) => {
+      expect(buffer.constructor.name).toEqual('WebGLBuffer')
+    })
+  })
+
+  it("should have a list of arrays for the normals direction data", function() {
+    myTriangleMesh.primitivesNormals.forEach((normals) => {
+      expect(normals.constructor.name).toEqual('Float32Array')
+    })
+  })
+
+  it("should have a list of web gl buffer objects for the indices buffers", function() {
+    myTriangleMesh.glIndicesBuffers.forEach((buffer) => {
+      expect(buffer.constructor.name).toEqual('WebGLBuffer')
+    })
+  })
+
+  it("should have a list of arrays for the indices data", function() {
+    myTriangleMesh.primitivesIndices.forEach((indices) => {
+      expect(indices.constructor.name).toEqual('Uint16Array')
+    })
+  })
+
+  it("should have a list of web gl buffer objects for the color buffers", function() {
+    myTriangleMesh.glColorBuffers.forEach((buffer) => {
+      expect(buffer.constructor.name).toEqual('WebGLBuffer')
+    })
+  })
+
+  it("should have a list of arrays for the indices data", function() {
+    myTriangleMesh.primitivesColors.forEach((colors) => {
+      expect(colors.constructor.name).toEqual('Float32Array')
+    })
   })
 
   it("should have a method update", function() {
