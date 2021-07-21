@@ -80,12 +80,6 @@ class Camera3D extends Renderable3D {
   update() {
     this.worldMatrix.reset()
     this.modelTransformationMatrix.reset()
-    // this.translateZIncremental(-0.01)
-    // this.translateXIncremental(-0.1)
-    // this.rotateXIncremental(0.1)
-    // this.rotateYIncremental(0.1)
-    // this.lookAt()
-    // this.worldMatrix.multiplyM4(this.lookAtMatrix)
     this.worldMatrix.multiplyM4(this.modelTransformationMatrix)
     this.worldMatrix.multiplyM4(this.worldTranslationMatrix)
   }
@@ -93,7 +87,6 @@ class Camera3D extends Renderable3D {
   draw() {
     this.glCntxt.useProgram(this.shader.program)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_WorldToViewMatrix'], false, this.worldMatrix.cells)
-    // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.orthoProjectionMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.perspectiveProjectionMatrix.cells)
   }
 }

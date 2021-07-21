@@ -21,7 +21,7 @@ describe("Plot3DGlTfLoader", function() {
         }
       }
     }
-    gltfRequester.open('GET', './spec/assets/mesh3d/triangle.gltf', true)
+    gltfRequester.open('GET', './spec/assets/mesh3d/cube.gltf', true)
     gltfRequester.send(null)
     setTimeout(() => {}, 2000)
   })
@@ -73,7 +73,7 @@ describe("Plot3DGlTfLoader", function() {
 
     it("should call the class internal method for extracting the data from the gltf data", function(done) {
       spyOn(myPlot3DGlTfLoader, "extractDataFromGltfJson")
-      let url = './spec/assets/mesh3d/triangle.gltf'
+      let url = './spec/assets/mesh3d/cube.gltf'
       myPlot3DGlTfLoader.requestGlTf(url)
       setTimeout(() => {
         expect(myPlot3DGlTfLoader.extractDataFromGltfJson).toHaveBeenCalled()
@@ -91,7 +91,7 @@ describe("Plot3DGlTfLoader", function() {
     it("should call open with the url given in parameter 1", function() {
       spyOn(myPlot3DGlTfLoader.gltfRequester, 'open').and.callThrough()
       spyOn(myPlot3DGlTfLoader.gltfRequester, 'send').and.callThrough()
-      let url = './spec/assets/mesh3d/triangle.gltf'
+      let url = './spec/assets/mesh3d/cube.gltf'
       myPlot3DGlTfLoader.requestGlTf(url)
       expect(myPlot3DGlTfLoader.gltfRequester.open).toHaveBeenCalledWith('GET', url, true)
       expect(myPlot3DGlTfLoader.gltfRequester.send).toHaveBeenCalledWith(null)
@@ -99,7 +99,7 @@ describe("Plot3DGlTfLoader", function() {
 
     it("should trigger the on ready state and trigger the data extraction", function(done) {
       spyOn(myPlot3DGlTfLoader, 'extractDataFromGltfJson').and.callThrough()
-      let url = './spec/assets/mesh3d/triangle.gltf'
+      let url = './spec/assets/mesh3d/cube.gltf'
       myPlot3DGlTfLoader.requestGlTf(url)
       setTimeout(() => {
         expect(myPlot3DGlTfLoader.extractDataFromGltfJson).toHaveBeenCalled()
@@ -140,22 +140,22 @@ describe("Plot3DGlTfLoader", function() {
     it("should call the class internal function bytesToFloat when the accessor tells it is a float buffer of floats", function() {
       spyOn(myPlot3DGlTfLoader, 'bytesToFloats')
       myPlot3DGlTfLoader.extractDataFromGltfJson(gltfObject)
-      expect(myPlot3DGlTfLoader.bytesToFloats).toHaveBeenCalledTimes(2)
+      expect(myPlot3DGlTfLoader.bytesToFloats).toHaveBeenCalledTimes(12)
     })
 
     it("should call the class internal function bytesToUShort when the accessor tells it is a buffer of unsigned shorts", function() {
       spyOn(myPlot3DGlTfLoader, 'bytesToUShorts')
       myPlot3DGlTfLoader.extractDataFromGltfJson(gltfObject)
-      expect(myPlot3DGlTfLoader.bytesToUShorts).toHaveBeenCalledTimes(1)
+      expect(myPlot3DGlTfLoader.bytesToUShorts).toHaveBeenCalledTimes(4)
     })
 
     it("should return the correct data", function() {
       let myData = myPlot3DGlTfLoader.extractDataFromGltfJson(gltfObject)
-      let myExpectedArray = new Float32Array([ 1, 0, 1, 1, 0, -0, 0, 0, 0.5847219824790955 ])
+      let myExpectedArray = new Float32Array([ 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, 1 ])
       expect(myData.bufferViews[0].cells).toEqual(myExpectedArray)
-      myExpectedArray = new Float32Array([ 0, 1, -0, 0, 1, -0, 0, 1, -0 ])
+      myExpectedArray = new Float32Array([ 0, 1, -0, 0, 1, -0, 0, 1, -0, 0, 1, -0 ])
       expect(myData.bufferViews[1].cells).toEqual(myExpectedArray)
-      myExpectedArray = new Uint16Array([ 1, 2, 0 ])
+      myExpectedArray = new Uint16Array([ 0, 2, 3, 0, 3, 1 ])
       expect(myData.bufferViews[2].cells).toEqual(myExpectedArray)
     })
     

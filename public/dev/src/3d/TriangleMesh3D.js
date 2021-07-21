@@ -147,8 +147,6 @@ class TriangleMesh3D extends Renderable3D {
     super.update()
     this.modelTransformationMatrix.reset()
     this.worldTranslationMatrix.reset()
-    // this.translateXIncremental(0.001)
-    // this.rotateXIncremental(0.01)
     this.rotateYIncremental(0.01)
     this.rotateZIncremental(0.01)
     this.worldTranslationMatrix.multiplyM4(this.modelTransformationMatrix)
@@ -159,10 +157,7 @@ class TriangleMesh3D extends Renderable3D {
 
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.worldTranslationMatrix.cells)
-    // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_WorldToViewMatrix'], false, this.camera.lookAtMatrix.cells)
-    // // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.camera.orthographicProjectionMatrix.cells)
-    // this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.camera.perspectiveProjectionMatrix.cells)
-    
+       
     this.meshData.forEach((primitive, primitiveIndex) => { 
       this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
       this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticesBuffers[primitiveIndex])
