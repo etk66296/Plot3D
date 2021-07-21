@@ -26,9 +26,8 @@ class Camera3D extends Renderable3D {
       aspect: glCntxt.canvas.clientWidth / glCntxt.canvas.clientHeight
     }
 
-    this.v = 1
-
     let f = Math.tan(Math.PI * 0.5 - 0.5 * this.frustum.fovAngleX)
+    
     this.perspectiveProjectionMatrix = new Matrix4x4([
       f / this.frustum.aspect, 0, 0, 0,
       0, f, 0, 0,

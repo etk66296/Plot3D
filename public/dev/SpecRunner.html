@@ -21,6 +21,8 @@
   <script src="src/Plot3DCycle.js"></script>
   <script src="src/Plot3DLoader.js"></script>
   <script src="src/loaders/Plot3DGlTfLoader.js"></script>
+  <script src="src/Plot3DUserIO.js"></script>
+  <script src="src/userio/Plot3DKeyboard.js"></script>
 
   <script src="src/math/Matrix.js"></script>
   <script src="src/math/Vector.js"></script>
@@ -44,6 +46,8 @@
   <script src="spec/Plot3DCycleSpec.js"></script>
   <script src="spec/Plot3DLoaderSpec.js"></script>
   <script src="spec/loaders/Plot3DGlTfLoaderSpec.js"></script>
+  <script src="spec/Plot3DUserIOSpec.js"></script>
+  <script src="spec/userio/Plot3DKeyboardSpec.js"></script>
 
   <script src="spec/math/MatrixSpec.js"></script>
   <script src="spec/math/VectorSpec.js"></script>
@@ -134,7 +138,6 @@
         }
         myGlTFLoader.requestGlTf(urlToGltfFile)
         setTimeout(() => {
-          console.log(myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1])
           let meshData = []
           let loadedData = myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1]
           loadedData.meshes.forEach(mesh => {
@@ -161,15 +164,11 @@
               }
             })
           })
-          console.log(meshData)
           // let meshData = {
           //   vertices: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[0].cells,
           //   normals: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[1].cells,
           //   indices: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[2].cells
           // }
-          // console.log('vertices: ', loadedVertices)
-          // console.log('normals: ', loadedNormals)
-          // console.log('colors', myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[2].cells)
           
           let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math, meshData)
           // let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math)

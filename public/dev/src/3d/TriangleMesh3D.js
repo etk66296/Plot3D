@@ -56,8 +56,6 @@ class TriangleMesh3D extends Renderable3D {
   ) {
     super(glCntxt, shader, math)
 
-    console.log(meshData)
-
     this.modelMatrix = new Matrix4x4()
 
 

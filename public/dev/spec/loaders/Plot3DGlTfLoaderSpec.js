@@ -114,7 +114,7 @@ describe("Plot3DGlTfLoader", function() {
       setTimeout(() => {
         expect(console.error).toHaveBeenCalledWith('check your gltf file, version must be 2.0')
         done()
-      }, 300)
+      }, 500)
     })
 
   })
