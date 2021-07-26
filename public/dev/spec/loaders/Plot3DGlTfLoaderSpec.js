@@ -23,7 +23,7 @@ describe("Plot3DGlTfLoader", function() {
     }
     gltfRequester.open('GET', './spec/assets/mesh3d/cube.gltf', true)
     gltfRequester.send(null)
-    setTimeout(() => {}, 2000)
+    setTimeout(() => {}, 3000)
   })
 
   beforeEach(function() {
@@ -31,7 +31,7 @@ describe("Plot3DGlTfLoader", function() {
     if(gltfObjectCopy == undefined) {
       setTimeout(() => {
         gltfObject = JSON.parse(JSON.stringify(gltfObjectCopy))
-      }, 300)
+      }, 500)
     } else {
       gltfObject = JSON.parse(JSON.stringify(gltfObjectCopy))
     }
@@ -68,7 +68,7 @@ describe("Plot3DGlTfLoader", function() {
       setTimeout(() => {
         expect(console.error).toHaveBeenCalled()
         done()
-      }, 300)
+      }, 700)
     })
 
     it("should call the class internal method for extracting the data from the gltf data", function(done) {
@@ -78,7 +78,7 @@ describe("Plot3DGlTfLoader", function() {
       setTimeout(() => {
         expect(myPlot3DGlTfLoader.extractDataFromGltfJson).toHaveBeenCalled()
         done()
-      }, 300)
+      }, 700)
     })
 
   })
@@ -104,7 +104,7 @@ describe("Plot3DGlTfLoader", function() {
       setTimeout(() => {
         expect(myPlot3DGlTfLoader.extractDataFromGltfJson).toHaveBeenCalled()
         done()
-      }, 300)
+      }, 700)
     })
 
     it("should log an error when the gltf object is not version 2", function(done) {
@@ -114,7 +114,7 @@ describe("Plot3DGlTfLoader", function() {
       setTimeout(() => {
         expect(console.error).toHaveBeenCalledWith('check your gltf file, version must be 2.0')
         done()
-      }, 500)
+      }, 1000)
     })
 
   })

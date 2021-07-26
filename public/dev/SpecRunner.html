@@ -126,6 +126,9 @@
         aCamera.translateZIncremental(5)
         myCycle.addRenderable(aCamera)
 
+        let myKeyboardCtrl = new Plot3DKeyboard()
+        myKeyboardCtrl.imposeKeyDownWasdCtrlTo(aCamera)
+
         // let aCube = myMeshFactory3D.createACube3D()
         // myCycle.addRenderable(aCube)
 
