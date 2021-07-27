@@ -31,7 +31,7 @@ describe("Plot3DGlTfLoader", function() {
     if(gltfObjectCopy == undefined) {
       setTimeout(() => {
         gltfObject = JSON.parse(JSON.stringify(gltfObjectCopy))
-      }, 500)
+      }, 1000)
     } else {
       gltfObject = JSON.parse(JSON.stringify(gltfObjectCopy))
     }
