@@ -11,6 +11,8 @@ class Renderable3D extends Renderable {
     this.worldPosition = new Vector3([ 0.0, 0.0, 0.0 ])
 
     this.math = math
+
+    this.controls = []
   }
 
   rotateXIncremental(angleInRadian) {
@@ -101,7 +103,7 @@ class Renderable3D extends Renderable {
   }
 
   update() {
-    
+
   }
 
   draw() {

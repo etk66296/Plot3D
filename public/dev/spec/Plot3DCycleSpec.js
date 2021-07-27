@@ -21,6 +21,10 @@ describe("Cycle", function() {
     expect(typeof myCycle.tickCount).toBe('number')
   })
 
+  it("has an attribute for storing the updatelist of userio objects", function() {
+    expect(myCycle.userIoObjectList.constructor.name).toEqual('Array')
+  })
+
   it("has an attribute renderObjectList of type array", function() {
     expect(myCycle.renderObjectList.constructor.name).toEqual('Array')
   })
@@ -34,6 +38,18 @@ describe("Cycle", function() {
       spyOn(myCycle.renderObjectList, 'push')
       myCycle.addRenderable(null)
       expect(myCycle.renderObjectList.push).toHaveBeenCalled()
+    })
+  })
+
+  it("has a method for adding user io objects to the corresponding list", function() {
+    expect(typeof myCycle.addUserIo).toBe('function')
+  })
+
+  describe("addUserIo", function() {
+    it("should add a userio object to the update list", function() {
+      spyOn(myCycle.userIoObjectList, 'push')
+      myCycle.addUserIo(null)
+      expect(myCycle.userIoObjectList.push).toHaveBeenCalled()
     })
   })
 

@@ -6,6 +6,7 @@ class Cycle extends Plot3DObject {
     this.tickCount = 0
 
     this.renderObjectList = []
+    this.userIoObjectList = []
     this.fps = 1
 
     this.tickRunner = null
@@ -16,6 +17,10 @@ class Cycle extends Plot3DObject {
 
   addRenderable(object) {
     this.renderObjectList.push(object)
+  }
+
+  addUserIo(object) {
+    this.userIoObjectList.push(object)
   }
 
   stop() {
@@ -56,6 +61,9 @@ class Cycle extends Plot3DObject {
   }
 
   update() {
+    this.userIoObjectList.forEach(userIo => {
+      userIo.update()
+    })
     this.renderObjectList.forEach(renderable => {
       renderable.update()
       renderable.draw()

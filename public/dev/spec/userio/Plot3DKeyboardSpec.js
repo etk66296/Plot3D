@@ -20,16 +20,16 @@ describe("Plot3DKeyboard", function() {
     expect(myPlot3DKeyboard.__proto__.__proto__.constructor.name).toEqual('Plot3DUserIO')
   })
 
-  it("should have a method for imposing Renderable3D objects keyboard 'wasd' control", function() {
-    expect(typeof myPlot3DKeyboard.imposeKeyDownWasdCtrlTo).toBe('function')
-  })
+  // it("should have a method for imposing Renderable3D objects keyboard 'wasd' control", function() {
+  //   expect(typeof myPlot3DKeyboard.imposeKeyDownWasdCtrlTo).toBe('function')
+  // })
 
-  describe("imposeKeyDownWasdCtrlTo", function() {
-    it ("should add four event listeners to the document", function() {
-      spyOn(document, 'addEventListener')
-      myPlot3DKeyboard.imposeKeyDownWasdCtrlTo(myRenderable3d)
-      expect(document.addEventListener).toHaveBeenCalled()
-    })
-  })
+  // describe("imposeKeyDownWasdCtrlTo", function() {
+  //   it ("should add four event listeners to the document", function() {
+  //     spyOn(document, 'addEventListener')
+  //     myPlot3DKeyboard.imposeKeyDownWasdCtrlTo(myRenderable3d)
+  //     expect(document.addEventListener).toHaveBeenCalled()
+  //   })
+  // })
 
 })

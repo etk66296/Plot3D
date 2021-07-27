@@ -126,11 +126,10 @@
         aCamera.translateZIncremental(5)
         myCycle.addRenderable(aCamera)
 
-        let myKeyboardCtrl = new Plot3DKeyboard()
-        myKeyboardCtrl.imposeKeyDownWasdCtrlTo(aCamera)
+        let myKeyboardControl = new Plot3DKeyboard()
+        myKeyboardControl.imposeKeyDownWasdCtrlTo(aCamera)
+        myCycle.addUserIo(myKeyboardControl)
 
-        // let aCube = myMeshFactory3D.createACube3D()
-        // myCycle.addRenderable(aCube)
 
         myGlTFLoader = new Plot3DGlTfLoader(glCntxt)
         let urlToGltfFile = './spec/assets/mesh3d/cube.gltf'

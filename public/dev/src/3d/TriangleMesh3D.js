@@ -142,7 +142,6 @@ class TriangleMesh3D extends Renderable3D {
 
 
   update() {
-    super.update()
     this.modelTransformationMatrix.reset()
     this.worldTranslationMatrix.reset()
     this.rotateYIncremental(0.01)
