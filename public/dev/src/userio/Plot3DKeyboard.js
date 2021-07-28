@@ -5,15 +5,16 @@ class Plot3DKeyboard extends Plot3DUserIO{
     this.keysDown = new Array(250).fill(false)
     
     document.addEventListener('keydown', (event) => {
-      this.keysDown[(event || window.event).keyCode] = true
+      this.setKeyDown((event || window.event).keyCode)
     })
 
     document.addEventListener('keyup', (event) => {
-      this.keysDown[(event || window.event).keyCode] = false
+      this.releaseKey((event || window.event).keyCode)
     })
 
 
     this.kbWasdCtrlObjects = []
+    this.kbArrowFlyCtrlObjects = []
  
   }
 
@@ -21,7 +22,19 @@ class Plot3DKeyboard extends Plot3DUserIO{
     this.kbWasdCtrlObjects.push(renderable3dObj)
   }
 
-  update() {
+  imposeKeyDownArrowFlyCtrlTo(renderable3dObj) {
+    this.kbArrowFlyCtrlObjects.push(renderable3dObj)
+  }
+
+  setKeyDown(keyCode) {
+    this.keysDown[keyCode] = true
+  }
+
+  releaseKey(keyCode) {
+    this.keysDown[keyCode] = false
+  }
+
+  updateWasdCtrl() {
     this.kbWasdCtrlObjects.forEach(renderable3d => {
       if (this.keysDown[87] /*w*/) {
         renderable3d.translateZIncremental(0.1)
@@ -36,6 +49,24 @@ class Plot3DKeyboard extends Plot3DUserIO{
         renderable3d.translateXIncremental(-0.1)
       }
     })
+  }
+
+  updateArrowFlyCtrl() {
+    this.kbArrowFlyCtrlObjects.forEach(renderable3d => {
+      if(this.keysDown[37] /*left arrow*/) {
+        renderable3d.rotateZIncremental(0.005)
+      }
+      if(this.keysDown[38] /*up arrow*/) {
+        renderable3d.rotateXIncremental(0.005)
+      }
+      if(this.keysDown[40] /*down arrow*/) {
+        renderable3d.rotateXIncremental(-0.005)
+      }
+    })
+  }
+
+  update() { /*NOT TESTED YET*/
+    this.updateWasdCtrl()
   }
    
 }

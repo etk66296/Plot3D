@@ -17,10 +17,10 @@ class Renderable3D extends Renderable {
 
   rotateXIncremental(angleInRadian) {
     this.modelSpaceRotationInRad.x += angleInRadian
-    let tyy = Math.cos(this.modelSpaceRotationInRad.x)
-    let tzy = (-1) * Math.sin(this.modelSpaceRotationInRad.x)
-    let tyz = Math.sin(this.modelSpaceRotationInRad.x)
-    let tzz = Math.cos(this.modelSpaceRotationInRad.x)
+    let tyy = Math.cos(angleInRadian)
+    let tzy = (-1) * Math.sin(angleInRadian)
+    let tyz = Math.sin(angleInRadian)
+    let tzz = Math.cos(angleInRadian)
     let xAxisRotation = new Matrix()
     xAxisRotation.cells = [
       1.0, 0.0, 0.0, 0.0,
@@ -33,10 +33,10 @@ class Renderable3D extends Renderable {
 
   rotateYIncremental(angleInRadian) {
     this.modelSpaceRotationInRad.y += angleInRadian
-    let txx = Math.cos(this.modelSpaceRotationInRad.y)
-    let tzx = Math.sin(this.modelSpaceRotationInRad.y)
-    let txz = (-1) * Math.sin(this.modelSpaceRotationInRad.y)
-    let tzz = Math.cos(this.modelSpaceRotationInRad.y)
+    let txx = Math.cos(angleInRadian)
+    let tzx = Math.sin(angleInRadian)
+    let txz = (-1) * Math.sin(angleInRadian)
+    let tzz = Math.cos(angleInRadian)
     let yAxisRotation = new Matrix()
     yAxisRotation.cells = [
       txx, 0.0, tzx, 0.0,
@@ -49,10 +49,10 @@ class Renderable3D extends Renderable {
 
   rotateZIncremental(angleInRadian) {
     this.modelSpaceRotationInRad.z += angleInRadian
-    let txx = Math.cos(this.modelSpaceRotationInRad.z)
-    let tyx = (-1) * Math.sin(this.modelSpaceRotationInRad.z)
-    let txy = Math.sin(this.modelSpaceRotationInRad.z)
-    let tyy = Math.cos(this.modelSpaceRotationInRad.z)
+    let txx = Math.cos(angleInRadian)
+    let tyx = (-1) * Math.sin(angleInRadian)
+    let txy = Math.sin(angleInRadian)
+    let tyy = Math.cos(angleInRadian)
     let zAxisRotation = new Matrix()
     zAxisRotation.cells = [
       txx, tyx, 0.0, 0.0,
