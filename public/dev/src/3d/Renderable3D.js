@@ -5,6 +5,11 @@ class Renderable3D extends Renderable {
     
     this.modelTransformationMatrix = new Matrix4x4()
     this.modelSpaceRotationInRad = { x: 0.0, y: 0.0, z: 0.0 }
+    this.modelDirections = {
+      x: new Vector3([ 1.0, 0.0, 0.0 ]),
+      y: new Vector3([ 0.0, 1.0, 0.0 ]),
+      z: new Vector3([ 0.0, 0.0, 1.0 ])
+    }
     this.modelScale = {x: 0.0, y: 0.0, z: 0.0 }
 
     this.worldTranslationMatrix = new Matrix4x4()
@@ -17,15 +22,15 @@ class Renderable3D extends Renderable {
 
   rotateXIncremental(angleInRadian) {
     this.modelSpaceRotationInRad.x += angleInRadian
-    let tyy = Math.cos(angleInRadian)
-    let tzy = (-1) * Math.sin(angleInRadian)
-    let tyz = Math.sin(angleInRadian)
-    let tzz = Math.cos(angleInRadian)
+    this.modelDirections.y.cells[1] = Math.cos(this.modelSpaceRotationInRad.x)
+    this.modelDirections.z.cells[1] = (-1) * Math.sin(this.modelSpaceRotationInRad.x)
+    this.modelDirections.y.cells[2] = Math.sin(this.modelSpaceRotationInRad.x)
+    this.modelDirections.z.cells[2] = Math.cos(this.modelSpaceRotationInRad.x)
     let xAxisRotation = new Matrix()
     xAxisRotation.cells = [
       1.0, 0.0, 0.0, 0.0,
-      0.0, tyy, tzy, 0.0,
-      0.0, tyz, tzz, 0.0,
+      0.0, Math.cos(angleInRadian), (-1) * Math.sin(angleInRadian), 0.0,
+      0.0, Math.sin(angleInRadian), Math.cos(angleInRadian), 0.0,
       0.0, 0.0, 0.0, 1.0
     ]
     this.modelTransformationMatrix.multiplyM4(xAxisRotation)
@@ -33,15 +38,15 @@ class Renderable3D extends Renderable {
 
   rotateYIncremental(angleInRadian) {
     this.modelSpaceRotationInRad.y += angleInRadian
-    let txx = Math.cos(angleInRadian)
-    let tzx = Math.sin(angleInRadian)
-    let txz = (-1) * Math.sin(angleInRadian)
-    let tzz = Math.cos(angleInRadian)
+    this.modelDirections.x.cells[0] = Math.cos(this.modelSpaceRotationInRad.y)
+    this.modelDirections.z.cells[0] = Math.sin(this.modelSpaceRotationInRad.y)
+    this.modelDirections.x.cells[2] = (-1) * Math.sin(this.modelSpaceRotationInRad.y)
+    this.modelDirections.z.cells[2] = Math.cos(this.modelSpaceRotationInRad.y)
     let yAxisRotation = new Matrix()
     yAxisRotation.cells = [
-      txx, 0.0, tzx, 0.0,
+      Math.cos(angleInRadian), 0.0, Math.sin(angleInRadian), 0.0,
       0.0, 1.0, 0.0, 0.0,
-      txz, 0.0, tzz, 0.0,
+      (-1) * Math.sin(angleInRadian), 0.0, Math.cos(angleInRadian), 0.0,
       0.0, 0.0, 0.0, 1.0
     ]
     this.modelTransformationMatrix.multiplyM4(yAxisRotation)
@@ -49,18 +54,56 @@ class Renderable3D extends Renderable {
 
   rotateZIncremental(angleInRadian) {
     this.modelSpaceRotationInRad.z += angleInRadian
-    let txx = Math.cos(angleInRadian)
-    let tyx = (-1) * Math.sin(angleInRadian)
-    let txy = Math.sin(angleInRadian)
-    let tyy = Math.cos(angleInRadian)
+    this.modelDirections.x.cells[0] = Math.cos(this.modelSpaceRotationInRad.z)
+    this.modelDirections.y.cells[0] = (-1) * Math.sin(this.modelSpaceRotationInRad.z)
+    this.modelDirections.x.cells[1] = Math.sin(this.modelSpaceRotationInRad.z)
+    this.modelDirections.y.cells[1] = Math.cos(this.modelSpaceRotationInRad.z)
     let zAxisRotation = new Matrix()
     zAxisRotation.cells = [
-      txx, tyx, 0.0, 0.0,
-      txy, tyy, 0.0, 0.0,
+      Math.cos(angleInRadian), (-1) * Math.sin(angleInRadian), 0.0, 0.0,
+      Math.sin(angleInRadian), Math.cos(angleInRadian), 0.0, 0.0,
       0.0, 0.0, 1.0, 0.0,
       0.0, 0.0, 0.0, 1.0
     ]
     this.modelTransformationMatrix.multiplyM4(zAxisRotation)
+  }
+
+  strideLeft(distance) {
+    this.worldPosition.cells[0] += (distance * this.modelDirections.x.cells[0])
+    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldPosition.cells[1] += (distance * this.modelDirections.x.cells[1])
+    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldPosition.cells[2] += (distance * this.modelDirections.x.cells[2])
+    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+  }
+
+  strideRight(distance) {
+    distance = distance * (-1)
+    this.worldPosition.cells[0] += (distance * this.modelDirections.x.cells[0])
+    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldPosition.cells[1] += (distance * this.modelDirections.x.cells[1])
+    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldPosition.cells[2] += (distance * this.modelDirections.x.cells[2])
+    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+  }
+
+  moveForward(distance) {
+    this.worldPosition.cells[0] += (distance * this.modelDirections.z.cells[0])
+    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldPosition.cells[1] += (distance * this.modelDirections.z.cells[1])
+    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldPosition.cells[2] += (distance * this.modelDirections.z.cells[2])
+    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+  }
+
+  moveBackward(distance) {
+    distance = distance * (-1)
+    this.worldPosition.cells[0] += (distance * this.modelDirections.z.cells[0])
+    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldPosition.cells[1] += (distance * this.modelDirections.z.cells[1])
+    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldPosition.cells[2] += (distance * this.modelDirections.z.cells[2])
+    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
   }
 
   translateXIncremental(distance) {

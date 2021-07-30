@@ -69,6 +69,13 @@ describe("Renderable3D", function() {
     expect(typeof myRenderable3D.math.matrix4x4).toEqual('object')
   })
 
+  it("should have a object wich describes the orientation in world sapce", function() {
+    expect(myRenderable3D.modelDirections.constructor.name).toBe('Object')
+    expect(myRenderable3D.modelDirections.x.cells).toEqual([ 1.0, 0.0, 0.0 ])
+    expect(myRenderable3D.modelDirections.y.cells).toEqual([ 0.0, 1.0, 0.0 ])
+    expect(myRenderable3D.modelDirections.z.cells).toEqual([ 0.0, 0.0, 1.0 ])
+  })
+
   it("should have a a vector with four elements, which represents the current render color", function() {
     expect(myRenderable3D.color.constructor.name).toEqual('Vector4')
   })
@@ -97,8 +104,8 @@ describe("Renderable3D", function() {
       spyOn(Math, 'cos').and.callThrough()
       spyOn(Math, 'sin').and.callThrough()
       myRenderable3D.rotateXIncremental(0.1)
-      expect(Math.cos).toHaveBeenCalledTimes(2)
-      expect(Math.sin).toHaveBeenCalledTimes(2)
+      expect(Math.cos).toHaveBeenCalledTimes(4)
+      expect(Math.sin).toHaveBeenCalledTimes(4)
     })
     it("should multipy the x rotation to the modelTransformationMatrix", function() {
       spyOn(myRenderable3D.modelTransformationMatrix, 'multiplyM4')
@@ -125,8 +132,8 @@ describe("Renderable3D", function() {
       spyOn(Math, 'cos').and.callThrough()
       spyOn(Math, 'sin').and.callThrough()
       myRenderable3D.rotateYIncremental(0.1)
-      expect(Math.cos).toHaveBeenCalledTimes(2)
-      expect(Math.sin).toHaveBeenCalledTimes(2)
+      expect(Math.cos).toHaveBeenCalledTimes(4)
+      expect(Math.sin).toHaveBeenCalledTimes(4)
     })
     it("should multipy the y rotation to the modelTransformationMatrix", function() {
       spyOn(myRenderable3D.modelTransformationMatrix, 'multiplyM4')
@@ -153,8 +160,8 @@ describe("Renderable3D", function() {
       spyOn(Math, 'cos').and.callThrough()
       spyOn(Math, 'sin').and.callThrough()
       myRenderable3D.rotateZIncremental(0.1)
-      expect(Math.cos).toHaveBeenCalledTimes(2)
-      expect(Math.sin).toHaveBeenCalledTimes(2)
+      expect(Math.cos).toHaveBeenCalledTimes(4)
+      expect(Math.sin).toHaveBeenCalledTimes(4)
     })
     it("should multipy the z rotation to the modelTransformationMatrix", function() {
       spyOn(myRenderable3D.modelTransformationMatrix, 'multiplyM4')
