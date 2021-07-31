@@ -110,14 +110,14 @@ describe("Renderable3D", function() {
       expect(Math.cos).toHaveBeenCalledTimes(2)
       expect(Math.sin).toHaveBeenCalledTimes(2)
     })
-    it("should multipy the x rotation to the worldTranslationMatrix", function() {
-      spyOn(myRenderable3D.worldTranslationMatrix, 'multiplyM4')
+    it("should multipy the x rotation to the worldTransformationMatrix", function() {
+      spyOn(myRenderable3D.worldTransformationMatrix, 'multiplyM4')
       myRenderable3D.rotWorldXIncr(0.1)
-      expect(myRenderable3D.worldTranslationMatrix.multiplyM4).toHaveBeenCalled()
+      expect(myRenderable3D.worldTransformationMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotWorldXIncr(0.1)
-      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+      expect(myRenderable3D.worldTransformationMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 0.9950041652780258, -0.09983341664682815, 0,
         0, 0.09983341664682815, 0.9950041652780258, 0,
@@ -139,13 +139,13 @@ describe("Renderable3D", function() {
       expect(Math.sin).toHaveBeenCalledTimes(2)
     })
     it("should multipy the y rotation to the modelTransformationMatrix", function() {
-      spyOn(myRenderable3D.worldTranslationMatrix, 'multiplyM4')
+      spyOn(myRenderable3D.worldTransformationMatrix, 'multiplyM4')
       myRenderable3D.rotWorldYIncr(0.1)
-      expect(myRenderable3D.worldTranslationMatrix.multiplyM4).toHaveBeenCalled()
+      expect(myRenderable3D.worldTransformationMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotWorldYIncr(0.1)
-      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+      expect(myRenderable3D.worldTransformationMatrix.cells).toEqual([
         0.9950041652780258, 0.0, 0.09983341664682815, 0.0,
         0.0, 1.0, 0.0, 0.0,
         -0.09983341664682815, 0.0, 0.9950041652780258, 0.0,
@@ -167,13 +167,13 @@ describe("Renderable3D", function() {
       expect(Math.sin).toHaveBeenCalledTimes(2)
     })
     it("should multipy the z rotation to the modelTransformationMatrix", function() {
-      spyOn(myRenderable3D.worldTranslationMatrix, 'multiplyM4')
+      spyOn(myRenderable3D.worldTransformationMatrix, 'multiplyM4')
       myRenderable3D.rotWorldZIncr(0.1)
-      expect(myRenderable3D.worldTranslationMatrix.multiplyM4).toHaveBeenCalled()
+      expect(myRenderable3D.worldTransformationMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
       myRenderable3D.rotWorldZIncr(0.1)
-      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+      expect(myRenderable3D.worldTransformationMatrix.cells).toEqual([
         0.9950041652780258, -0.09983341664682815, 0.0, 0.0,
         0.09983341664682815, 0.9950041652780258, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
@@ -186,9 +186,9 @@ describe("Renderable3D", function() {
     expect(myRenderable3D.worldPosition.cells).toEqual([ 0.0, 0.0, 0.0 ])
   })
   
-  it("should have a 4x4 model 'worldTranslationMatrix', which is initialy the identity matrix", function() {
-    expect(myRenderable3D.worldTranslationMatrix.constructor.name).toEqual('Matrix4x4')
-    expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+  it("should have a 4x4 model 'worldTransformationMatrix', which is initialy the identity matrix", function() {
+    expect(myRenderable3D.worldTransformationMatrix.constructor.name).toEqual('Matrix4x4')
+    expect(myRenderable3D.worldTransformationMatrix.cells).toEqual([
       1, 0, 0, 0,
       0, 1, 0, 0,
       0, 0, 1, 0,
@@ -207,9 +207,9 @@ describe("Renderable3D", function() {
       expect(myRenderable3D.worldPosition.cells[0]).toEqual(11)
     })
 
-    it("should maipulate the worldTranslationMatrix", function() {
+    it("should maipulate the worldTransformationMatrix", function() {
       myRenderable3D.translateXIncremental(123.456)
-      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+      expect(myRenderable3D.worldTransformationMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
@@ -229,9 +229,9 @@ describe("Renderable3D", function() {
       expect(myRenderable3D.worldPosition.cells[1]).toEqual(10)
     })
 
-    it("should maipulate the worldTranslationMatrix", function() {
+    it("should maipulate the worldTransformationMatrix", function() {
       myRenderable3D.translateYIncremental(789.101112)
-      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+      expect(myRenderable3D.worldTransformationMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
@@ -251,9 +251,9 @@ describe("Renderable3D", function() {
       expect(myRenderable3D.worldPosition.cells[2]).toEqual(75)
     })
 
-    it("should maipulate the worldTranslationMatrix", function() {
+    it("should maipulate the worldTransformationMatrix", function() {
       myRenderable3D.translateZIncremental(131415.161718)
-      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
+      expect(myRenderable3D.worldTransformationMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,

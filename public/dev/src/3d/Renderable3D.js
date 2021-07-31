@@ -4,6 +4,9 @@ class Renderable3D extends Renderable {
     this.color = new Vector4([ 0.3, 0.0, 1.0, 1.0 ])
     
     this.modelTransformationMatrix = new Matrix4x4()
+    this.worldTransformationMatrix = new Matrix4x4()
+    this.worldPosition = new Vector3([ 0.0, 0.0, 0.0 ])
+    
     this.worldSpaceRotationInRad = { x: 0.0, y: 0.0, z: 0.0 }
     this.modelDirections = {
       x: new Vector3([ 1.0, 0.0, 0.0 ]),
@@ -11,9 +14,6 @@ class Renderable3D extends Renderable {
       z: new Vector3([ 0.0, 0.0, 1.0 ])
     }
     this.modelScale = {x: 0.0, y: 0.0, z: 0.0 }
-
-    this.worldTranslationMatrix = new Matrix4x4()
-    this.worldPosition = new Vector3([ 0.0, 0.0, 0.0 ])
 
     this.modelRotationM4 = new Matrix4x4()
 
@@ -35,7 +35,7 @@ class Renderable3D extends Renderable {
       0.0, Math.sin(angleInRadian), Math.cos(angleInRadian), 0.0,
       0.0, 0.0, 0.0, 1.0
     ]
-    this.worldTranslationMatrix.multiplyM4(xAxisRotation)
+    this.worldTransformationMatrix.multiplyM4(xAxisRotation)
   }
 
   rotWorldYIncr(angleInRadian) {
@@ -51,7 +51,7 @@ class Renderable3D extends Renderable {
       (-1) * Math.sin(angleInRadian), 0.0, Math.cos(angleInRadian), 0.0,
       0.0, 0.0, 0.0, 1.0
     ]
-    this.worldTranslationMatrix.multiplyM4(yAxisRotation)
+    this.worldTransformationMatrix.multiplyM4(yAxisRotation)
   }
 
   rotWorldZIncr(angleInRadian) {
@@ -67,60 +67,60 @@ class Renderable3D extends Renderable {
       0.0, 0.0, 1.0, 0.0,
       0.0, 0.0, 0.0, 1.0
     ]
-    this.worldTranslationMatrix.multiplyM4(zAxisRotation)
+    this.worldTransformationMatrix.multiplyM4(zAxisRotation)
   }
 
   strideLeft(distance) {
     this.worldPosition.cells[0] += (distance * this.modelDirections.x.cells[0])
-    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
     this.worldPosition.cells[1] += (distance * this.modelDirections.x.cells[1])
-    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
     this.worldPosition.cells[2] += (distance * this.modelDirections.x.cells[2])
-    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+    this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]
   }
 
   strideRight(distance) {
     distance = distance * (-1)
     this.worldPosition.cells[0] += (distance * this.modelDirections.x.cells[0])
-    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
     this.worldPosition.cells[1] += (distance * this.modelDirections.x.cells[1])
-    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
     this.worldPosition.cells[2] += (distance * this.modelDirections.x.cells[2])
-    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+    this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]
   }
 
   moveForward(distance) {
     this.worldPosition.cells[0] += (distance * this.modelDirections.z.cells[0])
-    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
     this.worldPosition.cells[1] += (distance * this.modelDirections.z.cells[1])
-    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
     this.worldPosition.cells[2] += (distance * this.modelDirections.z.cells[2])
-    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+    this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]
   }
 
   moveBackward(distance) {
     distance = distance * (-1)
     this.worldPosition.cells[0] += (distance * this.modelDirections.z.cells[0])
-    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
     this.worldPosition.cells[1] += (distance * this.modelDirections.z.cells[1])
-    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
     this.worldPosition.cells[2] += (distance * this.modelDirections.z.cells[2])
-    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+    this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]
   }
 
   translateXIncremental(distance) {
     this.worldPosition.cells[0] += distance
-    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
   }
 
   translateYIncremental(distance) {
     this.worldPosition.cells[1] += distance
-    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
   }
 
   translateZIncremental(distance) {
     this.worldPosition.cells[2] += distance
-    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+    this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]
   }
   
   scaleX(factor) {
@@ -142,9 +142,9 @@ class Renderable3D extends Renderable {
     this.worldPosition.cells[0] = x
     this.worldPosition.cells[1] = y
     this.worldPosition.cells[2] = z
-    this.worldTranslationMatrix.cells[12] = this.worldPosition.cells[0]
-    this.worldTranslationMatrix.cells[13] = this.worldPosition.cells[1]
-    this.worldTranslationMatrix.cells[14] = this.worldPosition.cells[2]
+    this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
+    this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
+    this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]
   }
 
   update() {

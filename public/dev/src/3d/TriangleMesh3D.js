@@ -142,17 +142,13 @@ class TriangleMesh3D extends Renderable3D {
 
 
   update() {
-    this.worldTranslationMatrix.reset()
-    // this.rotateYIncremental(0.01)
-    // this.rotateZIncremental(0.01)
-    this.worldTranslationMatrix.multiplyM4(this.modelTransformationMatrix)
   }
 
   draw() {
     this.glCntxt.useProgram(this.shader.program)
 
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
-    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.worldTranslationMatrix.cells)
+    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.worldTransformationMatrix.cells)
        
     this.meshData.forEach((primitive, primitiveIndex) => { 
       this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
