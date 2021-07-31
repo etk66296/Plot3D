@@ -165,6 +165,40 @@ class Matrix4x4 extends Matrix {
   
     return this
   }
+
+  setCellsForRotatingAroundV3(angleInRad, directionV3) {
+    let x = directionV3.cells[0],
+      y = directionV3.cells[1],
+      z = directionV3.cells[2]
+    let len = Math.hypot(x, y, z)
+    let s, c, t
+    if (len < 0.000001) {
+      return null
+    }
+    len = 1 / len
+    x *= len
+    y *= len
+    z *= len
+    s = Math.sin(angleInRad)
+    c = Math.cos(angleInRad)
+    t = 1 - c
+    this.cells[0] = x * x * t + c
+    this.cells[1] = y * x * t + z * s
+    this.cells[2] = z * x * t - y * s
+    this.cells[3] = 0
+    this.cells[4] = x * y * t - z * s
+    this.cells[5] = y * y * t + c
+    this.cells[6] = z * y * t + x * s
+    this.cells[7] = 0
+    this.cells[8] = x * z * t + y * s
+    this.cells[9] = y * z * t - x * s
+    this.cells[10] = z * z * t + c
+    this.cells[11] = 0
+    this.cells[12] = 0
+    this.cells[13] = 0
+    this.cells[14] = 0
+    this.cells[15] = 1
+  }
 }
 
 class Matrix4x4Math {
@@ -251,6 +285,7 @@ class Matrix4x4Math {
       (a20 * b03 - a21 * b01 + a22 * b00) * det
     ])
   }
+
 }
 
 class Matrix3x3 extends Matrix{

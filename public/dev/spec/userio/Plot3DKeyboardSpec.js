@@ -147,52 +147,52 @@ describe("Plot3DKeyboard", function() {
       expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects.forEach).toHaveBeenCalled()
     })
 
-    it ("should call rotateZIncremental when the 'bild up arrow' button is down", function() {
+    it ("should call rotWorldZIncr when the 'bild up arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotateZIncremental')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotWorldZIncr')
       myPlot3DKeyboard.keysDown[33] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotateZIncremental).toHaveBeenCalledWith(0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotWorldZIncr).toHaveBeenCalledWith(0.03)
     })
 
-    it ("should call rotateZIncremental when the 'bild down arrow' button is down", function() {
+    it ("should call rotWorldZIncr when the 'bild down arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotateZIncremental')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotWorldZIncr')
       myPlot3DKeyboard.keysDown[34] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotateZIncremental).toHaveBeenCalledWith(-0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotWorldZIncr).toHaveBeenCalledWith(-0.03)
     })
 
-    it ("should call rotateYIncremental when the 'left arrow' button is down", function() {
+    it ("should call rotWorldYIncr when the 'left arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotateYIncremental')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotWorldYIncr')
       myPlot3DKeyboard.keysDown[37] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotateYIncremental).toHaveBeenCalledWith(0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotWorldYIncr).toHaveBeenCalledWith(0.03)
     })
 
-    it ("should call rotateXIncremental when the 'up arrow' button is down", function() {
+    it ("should call rotWorldXIncr when the 'up arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotateXIncremental')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotWorldXIncr')
       myPlot3DKeyboard.keysDown[38] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotateXIncremental).toHaveBeenCalledWith(0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotWorldXIncr).toHaveBeenCalledWith(0.03)
     })
 
-    it ("should call rotateYIncremental when the 'left arrow' button is down", function() {
+    it ("should call rotWorldYIncr when the 'left arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotateYIncremental')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotWorldYIncr')
       myPlot3DKeyboard.keysDown[39] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotateYIncremental).toHaveBeenCalledWith(-0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotWorldYIncr).toHaveBeenCalledWith(-0.03)
     })
 
-    it ("should call rotateXIncremental when the 'down arrow' button is down", function() {
+    it ("should call rotWorldXIncr when the 'down arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotateXIncremental')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotWorldXIncr')
       myPlot3DKeyboard.keysDown[40] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotateXIncremental).toHaveBeenCalledWith(-0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotWorldXIncr).toHaveBeenCalledWith(-0.03)
     })
 
   })

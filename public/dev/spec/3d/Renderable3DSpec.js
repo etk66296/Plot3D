@@ -81,7 +81,7 @@ describe("Renderable3D", function() {
   })
 
   it("have a model rotation object which holds an angle in radian for all three directions x, y, z", function() {
-    expect(myRenderable3D.modelSpaceRotationInRad).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
+    expect(myRenderable3D.worldSpaceRotationInRad).toEqual({ x: 0.0, y: 0.0, z: 0.0 })
   })
 
   it("should have a 4x4 model 'modelTransformationMatrix', which is initialy the identity matrix", function() {
@@ -94,27 +94,30 @@ describe("Renderable3D", function() {
     ])
   })
 
-
-  it("should have a method rotateXIncremental", function() {
-    expect(typeof myRenderable3D.rotateXIncremental).toEqual('function')
+  it("should have a Matrix 4x4 roateModelXAxis", function() {
+    expect(myRenderable3D.modelRotationM4.constructor.name).toBe('Matrix4x4')
   })
 
-  describe("rotateXIncremental", function() {
+  it("should have a method rotWorldXIncr", function() {
+    expect(typeof myRenderable3D.rotWorldXIncr).toEqual('function')
+  })
+
+  describe("rotWorldXIncr", function() {
     it("should greate the rotation transformation values", function() {
       spyOn(Math, 'cos').and.callThrough()
       spyOn(Math, 'sin').and.callThrough()
-      myRenderable3D.rotateXIncremental(0.1)
-      expect(Math.cos).toHaveBeenCalledTimes(4)
-      expect(Math.sin).toHaveBeenCalledTimes(4)
+      myRenderable3D.rotWorldXIncr(0.1)
+      expect(Math.cos).toHaveBeenCalledTimes(2)
+      expect(Math.sin).toHaveBeenCalledTimes(2)
     })
-    it("should multipy the x rotation to the modelTransformationMatrix", function() {
-      spyOn(myRenderable3D.modelTransformationMatrix, 'multiplyM4')
-      myRenderable3D.rotateXIncremental(0.1)
-      expect(myRenderable3D.modelTransformationMatrix.multiplyM4).toHaveBeenCalled()
+    it("should multipy the x rotation to the worldTranslationMatrix", function() {
+      spyOn(myRenderable3D.worldTranslationMatrix, 'multiplyM4')
+      myRenderable3D.rotWorldXIncr(0.1)
+      expect(myRenderable3D.worldTranslationMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
-      myRenderable3D.rotateXIncremental(0.1)
-      expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
+      myRenderable3D.rotWorldXIncr(0.1)
+      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
         1, 0, 0, 0,
         0, 0.9950041652780258, -0.09983341664682815, 0,
         0, 0.09983341664682815, 0.9950041652780258, 0,
@@ -123,26 +126,26 @@ describe("Renderable3D", function() {
     })
   })
 
-  it("should have a method rotateYIncremental", function() {
-    expect(typeof myRenderable3D.rotateYIncremental).toEqual('function')
+  it("should have a method rotWorldYIncr", function() {
+    expect(typeof myRenderable3D.rotWorldYIncr).toEqual('function')
   })
 
-  describe("rotateYIncremental", function() {
+  describe("rotWorldYIncr", function() {
     it("should greate the rotation transformation values", function() {
       spyOn(Math, 'cos').and.callThrough()
       spyOn(Math, 'sin').and.callThrough()
-      myRenderable3D.rotateYIncremental(0.1)
-      expect(Math.cos).toHaveBeenCalledTimes(4)
-      expect(Math.sin).toHaveBeenCalledTimes(4)
+      myRenderable3D.rotWorldYIncr(0.1)
+      expect(Math.cos).toHaveBeenCalledTimes(2)
+      expect(Math.sin).toHaveBeenCalledTimes(2)
     })
     it("should multipy the y rotation to the modelTransformationMatrix", function() {
-      spyOn(myRenderable3D.modelTransformationMatrix, 'multiplyM4')
-      myRenderable3D.rotateYIncremental(0.1)
-      expect(myRenderable3D.modelTransformationMatrix.multiplyM4).toHaveBeenCalled()
+      spyOn(myRenderable3D.worldTranslationMatrix, 'multiplyM4')
+      myRenderable3D.rotWorldYIncr(0.1)
+      expect(myRenderable3D.worldTranslationMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
-      myRenderable3D.rotateYIncremental(0.1)
-      expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
+      myRenderable3D.rotWorldYIncr(0.1)
+      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
         0.9950041652780258, 0.0, 0.09983341664682815, 0.0,
         0.0, 1.0, 0.0, 0.0,
         -0.09983341664682815, 0.0, 0.9950041652780258, 0.0,
@@ -151,26 +154,26 @@ describe("Renderable3D", function() {
     })
   })
 
-  it("should have a method rotateZIncremental", function() {
-    expect(typeof myRenderable3D.rotateZIncremental).toEqual('function')
+  it("should have a method rotWorldZIncr", function() {
+    expect(typeof myRenderable3D.rotWorldZIncr).toEqual('function')
   })
 
-  describe("rotateZIncremental", function() {
+  describe("rotWorldZIncr", function() {
     it("should greate the rotation transformation values", function() {
       spyOn(Math, 'cos').and.callThrough()
       spyOn(Math, 'sin').and.callThrough()
-      myRenderable3D.rotateZIncremental(0.1)
-      expect(Math.cos).toHaveBeenCalledTimes(4)
-      expect(Math.sin).toHaveBeenCalledTimes(4)
+      myRenderable3D.rotWorldZIncr(0.1)
+      expect(Math.cos).toHaveBeenCalledTimes(2)
+      expect(Math.sin).toHaveBeenCalledTimes(2)
     })
     it("should multipy the z rotation to the modelTransformationMatrix", function() {
-      spyOn(myRenderable3D.modelTransformationMatrix, 'multiplyM4')
-      myRenderable3D.rotateZIncremental(0.1)
-      expect(myRenderable3D.modelTransformationMatrix.multiplyM4).toHaveBeenCalled()
+      spyOn(myRenderable3D.worldTranslationMatrix, 'multiplyM4')
+      myRenderable3D.rotWorldZIncr(0.1)
+      expect(myRenderable3D.worldTranslationMatrix.multiplyM4).toHaveBeenCalled()
     })
     it("should result the expected rotation matrix", function() {
-      myRenderable3D.rotateZIncremental(0.1)
-      expect(myRenderable3D.modelTransformationMatrix.cells).toEqual([
+      myRenderable3D.rotWorldZIncr(0.1)
+      expect(myRenderable3D.worldTranslationMatrix.cells).toEqual([
         0.9950041652780258, -0.09983341664682815, 0.0, 0.0,
         0.09983341664682815, 0.9950041652780258, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
