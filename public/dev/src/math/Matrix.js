@@ -166,16 +166,12 @@ class Matrix4x4 extends Matrix {
     return this
   }
 
-  setCellsForRotatingAroundV3(angleInRad, directionV3) {
+  setCellsForRotationAroundV3Dir(angleInRad, directionV3) {
     let x = directionV3.cells[0],
       y = directionV3.cells[1],
       z = directionV3.cells[2]
-    let len = Math.hypot(x, y, z)
+    let len = 1 /  Math.hypot(x, y, z)
     let s, c, t
-    if (len < 0.000001) {
-      return null
-    }
-    len = 1 / len
     x *= len
     y *= len
     z *= len

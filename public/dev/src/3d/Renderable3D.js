@@ -22,6 +22,19 @@ class Renderable3D extends Renderable {
     this.controls = []
   }
 
+  rotModelXIncr(angleInRad) {
+    this.modelRotationM4.setCellsForRotationAroundV3Dir(angleInRad, this.modelDirections.x)
+    this.modelTransformationMatrix.multiplyM4(this.modelRotationM4)
+  }
+  rotModelYIncr(angleInRad) {
+    this.modelRotationM4.setCellsForRotationAroundV3Dir(angleInRad, this.modelDirections.y)
+    this.modelTransformationMatrix.multiplyM4(this.modelRotationM4)
+  }
+  rotModelZIncr(angleInRad) {
+    this.modelRotationM4.setCellsForRotationAroundV3Dir(angleInRad, this.modelDirections.z)
+    this.modelTransformationMatrix.multiplyM4(this.modelRotationM4)
+  }
+
   rotWorldXIncr(angleInRadian) {
     this.worldSpaceRotationInRad.x += angleInRadian
     // this.modelDirections.y.cells[1] = Math.cos(this.modelSpaceRotationInRad.x)

@@ -168,6 +168,53 @@ describe("Matrix4x4", function() {
       ])
     })
   })
+
+  it("should have a method for setting the cells to act as rotation matrix around arbitrary direction", function() {
+    expect(typeof myMatrix4x4.setCellsForRotationAroundV3Dir).toBe('function')
+  })
+
+  describe("setCellsForRotationAroundV3Dir", function() {
+    it("should take two arguments the rotation angle in rad and the direction v3 vector", function() {
+      spyOn(myMatrix4x4, 'setCellsForRotationAroundV3Dir')
+      let direction = new Vector3([ 0.1, 0.2, 0.3 ])
+      myMatrix4x4.setCellsForRotationAroundV3Dir(0.05, direction)
+      expect(myMatrix4x4.setCellsForRotationAroundV3Dir).toHaveBeenCalledWith(0.05, direction)
+    })
+
+    it("should calculate the length of the direction vector for normalizing its components", function() {
+      spyOn(Math, 'hypot')
+      let direction = new Vector3([ 0.1, 0.2, 0.3 ])
+      myMatrix4x4.setCellsForRotationAroundV3Dir(0.05, direction)
+      expect(Math.hypot).toHaveBeenCalledWith(0.1, 0.2, 0.3)
+    })
+
+    it("should calculate the sinus value of the rotation angel", function() {
+      spyOn(Math, 'sin')
+      let direction = new Vector3([ 0.1, 0.2, 0.3 ])
+      myMatrix4x4.setCellsForRotationAroundV3Dir(0.05, direction)
+      expect(Math.sin).toHaveBeenCalledWith(0.05)
+    })
+
+    it("should calculate the cos value of the rotation angel", function() {
+      spyOn(Math, 'cos')
+      let direction = new Vector3([ 0.1, 0.2, 0.3 ])
+      myMatrix4x4.setCellsForRotationAroundV3Dir(0.05, direction)
+      expect(Math.cos).toHaveBeenCalledWith(0.05)
+    })
+
+    it("should set the cells for rotation around the direction vector", function() {
+      let direction = new Vector3([ 0.1, 0.2, 0.3 ])
+      myMatrix4x4.setCellsForRotationAroundV3Dir(0.05, direction)
+      expect(myMatrix4x4.cells).toEqual([
+        0.9988395275096116, 0.040251018776388835, -0.02644718835412974, 0,
+        -0.03989395031780777, 0.9991073288535474, 0.013893097536904361, 0,
+        0.026982791042001335, -0.012821892161161176, 0.9995536644267736, 0,
+        0, 0, 0, 1
+      ])
+
+    })
+  })
+
   describe('log', function() {
     it("should log the each cell", function() {
       spyOn(console, 'log')

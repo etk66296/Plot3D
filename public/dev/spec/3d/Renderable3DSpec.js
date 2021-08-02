@@ -98,6 +98,10 @@ describe("Renderable3D", function() {
     expect(myRenderable3D.modelRotationM4.constructor.name).toBe('Matrix4x4')
   })
 
+  it("should have a method for rotating the model around its x direction", function() {
+    expect(typeof myRenderable3D.rotModelXIncr).toBe('function')
+  })
+
   it("should have a method rotWorldXIncr", function() {
     expect(typeof myRenderable3D.rotWorldXIncr).toEqual('function')
   })
@@ -251,7 +255,7 @@ describe("Renderable3D", function() {
       expect(myRenderable3D.worldPosition.cells[2]).toEqual(75)
     })
 
-    it("should maipulate the worldTransformationMatrix", function() {
+    it("should manipulate the worldTransformationMatrix", function() {
       myRenderable3D.translateZIncremental(131415.161718)
       expect(myRenderable3D.worldTransformationMatrix.cells).toEqual([
         1, 0, 0, 0,
