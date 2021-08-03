@@ -195,6 +195,43 @@ class Matrix4x4 extends Matrix {
     this.cells[14] = 0
     this.cells[15] = 1
   }
+
+  setCellsFromQuaternion(quat) {
+    let x = quat.cells[0]
+    let y = quat.cells[1]
+    let z = quat.cells[2]
+    let w = quat.cells[3]
+    let x2 = x + x
+    let y2 = y + y
+    let z2 = z + z
+    let xx = x * x2
+    let yx = y * x2
+    let yy = y * y2
+    let zx = z * x2
+    let zy = z * y2
+    let zz = z * z2
+    let wx = w * x2
+    let wy = w * y2
+    let wz = w * z2
+    this.cells[0] = 1 - yy - zz
+    this.cells[1] = yx + wz
+    this.cells[2] = zx - wy
+    this.cells[3] = 0
+    this.cells[4] = yx - wz
+    this.cells[5] = 1 - xx - zz
+    this.cells[6] = zy + wx
+    this.cells[7] = 0
+    this.cells[8] = zx + wy
+    this.cells[9] = zy - wx
+    this.cells[10] = 1 - xx - yy
+    this.cells[11] = 0
+    this.cells[12] = 0
+    this.cells[13] = 0
+    this.cells[14] = 0
+    this.cells[15] = 1
+  }
+
+  
 }
 
 class Matrix4x4Math {

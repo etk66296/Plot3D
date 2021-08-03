@@ -79,9 +79,9 @@ class Camera3D extends Renderable3D {
   update() {
     super.update()
     this.worldMatrix.reset()
-    // this.modelTransformationMatrix.reset()
     this.worldMatrix.multiplyM4(this.modelTransformationMatrix)
     this.worldMatrix.multiplyM4(this.worldTransformationMatrix)
+    this.modelTransformationMatrix.reset()
   }
 
   draw() {

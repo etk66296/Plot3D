@@ -65,6 +65,23 @@
   <script>
     window.addEventListener("load",
       () => {
+
+
+        window.addEventListener("keydown", function(e) {
+          if ([
+              "Space",
+              "ArrowUp",
+              "ArrowDown",
+              "ArrowLeft",
+              "ArrowRight",
+              "PageUp",
+              "PageDown"
+            ].indexOf(e.code) > -1
+          ) {
+            e.preventDefault()
+          }
+        }, false)
+
         let canvas = document.getElementById("renderCanvas2")
         let glCntxt = canvas.getContext("webgl2")
         glCntxt.enable(glCntxt.CULL_FACE)

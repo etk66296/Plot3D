@@ -152,3 +152,60 @@ describe("Vector4", function() {
     expect(myVector4.__proto__.__proto__.constructor.name).toEqual('Vector')
   })
 })
+
+describe("Quaternion", function() {
+  var myQuaternion
+
+  beforeEach(function() {
+    myQuaternion = new Quaternion()
+  })
+
+  it("has the parent class Vector4", function() {
+    expect(myQuaternion.__proto__.__proto__.constructor.name).toEqual('Vector4')
+  })
+
+  it("should have initial cell values", function() {
+    expect(myQuaternion.cells).toEqual([ 0.0, 0.0, 0.0, 1.0 ])
+  })
+
+  it("should have a method for calulating the rotation axis from the quaternion", function() {
+    expect(typeof myQuaternion.getAxis).toBe('function')
+  })
+
+  describe("getAxis", function() {
+
+  })
+
+  it("should have a method for rotate the quaternion around the X axis", function() {
+    expect(typeof myQuaternion.rotateX).toBe('function')
+  })
+
+  describe("rotateX", function() {
+    it("should rotate the quternion around the x axis", function() {
+      myQuaternion.rotateX(Math.PI * 0.125)
+      expect(myQuaternion.cells).toEqual([ 0.19509032201612825, 0, 0, 0.9807852804032304 ])
+    })
+  })
+
+  it("should have a method for rotate the quaternion around the y axis", function() {
+    expect(typeof myQuaternion.rotateY).toBe('function')
+  })
+
+  describe("rotateY", function() {
+    it("should rotate the quternion around the y axis", function() {
+      myQuaternion.rotateY(Math.PI * 0.125)
+      expect(myQuaternion.cells).toEqual([ 0, 0.19509032201612825, 0, 0.9807852804032304 ])
+    })
+  })
+
+  it("should have a method for rotate the quaternion around the z axis", function() {
+    expect(typeof myQuaternion.rotateZ).toBe('function')
+  })
+
+  describe("rotateZ", function() {
+    it("should rotate the quternion around the z axis", function() {
+      myQuaternion.rotateZ(Math.PI * 0.125)
+      expect(myQuaternion.cells).toEqual([ 0, 0,  0.19509032201612825, 0.9807852804032304 ])
+    })
+  })
+})

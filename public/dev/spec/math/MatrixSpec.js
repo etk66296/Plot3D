@@ -215,6 +215,14 @@ describe("Matrix4x4", function() {
     })
   })
 
+  it("should have a method for calculating a matrix out of a quaternion.", function() {
+    expect(typeof myMatrix4x4.setCellsFromQuaternion).toBe('function')
+  })
+
+  describe("setCellsFromQuaternion", function() {
+    
+  })
+
   describe('log', function() {
     it("should log the each cell", function() {
       spyOn(console, 'log')

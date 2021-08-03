@@ -83,3 +83,100 @@ class Vector4 extends Vector {
     super(cells)
   }
 }
+
+class Quaternion extends Vector4 {
+  constructor() {
+    super([ 0.0, 0.0, 0.0, 1.0 ])
+    this.dirFwd = new Vector3()
+    this.dirUp = new Vector3()
+    this.dirLeft = new Vector3()
+    this.updateDirFwd()
+    this.updateDirUp()
+    this.updateDirLeft()
+  }
+
+  getAxis() {
+    let rad = Math.acos(this.cells[3]) * 2.0
+    let s = Math.sin(rad / 2.0)
+    let axis = new Vector3()
+    if (s > 0.0000001) {
+      axis.cells[0] = this.cells[0] / s
+      axis.cells[1] = this.cells[1] / s
+      axis.cells[2] = this.cells[2] / s
+    } else {
+      axis.cells[0] = 1
+      axis.cells[1] = 0
+      axis.cells[2] = 0
+    }
+    return axis
+  }
+
+  updateDirFwd() {
+      this.dirFwd.cells[0] = 2 * (this.cells[0] * this.cells[2] + this.cells[3] * this.cells[1])
+      this.dirFwd.cells[1] = 2 * (this.cells[1] * this.cells[2] - this.cells[3] * this.cells[0])
+      this.dirFwd.cells[2] = 1 - 2 * (this.cells[0] * this.cells[0] + this.cells[1] * this.cells[1])
+  }
+
+  updateDirUp() {
+    this.dirUp.cells[0] = 2 * (this.cells[0] * this.cells[1] - this.cells[3] * this.cells[2])
+    this.dirUp.cells[1] = 1 - 2 * (this.cells[0] * this.cells[0] + this.cells[2] * this.cells[2])
+    this.dirUp.cells[2] = 2 * (this.cells[1] * this.cells[2] + this.cells[3] * this.cells[0])
+  }
+
+  updateDirLeft() {
+    this.dirLeft.cells[0] = 1 - 2 * (this.cells[1] * this.cells[1] + this.cells[2] * this.cells[2])
+    this.dirLeft.cells[1] = 2 * (this.cells[0] * this.cells[1] + this.cells[3] * this.cells[2])
+    this.dirLeft.cells[2] = 2 * (this.cells[0] * this.cells[2] - this.cells[3] * this.cells[1])
+  }
+
+  rotateX(angleInRad) {
+    angleInRad *= 0.5
+    let bx = Math.sin(angleInRad)
+    let bw = Math.cos(angleInRad)
+    let ax = this.cells[0]
+    let ay = this.cells[1]
+    let az = this.cells[2]
+    let aw = this.cells[3]
+    this.cells[0] = ax * bw + aw * bx
+    this.cells[1] = ay * bw + az * bx
+    this.cells[2] = az * bw - ay * bx
+    this.cells[3] = aw * bw - ax * bx
+    this.updateDirFwd()
+    this.updateDirUp()
+    this.updateDirLeft()
+  }
+
+  rotateY(angleInRad) {
+    angleInRad *= 0.5
+    let by = Math.sin(angleInRad)
+    let bw = Math.cos(angleInRad)
+    let ax = this.cells[0]
+    let ay = this.cells[1]
+    let az = this.cells[2]
+    let aw = this.cells[3] 
+    this.cells[0] = ax * bw - az * by
+    this.cells[1] = ay * bw + aw * by
+    this.cells[2] = az * bw + ax * by
+    this.cells[3] = aw * bw - ay * by
+    this.updateDirFwd()
+    this.updateDirUp()
+    this.updateDirLeft()
+  }
+
+  rotateZ(angleInRad) {
+    angleInRad *= 0.5
+    let bz = Math.sin(angleInRad)
+    let bw = Math.cos(angleInRad)
+    let ax = this.cells[0]
+    let ay = this.cells[1]
+    let az = this.cells[2]
+    let aw = this.cells[3]
+    this.cells[0] = ax * bw + ay * bz
+    this.cells[1] = ay * bw - ax * bz
+    this.cells[2] = az * bw + aw * bz
+    this.cells[3] = aw * bw - az * bz
+    this.updateDirFwd()
+    this.updateDirUp()
+    this.updateDirLeft()
+  }
+}
