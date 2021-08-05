@@ -58,22 +58,22 @@ class Plot3DKeyboard extends Plot3DUserIO{
   updateArrowFlyCtrl() {
     this.kbArrowFlyCtrlObjects.forEach(renderable3d => {
       if(this.keysDown[33] /*bild up*/) {
-        renderable3d.rotModelZIncr(-0.03)
+        renderable3d.yaw(0.03)
       }
       if(this.keysDown[34] /*bild down*/) {
-        renderable3d.rotModelZIncr(0.03)
+        renderable3d.yaw(-0.03)
       }
       if(this.keysDown[37] /*left arrow*/) {
-        renderable3d.rotModelYIncr(-0.03)
+        renderable3d.pitch(0.03)
       }
       if(this.keysDown[38] /*up arrow*/) {
-        renderable3d.rotModelXIncr(-0.03)
+        renderable3d.roll(-0.03)
       }
       if(this.keysDown[39] /*right arrow*/) {
-        renderable3d.rotModelYIncr(0.03)
+        renderable3d.pitch(-0.03)
       }
       if(this.keysDown[40] /*down arrow*/) {
-        renderable3d.rotModelXIncr(0.03)
+        renderable3d.roll(0.03)
       }
     })
   }

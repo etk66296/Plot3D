@@ -70,8 +70,12 @@ describe("Renderable3D", function() {
   })
 
   it("should have a object wich describes the orientation in world sapce", function() {
-    expect(myRenderable3D.modelDirection.constructor.name).toBe('Vector3')
-    expect(myRenderable3D.modelDirection.cells).toEqual([ 1.0, 0.0, 0.0 ])
+    expect(myRenderable3D.modelLeftDirection.constructor.name).toBe('Vector3')
+    expect(myRenderable3D.modelUpDirection.constructor.name).toBe('Vector3')
+    expect(myRenderable3D.modelFwdDirection.constructor.name).toBe('Vector3')
+    expect(myRenderable3D.modelLeftDirection.cells).toEqual([ 1.0, 0.0, 0.0 ])
+    expect(myRenderable3D.modelUpDirection.cells).toEqual([ 0.0, 1.0, 0.0 ])
+    expect(myRenderable3D.modelFwdDirection.cells).toEqual([ 0.0, 0.0, 1.0 ])
   })
 
   it("should have a a vector with four elements, which represents the current render color", function() {
@@ -101,11 +105,11 @@ describe("Renderable3D", function() {
   })
 
   it("should have a method for rotating the model around its x direction", function() {
-    expect(typeof myRenderable3D.rotModelXIncr).toBe('function')
+    expect(typeof myRenderable3D.roll).toBe('function')
   })
 
   it("should have a method rotWorldXIncr", function() {
-    expect(typeof myRenderable3D.rotWorldXIncr).toEqual('function')
+    expect(typeof myRenderable3D.roll).toEqual('function')
   })
 
   describe("rotWorldXIncr", function() {

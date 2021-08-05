@@ -135,7 +135,7 @@ describe("Vector3Math", function() {
     it("should caluclate the normalized vector and return a new Vector3 instance", function() {
       let myVectorA = new Vector3([ Math.sqrt(2), Math.sqrt(2), 0 ])
       let result = myVector3Math.normalize(myVectorA)
-      expect(result.cells).toEqual([ 0.5 * Math.sqrt(2), 0.5 * Math.sqrt(2), 0 ])
+      expect(result.cells).toEqual([ 0.7071067811865475, 0.7071067811865475, 0 ])
     })
   })
 
@@ -206,6 +206,43 @@ describe("Quaternion", function() {
     it("should rotate the quternion around the z axis", function() {
       myQuaternion.rotateZ(Math.PI * 0.125)
       expect(myQuaternion.cells).toEqual([ 0, 0,  0.19509032201612825, 0.9807852804032304 ])
+    })
+  })
+
+  it("should have a method for seting the angle of the quanternion along a parameter axis direction", function() {
+    expect(typeof myQuaternion.setAxisAngle).toBe('function')
+  })
+
+  describe("setAxisAngle", function() {
+    it("should have a method for seting the angle of the quanternion along a parameter axis direction", function() {
+      let myAxis = new Vector3([ 1, 0, 0 ])
+      myQuaternion.setAxisAngle(Math.PI * 0.5, myAxis)
+      expect(myQuaternion.cells).toEqual([ 0.7071067811865475, 0, 0, 0.7071067811865476 ])
+    })
+
+    it("should have a method for seting the angle of the quanternion along a parameter axis direction", function() {
+      let myAxis = new Vector3([ 1, 0, 0 ])
+      myQuaternion.setAxisAngle(Math.PI * 0.5, myAxis)
+      expect(myQuaternion.cells).toEqual([ 0.7071067811865475, 0, 0, 0.7071067811865476 ])
+      myAxis.cells[0] = 1
+      myAxis.cells[1] = 2
+      myAxis.cells[2] = 3
+      myAxis.normalize()
+      myQuaternion.setAxisAngle(Math.PI * 0.5, myAxis)
+      expect(myQuaternion.cells).toEqual([ 0.1889822365046136, 0.3779644730092272, 0.5669467095138409, 0.7071067811865476 ])
+    })  
+  })
+
+  it("should have a method for requesting the angle between the x axis", function() {
+    expect(typeof myQuaternion.getXAxisAngle).toBe('function')
+  })
+
+  describe("getXAxisAngle", function() {
+    it("should return the correct angle in radian", function() {
+      let myAxis = new Vector3([ 1, 2, 3 ])
+      myAxis.normalize()
+      myQuaternion.setAxisAngle(Math.PI * 0.5, myAxis)
+      expect(myQuaternion.getXAxisAngle()).toEqual(0.2672612419124244)
     })
   })
 })

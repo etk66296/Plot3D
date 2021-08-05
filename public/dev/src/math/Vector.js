@@ -3,6 +3,7 @@ class Vector extends Plot3DObject {
     super()
     this.cells = cells
   }
+
 }
 
 class Vector3 extends Vector {
@@ -36,8 +37,7 @@ class Vector3 extends Vector {
   }
 
   normalize() {
-    let len = this.cells[0] * this.cells[0] + this.cells[1] * this.cells[1] + this.cells[2] * this.cells[2]
-    len = 1 / Math.sqrt(len)
+    let len = 1 / Math.hypot(this.cells[0], this.cells[1], this.cells[2])
     this.cells[0] = this.cells[0] * len
     this.cells[1] = this.cells[1] * len
     this.cells[2] = this.cells[2] * len
@@ -66,8 +66,7 @@ class Vector3Math {
 
   normalize(v) {
     let result = new Vector3([ v.cells[0], v.cells[1], v.cells[2] ])
-    let len = result.cells[0] * result.cells[0] + result.cells[1] * result.cells[1] + result.cells[2] * result.cells[2]
-    len = 1 / Math.sqrt(len)
+    let len = 1 / Math.hypot(result.cells[0], result.cells[1], result.cells[2])
     result.cells[0] = result.cells[0] * len
     result.cells[1] = result.cells[1] * len
     result.cells[2] = result.cells[2] * len
@@ -81,6 +80,15 @@ class Vector4 extends Vector {
     0, 0, 0, 0
   ]) {
     super(cells)
+  }
+
+  normalize() {
+    let len = 1 / Math.hypot(this.cells[0], this.cells[1], this.cells[2], this.cells[3])
+    this.cells[0] = this.cells[0] * len
+    this.cells[1] = this.cells[1] * len
+    this.cells[2] = this.cells[2] * len
+    this.cells[3] = this.cells[3] * len
+    return this
   }
 }
 
@@ -109,6 +117,45 @@ class Quaternion extends Vector4 {
       axis.cells[2] = 0
     }
     return axis
+  }
+
+  setAxisAngle(angleInRad, axisV3) {
+    angleInRad = angleInRad * 0.5;
+    let s = Math.sin(angleInRad)
+    this.cells[0] = s * axisV3.cells[0]
+    this.cells[1] = s * axisV3.cells[1]
+    this.cells[2] = s * axisV3.cells[2]
+    this.cells[3] = Math.cos(angleInRad)
+  }
+
+  getXAxisAngle() {
+    let rad = Math.acos(this.cells[3]) * 2.0
+    let s = Math.sin(rad / 2.0)
+    if (s > 0.0000001) {
+      return this.cells[0] / s  
+    } else {
+      return 0
+    }
+  }
+
+  getYAxisAngle() {
+    let rad = Math.acos(this.cells[3]) * 2.0
+    let s = Math.sin(rad / 2.0)
+    if (s > 0.0000001) {
+      return this.cells[1] / s  
+    } else {
+      return 0
+    }
+  }
+
+  getZAxisAngle() {
+    let rad = Math.acos(this.cells[3]) * 2.0
+    let s = Math.sin(rad / 2.0)
+    if (s > 0.0000001) {
+      return this.cells[2] / s  
+    } else {
+      return 0
+    }
   }
 
   updateDirFwd() {

@@ -8,10 +8,15 @@ class Renderable3D extends Renderable {
     this.worldPosition = new Vector3([ 0.0, 0.0, 0.0 ])
     
     this.worldSpaceRotationInRad = { x: 0.0, y: 0.0, z: 0.0 }
+    
     this.modelQuaternion = new Quaternion()
-    this.modelDirection = new Vector3([ 1.0, 0.0, 0.0 ])
+    this.modelLeftDirection = new Vector3([ 1.0, 0.0, 0.0 ])
+    this.modelUpDirection = new Vector3([ 0.0, 1.0, 0.0 ])
+    this.modelFwdDirection = new Vector3([ 0.0, 0.0, 1.0 ])
+    
     this.modelScale = {x: 0.0, y: 0.0, z: 0.0 }
 
+    this.modelRotation = {roll: 0.0, pitch: 0.0, yaw: 0.0 }
     this.modelRotationM4 = new Matrix4x4()
 
     this.math = math
@@ -19,103 +24,121 @@ class Renderable3D extends Renderable {
     this.controls = []
   }
 
-  rotModelXIncr(angleInRad) {
-    this.modelQuaternion.rotateX(angleInRad)
-    this.modelRotationM4.setCellsFromQuaternion(this.modelQuaternion)
+  roll(angleInRad) {
+    this.modelRotation.roll += angleInRad
+    let cosYawSinPitch = Math.cos(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.pitch)
+    let sinYawCosRoll = Math.sin(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.roll)
+    let sinYawSinPitch = Math.sin(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.roll)
+    let sinYawSinRoll = Math.sin(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.roll)
+    let cosYawCosRoll = Math.cos(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.roll)
+    let cosYawSinRoll = Math.cos(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.roll)
+    let cosPitchSinRoll = Math.cos(this.modelRotation.pitch) *
+      Math.sin(this.modelRotation.roll)
+    let cosPitchCosRoll = Math.cos(this.modelRotation.pitch) *
+      Math.cos(this.modelRotation.roll)
+
+    this.modelRotationM4.cells[1] = cosYawSinPitch * Math.sin(this.modelRotation.roll) - sinYawCosRoll
+    this.modelRotationM4.cells[2] = cosYawSinPitch * Math.sin(this.modelRotation.roll) + sinYawSinRoll
+    this.modelRotationM4.cells[5] = sinYawSinPitch * Math.sin(this.modelRotation.roll) + cosYawCosRoll
+    this.modelRotationM4.cells[6] = sinYawSinPitch * Math.cos(this.modelRotation.roll) - cosYawSinRoll
+    this.modelRotationM4.cells[9] = cosPitchSinRoll
+    this.modelRotationM4.cells[10] = cosPitchCosRoll
   }
 
-  rotModelYIncr(angleInRad) {
-    this.modelQuaternion.rotateY(angleInRad)
-    this.modelRotationM4.setCellsFromQuaternion(this.modelQuaternion)
+  yaw(angleInRad) {
+    this.modelRotation.pitch += angleInRad
+    let cosYawCosPitch = Math.cos(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.pitch)
+    let cosYawSinPitch = Math.cos(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.pitch)
+    let sinYawCosPitch = Math.sin(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.pitch)
+    let sinYawCosRoll = Math.sin(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.roll)
+    let sinYawSinPitch = Math.sin(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.roll)
+    let sinYawSinRoll = Math.sin(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.roll)
+    let cosYawCosRoll = Math.cos(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.roll)
+    let cosYawSinRoll = Math.cos(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.roll)
+    let cosPitchSinRoll = Math.cos(this.modelRotation.pitch) *
+      Math.sin(this.modelRotation.roll)
+    let cosPitchCosRoll = Math.cos(this.modelRotation.pitch) *
+      Math.cos(this.modelRotation.roll)
+
+    this.modelRotationM4.cells[0] = cosYawCosPitch
+    this.modelRotationM4.cells[1] = cosYawSinPitch * Math.sin(this.modelRotation.roll) - sinYawCosRoll
+    this.modelRotationM4.cells[2] = cosYawSinPitch * Math.sin(this.modelRotation.roll) + sinYawSinRoll
+    this.modelRotationM4.cells[4] = sinYawCosPitch
+    this.modelRotationM4.cells[5] = sinYawSinPitch * Math.sin(this.modelRotation.roll) + cosYawCosRoll
+    this.modelRotationM4.cells[6] = sinYawSinPitch * Math.cos(this.modelRotation.roll) - cosYawSinRoll
+    this.modelRotationM4.cells[8] = (-1) * Math.sin(this.modelRotation.pitch)
+    this.modelRotationM4.cells[9] = cosPitchSinRoll
+    this.modelRotationM4.cells[10] = cosPitchCosRoll
   }
   
-  rotModelZIncr(angleInRad) {
-    this.modelQuaternion.rotateZ(angleInRad)
-    this.modelRotationM4.setCellsFromQuaternion(this.modelQuaternion)
+  pitch(angleInRad) {
+    this.modelRotation.yaw += angleInRad
+    let cosYawCosPitch = Math.cos(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.pitch)
+    let cosYawSinPitch = Math.cos(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.pitch)
+    let sinYawCosPitch = Math.sin(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.pitch)
+    let sinYawCosRoll = Math.sin(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.roll)
+    let sinYawSinPitch = Math.sin(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.roll)
+    let sinYawSinRoll = Math.sin(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.roll)
+    let cosYawCosRoll = Math.cos(this.modelRotation.yaw) *
+      Math.cos(this.modelRotation.roll)
+    let cosYawSinRoll = Math.cos(this.modelRotation.yaw) *
+      Math.sin(this.modelRotation.roll)
+
+    this.modelRotationM4.cells[0] = cosYawCosPitch
+    this.modelRotationM4.cells[1] = cosYawSinPitch * Math.sin(this.modelRotation.roll) - sinYawCosRoll
+    this.modelRotationM4.cells[2] = cosYawSinPitch * Math.sin(this.modelRotation.roll) + sinYawSinRoll
+    this.modelRotationM4.cells[4] = sinYawCosPitch
+    this.modelRotationM4.cells[5] = sinYawSinPitch * Math.sin(this.modelRotation.roll) + cosYawCosRoll
+    this.modelRotationM4.cells[6] = sinYawSinPitch * Math.cos(this.modelRotation.roll) - cosYawSinRoll
   }
 
   rotWorldXIncr(angleInRadian) {
-    // this.worldSpaceRotationInRad.x += angleInRadian
-    // this.modelDirections.y.cells[1] = Math.cos(this.modelSpaceRotationInRad.x)
-    // this.modelDirections.z.cells[1] = (-1) * Math.sin(this.modelSpaceRotationInRad.x)
-    // this.modelDirections.y.cells[2] = Math.sin(this.modelSpaceRotationInRad.x)
-    // this.modelDirections.z.cells[2] = Math.cos(this.modelSpaceRotationInRad.x)
-    // let xAxisRotation = new Matrix()
-    // xAxisRotation.cells = [
-    //   1.0, 0.0, 0.0, 0.0,
-    //   0.0, Math.cos(angleInRadian), (-1) * Math.sin(angleInRadian), 0.0,
-    //   0.0, Math.sin(angleInRadian), Math.cos(angleInRadian), 0.0,
-    //   0.0, 0.0, 0.0, 1.0
-    // ]
-    // this.worldTransformationMatrix.multiplyM4(xAxisRotation)
+  
   }
 
   rotWorldYIncr(angleInRadian) {
-    // this.worldSpaceRotationInRad.y += angleInRadian
-    // this.modelDirections.x.cells[0] = Math.cos(this.modelSpaceRotationInRad.y)
-    // this.modelDirections.z.cells[0] = Math.sin(this.modelSpaceRotationInRad.y)
-    // this.modelDirections.x.cells[2] = (-1) * Math.sin(this.modelSpaceRotationInRad.y)
-    // this.modelDirections.z.cells[2] = Math.cos(this.modelSpaceRotationInRad.y)
-    // let yAxisRotation = new Matrix()
-    // yAxisRotation.cells = [
-    //   Math.cos(angleInRadian), 0.0, Math.sin(angleInRadian), 0.0,
-    //   0.0, 1.0, 0.0, 0.0,
-    //   (-1) * Math.sin(angleInRadian), 0.0, Math.cos(angleInRadian), 0.0,
-    //   0.0, 0.0, 0.0, 1.0
-    // ]
-    // this.worldTransformationMatrix.multiplyM4(yAxisRotation)
+    
   }
 
   rotWorldZIncr(angleInRadian) {
-    // this.worldSpaceRotationInRad.z += angleInRadian
-    // this.modelDirections.x.cells[0] = Math.cos(this.modelSpaceRotationInRad.z)
-    // this.modelDirections.y.cells[0] = (-1) * Math.sin(this.modelSpaceRotationInRad.z)
-    // this.modelDirections.x.cells[1] = Math.sin(this.modelSpaceRotationInRad.z)
-    // this.modelDirections.y.cells[1] = Math.cos(this.modelSpaceRotationInRad.z)
-    // let zAxisRotation = new Matrix()
-    // zAxisRotation.cells = [
-    //   Math.cos(angleInRadian), (-1) * Math.sin(angleInRadian), 0.0, 0.0,
-    //   Math.sin(angleInRadian), Math.cos(angleInRadian), 0.0, 0.0,
-    //   0.0, 0.0, 1.0, 0.0,
-    //   0.0, 0.0, 0.0, 1.0
-    // ]
-    // this.worldTransformationMatrix.multiplyM4(zAxisRotation)
+  
   }
 
   strideLeft(distance) {
-    this.worldPosition.cells[0] += distance * this.modelQuaternion.dirLeft.cells[0]
-    this.worldPosition.cells[1] += distance * this.modelQuaternion.dirLeft.cells[1]
-    this.worldPosition.cells[2] += distance * this.modelQuaternion.dirLeft.cells[2]
-    console.log(distance * this.modelQuaternion.dirLeft.cells[0], distance * this.modelQuaternion.dirLeft.cells[1], distance * this.modelQuaternion.dirLeft.cells[2])
-    this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
-    this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
-    this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]
+  
   }
 
   strideRight(distance) {
-    distance = distance * (-1)
-    this.worldPosition.cells[0] += distance * this.modelQuaternion.dirLeft.cells[0]
-    this.worldPosition.cells[1] += distance * this.modelQuaternion.dirLeft.cells[1]
-    this.worldPosition.cells[2] += distance * this.modelQuaternion.dirLeft.cells[2]
-    this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
-    this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
-    this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]
+   
   }
 
   moveForward(distance) {
-    this.worldPosition.cells[0] += distance * this.modelQuaternion.dirFwd.cells[0]
-    this.worldPosition.cells[1] += distance * this.modelQuaternion.dirFwd.cells[1]
-    this.worldPosition.cells[2] += distance * this.modelQuaternion.dirFwd.cells[2]
     this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
     this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
     this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]
   }
 
   moveBackward(distance) {
-    distance = distance * (-1)
-    this.worldPosition.cells[0] += distance * this.modelQuaternion.dirFwd.cells[0]
-    this.worldPosition.cells[1] += distance * this.modelQuaternion.dirFwd.cells[1]
-    this.worldPosition.cells[2] += distance * this.modelQuaternion.dirFwd.cells[2]
     this.worldTransformationMatrix.cells[12] = this.worldPosition.cells[0]
     this.worldTransformationMatrix.cells[13] = this.worldPosition.cells[1]
     this.worldTransformationMatrix.cells[14] = this.worldPosition.cells[2]

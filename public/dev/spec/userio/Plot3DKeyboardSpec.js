@@ -147,52 +147,52 @@ describe("Plot3DKeyboard", function() {
       expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects.forEach).toHaveBeenCalled()
     })
 
-    it ("should call rotModelZIncr when the 'bild up arrow' button is down", function() {
+    it ("should call yaw when the 'bild up arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotModelZIncr')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'yaw')
       myPlot3DKeyboard.keysDown[33] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotModelZIncr).toHaveBeenCalledWith(-0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].yaw).toHaveBeenCalledWith(0.03)
     })
 
-    it ("should call rotModelZIncr when the 'bild down arrow' button is down", function() {
+    it ("should call yaw when the 'bild down arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotModelZIncr')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'yaw')
       myPlot3DKeyboard.keysDown[34] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotModelZIncr).toHaveBeenCalledWith(0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].yaw).toHaveBeenCalledWith(-0.03)
     })
 
-    it ("should call rotModelYIncr when the 'left arrow' button is down", function() {
+    it ("should call pitch when the 'left arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotModelYIncr')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'pitch')
       myPlot3DKeyboard.keysDown[37] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotModelYIncr).toHaveBeenCalledWith(-0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].pitch).toHaveBeenCalledWith(0.03)
     })
 
-    it ("should call rotModelXIncr when the 'up arrow' button is down", function() {
+    it ("should call roll when the 'up arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotModelXIncr')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'roll')
       myPlot3DKeyboard.keysDown[38] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotModelXIncr).toHaveBeenCalledWith(-0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].roll).toHaveBeenCalledWith(-0.03)
     })
 
-    it ("should call rotModelYIncr when the 'left arrow' button is down", function() {
+    it ("should call pitch when the 'left arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotModelYIncr')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'pitch')
       myPlot3DKeyboard.keysDown[39] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotModelYIncr).toHaveBeenCalledWith(0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].pitch).toHaveBeenCalledWith(-0.03)
     })
 
-    it ("should call rotModelXIncr when the 'down arrow' button is down", function() {
+    it ("should call roll when the 'down arrow' button is down", function() {
       myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'rotModelXIncr')
+      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'roll')
       myPlot3DKeyboard.keysDown[40] = true
       myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].rotModelXIncr).toHaveBeenCalledWith(0.03)
+      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].roll).toHaveBeenCalledWith(0.03)
     })
 
   })
