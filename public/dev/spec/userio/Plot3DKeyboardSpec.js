@@ -86,37 +86,6 @@ describe("Plot3DKeyboard", function() {
       expect(myPlot3DKeyboard.kbWasdCtrlObjects.forEach).toHaveBeenCalled()
     })
 
-    it ("should call moveForward when the 'w' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownWasdCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbWasdCtrlObjects[0], 'moveForward')
-      myPlot3DKeyboard.keysDown[87] = true
-      myPlot3DKeyboard.updateWasdCtrl()
-      expect(myPlot3DKeyboard.kbWasdCtrlObjects[0].moveForward).toHaveBeenCalledWith(0.1)
-    })
-
-    it ("should call strideLeft when the 'a' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownWasdCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbWasdCtrlObjects[0], 'strideLeft')
-      myPlot3DKeyboard.keysDown[65] = true
-      myPlot3DKeyboard.updateWasdCtrl()
-      expect(myPlot3DKeyboard.kbWasdCtrlObjects[0].strideLeft).toHaveBeenCalledWith(0.1)
-    })
-
-    it ("should call moveBackward when the 's' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownWasdCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbWasdCtrlObjects[0], 'moveBackward')
-      myPlot3DKeyboard.keysDown[83] = true
-      myPlot3DKeyboard.updateWasdCtrl()
-      expect(myPlot3DKeyboard.kbWasdCtrlObjects[0].moveBackward).toHaveBeenCalledWith(0.1)
-    })
-
-    it ("should call strideRight when the 'd' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownWasdCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbWasdCtrlObjects[0], 'strideRight')
-      myPlot3DKeyboard.keysDown[68] = true
-      myPlot3DKeyboard.updateWasdCtrl()
-      expect(myPlot3DKeyboard.kbWasdCtrlObjects[0].strideRight).toHaveBeenCalledWith(0.1)
-    })
   })
 
   it("should have an attribute for saving the renderable3e objects for arrow fly control", function() {
@@ -147,53 +116,6 @@ describe("Plot3DKeyboard", function() {
       expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects.forEach).toHaveBeenCalled()
     })
 
-    it ("should call yaw when the 'bild up arrow' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'yaw')
-      myPlot3DKeyboard.keysDown[33] = true
-      myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].yaw).toHaveBeenCalledWith(0.03)
-    })
-
-    it ("should call yaw when the 'bild down arrow' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'yaw')
-      myPlot3DKeyboard.keysDown[34] = true
-      myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].yaw).toHaveBeenCalledWith(-0.03)
-    })
-
-    it ("should call pitch when the 'left arrow' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'pitch')
-      myPlot3DKeyboard.keysDown[37] = true
-      myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].pitch).toHaveBeenCalledWith(0.03)
-    })
-
-    it ("should call roll when the 'up arrow' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'roll')
-      myPlot3DKeyboard.keysDown[38] = true
-      myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].roll).toHaveBeenCalledWith(-0.03)
-    })
-
-    it ("should call pitch when the 'left arrow' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'pitch')
-      myPlot3DKeyboard.keysDown[39] = true
-      myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].pitch).toHaveBeenCalledWith(-0.03)
-    })
-
-    it ("should call roll when the 'down arrow' button is down", function() {
-      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
-      spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0], 'roll')
-      myPlot3DKeyboard.keysDown[40] = true
-      myPlot3DKeyboard.updateArrowFlyCtrl()
-      expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects[0].roll).toHaveBeenCalledWith(0.03)
-    })
 
   })
 

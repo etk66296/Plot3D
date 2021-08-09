@@ -14,7 +14,7 @@ describe("Background", function() {
   })
 
   it("should has a parent class Renderable", function() {
-    expect(myBackground.__proto__.__proto__.constructor.name).toEqual('Renderable')
+    expect(myBackground.__proto__.__proto__.constructor.name).toEqual('Renderable2D')
   })
 
   it("should has a attribute of type vector4, which holds the clear color", function() {

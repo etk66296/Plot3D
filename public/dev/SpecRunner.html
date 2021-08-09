@@ -29,10 +29,11 @@
 
   <script src="src/Renderable.js"></script>
 
+  <script src="src/2d/Renderable2D.js"></script>
   <script src="src/2d/Background.js"></script>
 
   <script src="src/3d/Renderable3D.js"></script>
-  <script src="src/3d/TriangleMesh3D.js"></script>
+  <!-- <script src="src/3d/TriangleMesh3D.js"></script> -->
   <script src="src/3d/Camera3D.js"></script>
   <script src="src/3d/MeshFactory3D.js"></script>
 
@@ -54,10 +55,11 @@
   
   <script src="spec/RenderableSpec.js"></script>
 
+  <script src="spec/2d/Renderable2DSpec.js"></script>
   <script src="spec/2d/BackgroundSpec.js"></script>
 
   <script src="spec/3d/Renderable3DSpec.js"></script>
-  <script src="spec/3d/TriangleMesh3DSpec.js"></script>
+  <!-- <script src="spec/3d/TriangleMesh3DSpec.js"></script> -->
   <script src="spec/3d/Camera3DSpec.js"></script>
   <script src="spec/3d/MeshFactory3DSpec.js"></script>
 
@@ -127,77 +129,6 @@
             gl_FragColor = v_color * vec4(v_lighting, 1.0);
           }
         `
-        let shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-
-        let myCycle = new Cycle(true)
-        myCycle.stop()
-        myCycle.fps = 30
-        myCycle.play()
-
-        let myMeshFactory3D = new MeshFactory3D(glCntxt, shader)
-
-        let myBackground = new Background(glCntxt)
-        myCycle.addRenderable(myBackground)
-
-        let aCamera = myMeshFactory3D.createAStandardCamera3D()
-        aCamera.translateZIncremental(5)
-        myCycle.addRenderable(aCamera)
-
-        let myKeyboardControl = new Plot3DKeyboard()
-        myKeyboardControl.imposeKeyDownWasdCtrlTo(aCamera)
-        myKeyboardControl.imposeKeyDownArrowFlyCtrlTo(aCamera)
-        myCycle.addUserIo(myKeyboardControl)
-
-        // console.log(document)
-
-
-        myGlTFLoader = new Plot3DGlTfLoader(glCntxt)
-        let urlToGltfFile = './spec/assets/mesh3d/cube.gltf'
-        let loadedMesh = undefined
-        let math = {
-          vector3: new Vector3Math(),
-          matrix4x4: new Matrix4x4Math()
-        }
-        myGlTFLoader.requestGlTf(urlToGltfFile)
-        setTimeout(() => {
-          let meshData = []
-          let loadedData = myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1]
-          loadedData.meshes.forEach(mesh => {
-            mesh.primitives.forEach(primitive => {
-              meshData.push({
-                  vertices: [],
-                  normals: [],
-                  indices: [],
-                  colors: []
-                }
-              )
-              let verticeIndex = primitive.attributes.POSITION
-              let normalsIndex = primitive.attributes.NORMAL
-              let indicesIndex = primitive.indices
-              let colorIndex = primitive.material
-              loadedData.bufferViews[verticeIndex].cells.forEach(cell => { meshData[meshData.length - 1].vertices.push(cell) })
-              loadedData.bufferViews[normalsIndex].cells.forEach(cell => { meshData[meshData.length - 1].normals.push(cell) })
-              loadedData.bufferViews[indicesIndex].cells.forEach(cell => { meshData[meshData.length - 1].indices.push(cell) })
-              for (let i = 0; i < loadedData.bufferViews[indicesIndex].cells.length; i++) {
-                meshData[meshData.length - 1].colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[0])
-                meshData[meshData.length - 1].colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[1])
-                meshData[meshData.length - 1].colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[2])
-                meshData[meshData.length - 1].colors.push(loadedData.materials[colorIndex].pbrMetallicRoughness.baseColorFactor[3])
-              }
-            })
-          })
-          // let meshData = {
-          //   vertices: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[0].cells,
-          //   normals: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[1].cells,
-          //   indices: myGlTFLoader.loaded[myGlTFLoader.loaded.length - 1].bufferViews[2].cells
-          // }
-          
-          let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math, meshData)
-          // let monkeyMesh = new TriangleMesh3D(glCntxt, shader, math)
-          myCycle.addRenderable(monkeyMesh)
-          // let aCube = myMeshFactory3D.createACube3D()
-          // myCycle.addRenderable(aCube)
-        }, 2000)
 
       }
     )

@@ -28,13 +28,7 @@ describe("Plot3DGlTfLoader", function() {
 
   beforeEach(function() {
     myPlot3DGlTfLoader = new Plot3DGlTfLoader(glCntxt)
-    if(gltfObjectCopy == undefined) {
-      setTimeout(() => {
-        gltfObject = JSON.parse(JSON.stringify(gltfObjectCopy))
-      }, 1000)
-    } else {
-      gltfObject = JSON.parse(JSON.stringify(gltfObjectCopy))
-    }
+    gltfObject = JSON.parse(JSON.stringify(gltfObjectCopy))
   })
 
   it("has the parent class Plot3DLoader", function() {

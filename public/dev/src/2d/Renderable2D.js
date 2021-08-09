@@ -1,4 +1,4 @@
-class Renderable3D extends Renderable {
+class Renderable2D extends Renderable {
   constructor(glCntxt, shader, math) {
     super(glCntxt, shader)
   

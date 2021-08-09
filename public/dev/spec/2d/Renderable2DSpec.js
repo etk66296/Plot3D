@@ -1,13 +1,23 @@
-describe("Plot3DFactory", function() {
+describe("Renderable2D", function() {
   var canvas
   var glCntxt
   var myPlot3DShaderBuilder
-  var myMeshFactory3D
+  var math
+  
+  var shader
+  var myRenderable2d
   
   beforeAll(function() {
     canvas = document.getElementById("renderCanvas")
     glCntxt = canvas.getContext("webgl2")
+    math = {
+      vector3: new Vector3Math(),
+      matrix4x4: new Matrix4x4Math()
+    }
     myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
+  })
+
+  beforeEach(function() {
     let vertexShaderCode = `
       attribute vec4 a_position;
       attribute vec3 a_normal;
@@ -17,7 +27,7 @@ describe("Plot3DFactory", function() {
       uniform vec4 u_color;
 
 
-      uniform mat4 u_modelMatrix;
+      uniform mat4 u_modelTransformationMatrix;
       uniform mat4 u_modelToWorldMatrix;
       uniform mat4 u_WorldToViewMatrix;
       uniform mat4 u_ViewToProjectionMatrix;
@@ -25,7 +35,7 @@ describe("Plot3DFactory", function() {
       varying vec4 v_color;
 
       void main() {
-        mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
+        mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelTransformationMatrix;
         gl_Position = modelToProjection * a_position;
         v_color = u_color;
         v_normal = (modelToProjection * vec4(a_normal.xyz, 0.0)).xyz;
@@ -47,33 +57,11 @@ describe("Plot3DFactory", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+    myRenderable2D = new Renderable2D(glCntxt, shader, math)
   })
-
-  beforeEach(function() {
-    myMeshFactory3D = new MeshFactory3D(glCntxt, shader)
+  
+  it("should have the parent class Renderable", function() {
+    expect(myRenderable2D.__proto__.__proto__.constructor.name).toEqual('Renderable')
   })
-
-  it("has the parent class Plot3DObject", function() {
-    expect(myMeshFactory3D.__proto__.__proto__.constructor.name).toEqual('Plot3DFactory')
-  })
-
-  it("should have an object, which holds methods for all kind of math operations", function() {
-    expect(myMeshFactory3D.math.constructor.name).toEqual('Object')
-  })
-
-  describe("math", function() {
-    it("should have an instance of Vector3Math", function() {
-      expect(myMeshFactory3D.math.vector3.constructor.name).toEqual('Vector3Math')
-    })
-
-    it("should have an instance of Matrix4x4Math", function() {
-      expect(myMeshFactory3D.math.matrix4x4.constructor.name).toEqual('Matrix4x4Math')
-    })
-  })
-
-  it("should have a instance of Plot3DGlTfLoader", function() {
-    expect(myMeshFactory3D.loaders.gltf.constructor.name).toEqual('Plot3DGlTfLoader')
-  })
-
 
 })
