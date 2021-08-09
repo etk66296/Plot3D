@@ -3,32 +3,19 @@ describe("Plot3DGlTfLoader", function() {
   var canvas
   var glCntxt
 
-  var gltfObjectCopy
   var gltfObject
 
   var myPlot3DGlTfLoader
 
-  beforeAll(function() {
+  beforeAll(async function() {
     canvas = document.getElementById("renderCanvas")
     glCntxt = canvas.getContext("webgl2")
-    let gltfRequester = new XMLHttpRequest()
-    gltfRequester.onreadystatechange = () => {
-      if (gltfRequester.readyState === 4) {
-        if (gltfRequester.status === 200) {
-          gltfObjectCopy = JSON.parse(gltfRequester.responseText)
-        } else {
-           console.error(this.gltfRequester.statusText)
-        }
-      }
-    }
-    gltfRequester.open('GET', './spec/assets/mesh3d/cube.gltf', true)
-    gltfRequester.send(null)
-    setTimeout(() => {}, 3000)
   })
 
-  beforeEach(function() {
+  beforeEach(async function() {
     myPlot3DGlTfLoader = new Plot3DGlTfLoader(glCntxt)
-    gltfObject = JSON.parse(JSON.stringify(gltfObjectCopy))
+    await myPlot3DGlTfLoader.requestGlTf('./spec/assets/mesh3d/cube.gltf')
+    gltfObject = JSON.parse(JSON.stringify(myPlot3DGlTfLoader.loaded[0]))
   })
 
   it("has the parent class Plot3DLoader", function() {
@@ -39,42 +26,12 @@ describe("Plot3DGlTfLoader", function() {
     expect(myPlot3DGlTfLoader.glCntxt.constructor.name).toEqual('WebGL2RenderingContext')
   })
 
-  it("should have a xmlhttprequester for gltf files", function() {
-    expect(myPlot3DGlTfLoader.gltfRequester.constructor.name).toEqual("XMLHttpRequest")
-  })
-
   it("should have an attribute which is a regular expression for extracting the raw data from a base64 buffer", function() {
     expect(myPlot3DGlTfLoader.rawBufDataRegExMatcher).toEqual(/(?<=data:application\/octet-stream;base64,).*/)
   })
 
   it("should have a method for loading gltf files with embedded buffer data", function() {
     expect(typeof myPlot3DGlTfLoader.requestGlTf).toBe('function')
-  })
-
-  it("should have an on ready state change function in the requester instance for saving the gltf data", function() {
-    expect(typeof myPlot3DGlTfLoader.gltfRequester.onreadystatechange).toBe('function')
-  })
-
-  describe("onreadystatechange", function() {
-    it("should log an error if the response status is not ok (!= 200)", function(done) {
-      spyOn(console, 'error')
-      myPlot3DGlTfLoader.requestGlTf('blablabla.gltf')
-      setTimeout(() => {
-        expect(console.error).toHaveBeenCalled()
-        done()
-      }, 700)
-    })
-
-    it("should call the class internal method for extracting the data from the gltf data", function(done) {
-      spyOn(myPlot3DGlTfLoader, "extractDataFromGltfJson")
-      let url = './spec/assets/mesh3d/cube.gltf'
-      myPlot3DGlTfLoader.requestGlTf(url)
-      setTimeout(() => {
-        expect(myPlot3DGlTfLoader.extractDataFromGltfJson).toHaveBeenCalled()
-        done()
-      }, 700)
-    })
-
   })
 
   it("should have a list attribute for storing the gltf data object", function() {
@@ -91,14 +48,11 @@ describe("Plot3DGlTfLoader", function() {
       expect(myPlot3DGlTfLoader.gltfRequester.send).toHaveBeenCalledWith(null)
     })
 
-    it("should trigger the on ready state and trigger the data extraction", function(done) {
+    it("should trigger the on ready state and trigger the data extraction", async function() {
       spyOn(myPlot3DGlTfLoader, 'extractDataFromGltfJson').and.callThrough()
       let url = './spec/assets/mesh3d/cube.gltf'
-      myPlot3DGlTfLoader.requestGlTf(url)
-      setTimeout(() => {
-        expect(myPlot3DGlTfLoader.extractDataFromGltfJson).toHaveBeenCalled()
-        done()
-      }, 700)
+      await myPlot3DGlTfLoader.requestGlTf(url)
+      expect(myPlot3DGlTfLoader.extractDataFromGltfJson).toHaveBeenCalled()
     })
 
     it("should log an error when the gltf object is not version 2", function(done) {

@@ -12,28 +12,39 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     // 5126      (FLOAT) 	          4
 
     this.loaded = []
-
     this.rawBufDataRegExMatcher = /(?<=data:application\/octet-stream;base64,).*/
-
     this.gltfRequester = new XMLHttpRequest()
-    this.gltfRequester.onreadystatechange = (event) => {
-      if (this.gltfRequester.readyState === 4) {
-        if (this.gltfRequester.status === 200) {
-          let gltfObject = JSON.parse(this.gltfRequester.responseText)
-          if (gltfObject.asset.version !== '2.0') {
-            console.error('check your gltf file, version must be 2.0')
-          }
-          this.loaded.push(this.extractDataFromGltfJson(gltfObject))
-        } else {
-           console.error(this.gltfRequester.statusText)
-        }
-      }
-    }
+    
   }
 
   requestGlTf(url) {
-    this.gltfRequester.open('GET', url, true)
-    this.gltfRequester.send(null)
+    return new Promise((resolve, reject) => {
+      this.gltfRequester.open('GET', url, true)
+      this.gltfRequester.onload = (event) => {
+        if (this.gltfRequester.readyState === 4) {
+          if (this.gltfRequester.status === 200) {
+            let gltfObject = JSON.parse(this.gltfRequester.responseText)
+            if (gltfObject.asset.version !== '2.0') {
+              console.error('check your gltf file, version must be 2.0')
+            }
+            this.loaded.push(this.extractDataFromGltfJson(gltfObject))
+            resolve(this.gltfRequester.response)
+          } else {
+            reject({
+              status: this.gltfRequester.status,
+              statusText: this.gltfRequester.statusText
+            })
+          }
+        }
+        this.gltfRequester.onerror = function () {
+          reject({
+            status: this.gltfRequester.status,
+            statusText: this.gltfRequester.statusText
+          })
+        }
+      }
+      this.gltfRequester.send(null)
+    })
   }
 
   extractDataFromGltfJson(gltfObject) {
