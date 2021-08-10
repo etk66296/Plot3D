@@ -63,5 +63,12 @@ describe("Camera", function() {
     expect(myCamera.__proto__.__proto__.constructor.name).toEqual('Renderable3D')
   })
 
+  it("should have a matrix 4x4 for tranforming from world space to view space", function() {
+    expect(myCamera.worldToViewMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+  })
+
+  it("should have a matrix 4x4 for tranforming from view space to projection space", function() {
+    expect(myCamera.viewToProjection.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+  })
  
 })

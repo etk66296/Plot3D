@@ -1,7 +1,7 @@
 class Background extends Renderable2D {
   constructor(glCntxt, shader = null) {
     super(glCntxt, shader)
-    this.clearColor = new Vector4([ 0.2, 0.5, 0.1, 1.0 ])
+    this.clearColor = new Vector4([ 0.1, 0.1, 0.4, 1.0 ])
   }
 
   update() {

@@ -230,8 +230,50 @@ class Matrix4x4 extends Matrix {
     this.cells[14] = 0
     this.cells[15] = 1
   }
-
   
+}
+
+class Matrix4x4Projection extends Matrix4x4 {
+  constructor(fieldOfViewY = 2 / 3 * Math.PI, aspect = 16 / 9, near = 1, far = 1000) {
+    super()
+    this.fieldOfViewY = fieldOfViewY
+    this.aspect = aspect
+    this.near = near
+    this.far = far
+    this.setCellsForPerspectiveProjection(fieldOfViewY, aspect, near, far)
+  }
+
+  setCellsForPerspectiveProjection(fieldOfViewY, aspect, near, far) {
+    this.fieldOfViewY = fieldOfViewY
+    this.aspect = aspect
+    this.near = near
+    this.far = far
+    let f = 1.0 / Math.tan(this.fieldOfViewY * 0.5)
+    let nf
+    this.cells[0] = f / this.aspect
+    this.cells[1] = 0
+    this.cells[2] = 0
+    this.cells[3] = 0
+    this.cells[4] = 0
+    this.cells[5] = f
+    this.cells[6] = 0
+    this.cells[7] = 0
+    this.cells[8] = 0
+    this.cells[9] = 0
+    this.cells[11] = -1
+    this.cells[12] = 0
+    this.cells[13] = 0
+    this.cells[15] = 0
+  
+    if (this.far != null && this.far !== Infinity) {
+      nf = 1 / (this.near - this.far)
+      this.cells[10] = (this.far + this.near) * nf
+      this.cells[14] = 2 * this.far * this.near * nf
+    } else {
+      this.cells[10] = -1
+      this.cells[14] = -2 * this.near
+    }
+  }
 }
 
 class Matrix4x4Math {

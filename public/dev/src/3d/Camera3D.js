@@ -1,8 +1,8 @@
 class Camera3D extends Renderable3D {
   constructor(glCntxt, shader, math) {
     super(glCntxt, shader, math)
-
-  
+    this.worldToViewMatrix = new Matrix4x4()
+    this.viewToProjection = new Matrix4x4()
 
   }
 

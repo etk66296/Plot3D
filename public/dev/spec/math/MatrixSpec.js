@@ -232,6 +232,52 @@ describe("Matrix4x4", function() {
   })
 })
 
+describe("Matrix4x4Projection", function() {
+  var myProjectionMatrix
+
+  beforeEach(function() {
+    myProjectionMatrix = new Matrix4x4Projection()
+  })
+
+  it("has the parent class Matrix4x4", function() {
+    expect(myProjectionMatrix.__proto__.__proto__.constructor.name).toEqual('Matrix4x4')
+  })
+
+  it("has an attribute, which holds te vertical field of view valöue in radian", function() {
+    expect(myProjectionMatrix.fieldOfViewY).toEqual(2 / 3 * Math.PI)
+  })
+
+  it("has an attribute, which holds width and height ratio", function() {
+    expect(myProjectionMatrix.aspect).toEqual(16 / 9)
+  })
+
+  it("has an attribute, which holds the near frustum range", function() {
+    expect(myProjectionMatrix.near).toEqual(1)
+  })
+
+  it("has an attribute, which holds the far frustum range", function() {
+    expect(myProjectionMatrix.far).toEqual(1000)
+  })
+
+  it("has a method for setting the matrix cells", function() {
+    expect(typeof myProjectionMatrix.setCellsForPerspectiveProjection).toBe('function')
+  })
+
+  describe('setCellsForPerspectiveProjection', function() {
+    it ("should set the matrix cells for the expected projection", function() {
+      myProjectionMatrix.setCellsForPerspectiveProjection(Math.PI * 0.5, 4 / 3, 2, 200)
+      expect(myProjectionMatrix.cells).toEqual([
+        (1.0 / Math.tan(Math.PI * 0.5 * 0.5)) / (4 / 3), 0, 0, 0,
+        0, 1.0 / Math.tan(Math.PI * 0.5 * 0.5), 0, 0,
+        0, 0, (200 + 2) * (1 / (2 - 200)), -1,
+        0, 0, 2 * 200 * 2 * (1 / (2 - 200)), 0
+
+      ])
+    })
+  })
+
+})
+
 describe("Matrix4x4Math", function() {
   var myMatrix4x4Math
 

@@ -55,14 +55,11 @@ describe("Plot3DGlTfLoader", function() {
       expect(myPlot3DGlTfLoader.extractDataFromGltfJson).toHaveBeenCalled()
     })
 
-    it("should log an error when the gltf object is not version 2", function(done) {
+    it("should log an error when the gltf object is not version 2", async function() {
       spyOn(console, 'error')
       let url = './spec/assets/mesh3d/cubeWrongVersion.gltf'
-      myPlot3DGlTfLoader.requestGlTf(url)
-      setTimeout(() => {
-        expect(console.error).toHaveBeenCalledWith('check your gltf file, version must be 2.0')
-        done()
-      }, 1000)
+      await myPlot3DGlTfLoader.requestGlTf(url)
+      expect(console.error).toHaveBeenCalledWith('check your gltf file, version must be 2.0')
     })
 
   })

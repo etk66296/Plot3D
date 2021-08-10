@@ -20,7 +20,7 @@ class Plot3DGlTfLoader extends Plot3DLoader{
   requestGlTf(url) {
     return new Promise((resolve, reject) => {
       this.gltfRequester.open('GET', url, true)
-      this.gltfRequester.onload = (event) => {
+      this.gltfRequester.onload = () => {
         if (this.gltfRequester.readyState === 4) {
           if (this.gltfRequester.status === 200) {
             let gltfObject = JSON.parse(this.gltfRequester.responseText)
