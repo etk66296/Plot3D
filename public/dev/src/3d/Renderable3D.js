@@ -3,6 +3,7 @@ class Renderable3D extends Renderable {
     super(glCntxt, shader)
     this.modelMatrix = new Matrix4x4()
     this.modelToWorldMatrix = new Matrix4x4()
+    this.worldPos = new Vector3()
   }
 
 

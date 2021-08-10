@@ -1,6 +1,7 @@
 class Plot3DObject {
   constructor() {
     this.isInDebugMode = false
+    this.EPSILON = 0.0000001
   }
 
   convertDegToRad(deg) {

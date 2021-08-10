@@ -276,6 +276,93 @@ class Matrix4x4Projection extends Matrix4x4 {
   }
 }
 
+class Matrix4x4View extends Matrix4x4 {
+  constructor(eye, center, up) {
+    super()
+    this.setCellsForViewAt(eye, center, up)
+  }
+
+  setCellsForViewAt(eye, center, up) {
+    let x0, x1, x2, y0, y1, y2, z0, z1, z2, len
+    let eyex = eye.cells[0]
+    let eyey = eye.cells[1]
+    let eyez = eye.cells[2]
+
+    let upx = up.cells[0]  
+    let upy = up.cells[1]
+    let upz = up.cells[2]
+  
+    let centerx = center.cells[0]
+    let centery = center.cells[1]
+    let centerz = center.cells[2]
+  
+    if (
+      Math.abs(eyex - centerx) < this.EPSILON &&
+      Math.abs(eyey - centery) < this.EPSILON &&
+      Math.abs(eyez - centerz) < this.EPSILON
+    ) {
+      this.reset()
+      return this
+    }
+  
+    z0 = eyex - centerx
+    z1 = eyey - centery
+    z2 = eyez - centerz
+    len = 1 / Math.hypot(z0, z1, z2)
+    z0 *= len
+    z1 *= len
+    z2 *= len
+    x0 = upy * z2 - upz * z1
+    x1 = upz * z0 - upx * z2
+    x2 = upx * z1 - upy * z0
+    len = Math.hypot(x0, x1, x2)
+    if (!len) {
+      x0 = 0
+      x1 = 0
+      x2 = 0
+    } else {
+      len = 1 / len
+      x0 *= len
+      x1 *= len
+      x2 *= len
+    }
+  
+    y0 = z1 * x2 - z2 * x1
+    y1 = z2 * x0 - z0 * x2
+    y2 = z0 * x1 - z1 * x0
+    len = Math.hypot(y0, y1, y2)
+    if (!len) {
+      y0 = 0
+      y1 = 0
+      y2 = 0
+    } else {
+      len = 1 / len
+      y0 *= len
+      y1 *= len
+      y2 *= len
+    }
+  
+    this.cells[0] = x0
+    this.cells[1] = y0
+    this.cells[2] = z0
+    this.cells[3] = 0
+    this.cells[4] = x1
+    this.cells[5] = y1
+    this.cells[6] = z1
+    this.cells[7] = 0
+    this.cells[8] = x2
+    this.cells[9] = y2
+    this.cells[10] = z2
+    this.cells[11] = 0
+    this.cells[12] = -(x0 * eyex + x1 * eyey + x2 * eyez)
+    this.cells[13] = -(y0 * eyex + y1 * eyey + y2 * eyez)
+    this.cells[14] = -(z0 * eyex + z1 * eyey + z2 * eyez)
+    this.cells[15] = 1
+
+    this.invert()
+  }
+}
+
 class Matrix4x4Math {
   constructor() {}
 

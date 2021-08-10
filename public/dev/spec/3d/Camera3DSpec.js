@@ -68,7 +68,11 @@ describe("Camera", function() {
   })
 
   it("should have a matrix 4x4 for tranforming from view space to projection space", function() {
-    expect(myCamera.viewToProjection.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+    expect(myCamera.viewToProjection.constructor.name).toEqual('Matrix4x4Projection')
+  })
+
+  it("should have a matrix 4x4 for tranforming from world space to view space", function() {
+    expect(myCamera.worldToViewMatrix.constructor.name).toEqual('Matrix4x4View')
   })
  
 })

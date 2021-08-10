@@ -278,6 +278,32 @@ describe("Matrix4x4Projection", function() {
 
 })
 
+describe("Matrix4x4View", function() {
+  var myViewMatrix
+
+  beforeEach(function() {
+    myViewMatrix = new Matrix4x4View(
+      new Vector3([ 0, 4, 10 ]),
+      new Vector3([ -1, 0, -1 ]),
+      new Vector3([ 0, 1, 0 ])
+    )
+  })
+
+  it("has the parent class Matrix4x4", function() {
+    expect(myViewMatrix.__proto__.__proto__.constructor.name).toEqual('Matrix4x4')
+  })
+
+  it("should have the cell values as expected", function() {
+    expect(myViewMatrix.cells).toEqual([
+      0.995893206467704, 3.469446951953614e-18, -0.09053574604251854, 0,
+      -0.030827658034323767, 0.940243570046875, -0.33910423837756143, 0,
+      0.08512565307587486, 0.3405026123034994, 0.9363821838346236, -0,
+      2.7755575615628914e-17, 4, 10.000000000000002, 1
+    ])
+  })
+
+})
+
 describe("Matrix4x4Math", function() {
   var myMatrix4x4Math
 
