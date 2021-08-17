@@ -33,7 +33,7 @@
   <script src="src/2d/Background.js"></script>
 
   <script src="src/3d/Renderable3D.js"></script>
-  <!-- <script src="src/3d/TriangleMesh3D.js"></script> -->
+  <script src="src/3d/TriangleMesh3D.js"></script>
   <script src="src/3d/Camera3D.js"></script>
   <script src="src/3d/MeshFactory3D.js"></script>
 
@@ -59,7 +59,7 @@
   <script src="spec/2d/BackgroundSpec.js"></script>
 
   <script src="spec/3d/Renderable3DSpec.js"></script>
-  <!-- <script src="spec/3d/TriangleMesh3DSpec.js"></script> -->
+  <script src="spec/3d/TriangleMesh3DSpec.js"></script>
   <script src="spec/3d/Camera3DSpec.js"></script>
   <script src="spec/3d/MeshFactory3DSpec.js"></script>
 
@@ -89,10 +89,13 @@
         glCntxt.enable(glCntxt.CULL_FACE)
         glCntxt.cullFace(glCntxt.BACK)
         glCntxt.enable(glCntxt.DEPTH_TEST)
+        let math = {
+          vector3: new Vector3Math(),
+          matrix4x4: new Matrix4x4Math()
+        }
         let myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
         let vertexShaderCode = `
           attribute vec3 a_position;
-          attribute vec3 a_normal;
           attribute vec4 a_color;
 
           uniform mat4 u_modelMatrix;
@@ -100,36 +103,44 @@
           uniform mat4 u_WorldToViewMatrix;
           uniform mat4 u_ViewToProjectionMatrix;
 
-          varying vec4 v_color;
-          varying vec3 v_lighting;
+          varying lowp vec4 v_color;
 
-          void main() {
-            mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
-            gl_Position = modelToProjection * vec4(a_position, 1.0);
+          void main(void) {
+            gl_Position = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
             v_color = a_color;
-            
-            vec3 ambientLight = vec3(0.6, 0.6, 0.6);
-            vec3 directionalLightColor = vec3(0.5, 0.5, 0.75);
-            vec3 directionalVector = vec3(0.85, 0.8, 0.75);
-
-            vec4 transformedNormal = (u_modelToWorldMatrix * u_modelMatrix) * vec4(a_normal, 1.0);
-
-            float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
-            v_lighting = ambientLight + (directionalLightColor * directional);
           }
         `
         let fragmentShaderCode = `
           precision mediump float;
 
-          varying vec4 v_color;
-          varying vec3 v_lighting;
+          varying lowp vec4 v_color;
 
-
-          void main() {
-            gl_FragColor = v_color * vec4(v_lighting, 1.0);
+          void main(void) {
+            gl_FragColor = v_color;
           }
         `
+        let shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+        let myCamera = new Camera3D(glCntxt, shader, math)
+        myCamera.draw()
 
+        glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_modelMatrix'], false, (new Matrix4x4()).cells)
+        glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, (new Matrix4x4()).cells)
+
+        let myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
+        myTriangleMesh.draw()
+        // let squareVerticesBuffer = glCntxt.createBuffer();
+        // glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, squareVerticesBuffer)
+        // var vertices = [
+        //   1.0,  1.0,  -2.0,
+        //   -1.0, 1.0,  -2.0,
+        //   1.0,  -1.0, -2.0,
+        //   -1.0, -1.0, -2.0
+        // ]
+        // glCntxt.enableVertexAttribArray(shader.glAttrLocation['a_position'])
+        // glCntxt.bufferData(glCntxt.ARRAY_BUFFER, new Float32Array(vertices), glCntxt.STATIC_DRAW)
+        // glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, squareVerticesBuffer)
+        // glCntxt.vertexAttribPointer(shader.glAttrLocation['a_position'], 3, glCntxt.FLOAT, false, 0, 0)
+        // glCntxt.drawArrays(glCntxt.TRIANGLE_STRIP, 0, 4)
       }
     )
   </script>
@@ -141,7 +152,7 @@
       <canvas id="renderCanvas" width="100" height="100"></canvas>
     </div>
     <div style="display: inline-block;" id="canvasContainer2">
-      <canvas id="renderCanvas2" width="100" height="100"></canvas>
+      <canvas id="renderCanvas2" width="160" height="90"></canvas>
     </div>
   </div>
 </body>

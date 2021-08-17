@@ -248,6 +248,7 @@ class Matrix4x4Projection extends Matrix4x4 {
     this.aspect = aspect
     this.near = near
     this.far = far
+    
     let f = 1.0 / Math.tan(this.fieldOfViewY * 0.5)
     let nf
     this.cells[0] = f / this.aspect

@@ -69,7 +69,7 @@ describe("Renderable3D", function() {
   })
 
   it("should have a matrix 4x4 for rotating, scale and translate it in world space", function() {
-    expect(myRenderable3D.modelMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+    expect(myRenderable3D.modelToWorldMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
   })
 
 })

@@ -4,6 +4,7 @@ describe("Camera", function() {
   var myPlot3DShaderBuilder
   var math
   var myCamera
+  var myTriangleMesh
   
   beforeAll(function() {
     canvas = document.getElementById("renderCanvas")
@@ -13,6 +14,7 @@ describe("Camera", function() {
       matrix4x4: new Matrix4x4Math()
     }
     myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
+    
   })
 
   beforeEach(function() {
@@ -55,8 +57,11 @@ describe("Camera", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    myRenderable3D = new Renderable3D(glCntxt, shader, math)
     myCamera = new Camera3D(glCntxt, shader, math)
+    
+    // myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
+    // myTriangleMesh.draw()
+    myCamera.draw()
   })
 
   it("should have the parent class Renderable3D", function() {
