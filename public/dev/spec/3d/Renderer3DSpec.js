@@ -13,8 +13,46 @@ describe("Renderer3D", function() {
     expect(myRenderer3D.__proto__.__proto__.constructor.name).toEqual('Renderer')
   })
 
+  it("should have a variable with the index to the active camera set", function() {
+    expect(myRenderer3D.activeCamera).toEqual(null)
+  })
+
   it("should have a method for adding renderable3d objects to the renderables array", function() {
     expect(typeof myRenderer3D.addRenderable3D).toEqual('function')
+  })
+
+  describe("addRenderer3D", function() {
+    it("should check if the passed object is a instance of a renderable3d.", function() {
+      expect(function() { myRenderer3D.addRenderable3D({}) }).toThrow(new myRenderer3D.exceptions.NoRenderable3DObject(
+        `Renderer3D does noch accept the object. Just instances
+        of the classes Camera3D and TriangleMesh3D are allowed.`
+      ))
+    })
+
+    it("it sould add a camera to the cameras list", function() {
+      class Camera3D { constructor() {} }
+      let myCamera = new Camera3D()
+      spyOn(myRenderer3D.renderables.cameras, 'push').and.callThrough()
+      myRenderer3D.addRenderable3D(myCamera)
+      expect(myRenderer3D.renderables.cameras.push).toHaveBeenCalled()
+      expect(myRenderer3D.renderables.cameras.length).toEqual(1)
+    })
+
+    it("should add triangle meshes 3d to the drawings list", function() {
+      class TriangleMesh3D { constructor() {} }
+      let myTriangleMesh = new TriangleMesh3D()
+      spyOn(myRenderer3D.renderables.drawings, 'push').and.callThrough()
+      myRenderer3D.addRenderable3D(myTriangleMesh)
+      expect(myRenderer3D.renderables.drawings.push).toHaveBeenCalled()
+      expect(myRenderer3D.renderables.drawings.length).toEqual(1)
+    })
+
+    it("set the active camera to the passed object when it is type of Camera3D", function() {
+      class Camera3D { constructor() {} }
+      let myCamera = new Camera3D()
+      myRenderer3D.addRenderable3D(myCamera)
+      expect(myRenderer3D.activeCamera).toEqual(myCamera)
+    })
   })
 
 })
