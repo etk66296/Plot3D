@@ -55,4 +55,21 @@ describe("Renderer3D", function() {
     })
   })
 
+  it("should have a mehtod execute for render the scene with the present setup", function() {
+    expect(typeof myRenderer3D.process).toEqual('function')
+  })
+
+  describe('process', function() {
+    it('should call the draw function of the current camera', function() {
+      class Camera { constructor(){} draw(){}}
+      myRenderer3D.activeCamera = new Camera()
+      spyOn(myRenderer3D.activeCamera, 'draw')
+      myRenderer3D.process()
+      expect(myRenderer3D.activeCamera.draw).toHaveBeenCalled()
+    })
+    it("should trough an error when the active camera attriubte is null", function() {
+      
+    })
+  })
+
 })

@@ -11,6 +11,10 @@ class Renderer3D extends Renderer {
 
   }
 
+  process() {
+    this.activeCamera.draw()
+  }
+
   addRenderable3D(renderable3dObj) {
     let objectIsInstanceOf = renderable3dObj.constructor.name
     if (objectIsInstanceOf === 'Camera3D') {
