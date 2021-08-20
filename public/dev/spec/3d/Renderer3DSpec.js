@@ -21,6 +21,27 @@ describe("Renderer3D", function() {
     expect(typeof myRenderer3D.addRenderable3D).toEqual('function')
   })
 
+  it("should append the exception message NoRenderable3DObject", function() {
+    expect(typeof myRenderer3D.exceptions.NoRenderable3DObject).toEqual('function')
+  })
+
+  describe('exceptions.NoRenderable3DObject', function() {
+    var  myNoRenderableException
+
+    beforeAll(function() {
+      myNoRenderableException = new myRenderer3D.exceptions.NoRenderable3DObject('blablba')
+    })
+
+    it("should have an attribute message, which is passed by the function parameter", function() {
+      expect(myNoRenderableException.message).toEqual('blablba')
+    })
+
+    it("should have an attribute name", function() {
+      expect(myNoRenderableException.name).toEqual('NoRenderable3D')
+    })
+
+  })
+
   describe("addRenderer3D", function() {
     it("should check if the passed object is a instance of a renderable3d.", function() {
       expect(function() { myRenderer3D.addRenderable3D({}) }).toThrow(new myRenderer3D.exceptions.NoRenderable3DObject(

@@ -6,6 +6,14 @@ class Renderable extends Plot3DObject {
     this.math = null
   }
 
+  updateShaderUniforms() {
+
+  }
+
+  processShaderAttributes() {
+    
+  }
+
   update() {
 
   }

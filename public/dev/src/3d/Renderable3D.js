@@ -4,6 +4,11 @@ class Renderable3D extends Renderable {
     this.modelMatrix = new Matrix4x4()
     this.modelToWorldMatrix = new Matrix4x4()
     this.worldPos = new Vector3()
+
+    this.exceptions.ShaderUniformNotFound = function(message) {
+      this.message = message
+      this.name = 'ShaderUniformNotFound'
+    }
   }
 
   translateXIncremental(distance) {
@@ -19,6 +24,15 @@ class Renderable3D extends Renderable {
   translateZIncremental(distance) {
     this.worldPos.cells[2] += distance
     this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  }
+
+  updateShaderUniforms() {
+    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
+    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)
+  }
+
+  processShaderAttributes() {
+    
   }
 
   update() {

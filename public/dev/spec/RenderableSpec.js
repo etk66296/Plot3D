@@ -72,4 +72,12 @@ describe("Renderable", function() {
   it("should have a method draw", function() {
     expect(typeof myRenderable.draw).toEqual('function')
   })
+
+  it("should have a method for updating the shader uniforms", function() {
+    expect(typeof myRenderable.updateShaderUniforms).toEqual('function')
+  })
+
+  it("should have a method for processing the shader attributes", function() {
+    expect(typeof myRenderable.processShaderAttributes).toEqual('function')
+  })
 })

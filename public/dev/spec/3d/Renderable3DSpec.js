@@ -71,5 +71,58 @@ describe("Renderable3D", function() {
   it("should have a matrix 4x4 for rotating, scale and translate it in world space", function() {
     expect(myRenderable3D.modelToWorldMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
   })
+  
+
+  it("should append the exception message ShaderUniformNotFound", function() {
+    expect(typeof myRenderable3D.exceptions.ShaderUniformNotFound).toEqual('function')
+  })
+
+  describe('exceptions.ShaderUniformNotFound', function() {
+    var  myShaderUniformNotFound
+
+    beforeAll(function() {
+      myShaderUniformNotFound = new myRenderable3D.exceptions.ShaderUniformNotFound('blablba')
+    })
+
+    it("should have an attribute message, which is passed by the function parameter", function() {
+      expect(myShaderUniformNotFound.message).toEqual('blablba')
+    })
+
+    it("should have an attribute name", function() {
+      expect(myShaderUniformNotFound.name).toEqual('ShaderUniformNotFound')
+    })
+
+  })
+
+  describe('updateShaderUniforms', function() {
+
+    it('should update the shaders model matrix uniform', function() {
+      spyOn(myRenderable3D.glCntxt, 'uniformMatrix4fv')
+      myRenderable3D.updateShaderUniforms()
+      expect(myRenderable3D.glCntxt.uniformMatrix4fv)
+        .toHaveBeenCalledWith(
+          myRenderable3D.shader.glVertexUniformLocation['u_modelMatrix'],
+          false,
+          myRenderable3D.modelMatrix.cells
+        )
+    })
+
+    it('should update the shaders model to world matrix uniform', function() {
+      spyOn(myRenderable3D.glCntxt, 'uniformMatrix4fv')
+      myRenderable3D.updateShaderUniforms()
+      expect(myRenderable3D.glCntxt.uniformMatrix4fv)
+        .toHaveBeenCalledWith(
+          myRenderable3D.shader.glVertexUniformLocation['u_modelToWorldMatrix'],
+          false,
+          myRenderable3D.modelToWorldMatrix.cells
+        )
+    })
+
+
+  })
+
+  describe('processShaderAttributes', function() {
+
+  })
 
 })
