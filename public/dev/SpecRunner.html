@@ -105,12 +105,14 @@
           uniform mat4 u_modelMatrix;
           uniform mat4 u_modelToWorldMatrix;
           uniform mat4 u_WorldToViewMatrix;
+          uniform mat4 u_cameraModelMatrix;
+          uniform mat4 u_cameraTranslationMatrix;
           uniform mat4 u_ViewToProjectionMatrix;
 
           varying lowp vec4 v_color;
 
           void main(void) {
-            gl_Position = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+            gl_Position = u_ViewToProjectionMatrix * u_cameraTranslationMatrix * u_cameraModelMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
             v_color = a_color;
           }
         `
@@ -125,10 +127,13 @@
         `
         let shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
         let myCamera = new Camera3D(glCntxt, shader, math)
+        
+        glCntxt.useProgram(shader.program)
         myCamera.draw()
-
         glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_modelMatrix'], false, (new Matrix4x4()).cells)
         glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, (new Matrix4x4()).cells)
+        glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_cameraModelMatrix'], false, (new Matrix4x4()).cells)
+        glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_cameraTranslationMatrix'], false, (new Matrix4x4()).cells)
 
         let myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
         myTriangleMesh.draw()

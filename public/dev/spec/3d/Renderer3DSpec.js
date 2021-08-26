@@ -42,6 +42,27 @@ describe("Renderer3D", function() {
 
   })
 
+  it("should append the exception message NoCamera3DObject", function() {
+    expect(typeof myRenderer3D.exceptions.NoCamera3DObject).toEqual('function')
+  })
+
+  describe('exceptions.NoCamera3DObject', function() {
+    var  myNoCamera3DException
+
+    beforeAll(function() {
+      myNoCamera3DException = new myRenderer3D.exceptions.NoCamera3DObject('blablba')
+    })
+
+    it("should have an attribute message, which is passed by the function parameter", function() {
+      expect(myNoCamera3DException.message).toEqual('blablba')
+    })
+
+    it("should have an attribute name", function() {
+      expect(myNoCamera3DException.name).toEqual('NoCamera3D')
+    })
+
+  })
+
   describe("addRenderer3D", function() {
     it("should check if the passed object is a instance of a renderable3d.", function() {
       expect(function() { myRenderer3D.addRenderable3D({}) }).toThrow(new myRenderer3D.exceptions.NoRenderable3DObject(
@@ -82,14 +103,26 @@ describe("Renderer3D", function() {
 
   describe('process', function() {
     it('should call the draw function of the current camera', function() {
-      class Camera { constructor(){} draw(){}}
-      myRenderer3D.activeCamera = new Camera()
+      class Camera3D { constructor(){} update(){} draw(){}}
+      myRenderer3D.activeCamera = new Camera3D()
       spyOn(myRenderer3D.activeCamera, 'draw')
       myRenderer3D.process()
       expect(myRenderer3D.activeCamera.draw).toHaveBeenCalled()
     })
-    it("should trough an error when the active camera attriubte is null", function() {
-      
+
+    it('should call the update function of the current camera', function() {
+      class Camera3D { constructor(){} update(){} draw(){}}
+      myRenderer3D.activeCamera = new Camera3D()
+      spyOn(myRenderer3D.activeCamera, 'update')
+      myRenderer3D.process()
+      expect(myRenderer3D.activeCamera.update).toHaveBeenCalled()
+    })
+
+    it("should through NoCamera3D when the active camera attriubte is not a instance of Camera3D", function() {
+      myRenderer3D.activeCamera = {}
+      expect(function() { myRenderer3D.process() }).toThrow(new myRenderer3D.exceptions.NoCamera3DObject(
+        `Processing the active camera failed.`
+      ))
     })
   })
 

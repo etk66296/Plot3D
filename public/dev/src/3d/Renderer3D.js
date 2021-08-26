@@ -6,13 +6,22 @@ class Renderer3D extends Renderer {
       this.message = message
       this.name = 'NoRenderable3D'
     }
+    this.exceptions.NoCamera3DObject = function(message) {
+      this.message = message
+      this.name = 'NoCamera3D'
+    }
 
     this.activeCamera = null
 
   }
 
   process() {
-    this.activeCamera.draw()
+    if (this.activeCamera.constructor.name === 'Camera3D') {
+      this.activeCamera.update()
+      this.activeCamera.draw()
+    } else {
+      throw new this.exceptions.NoCamera3DObject('Processing the active camera failed.')
+    }
   }
 
   addRenderable3D(renderable3dObj) {
