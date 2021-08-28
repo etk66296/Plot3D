@@ -4,7 +4,6 @@ describe("Camera", function() {
   var myPlot3DShaderBuilder
   var math
   var myCamera
-  var myTriangleMesh
   
   beforeAll(function() {
     canvas = document.getElementById("renderCanvas")
@@ -19,56 +18,49 @@ describe("Camera", function() {
 
   beforeEach(function() {
     let vertexShaderCode = `
-      attribute vec4 a_position;
-      attribute vec3 a_normal;
-
-      varying vec3 v_normal;
-      // [View To Projection]x[World To View]x[Model to World]
-      uniform vec4 u_color;
-
+      attribute vec3 a_position;
+      attribute vec4 a_color;
 
       uniform mat4 u_modelMatrix;
       uniform mat4 u_modelToWorldMatrix;
+      uniform mat4 u_cameraModelMatrix;
+      uniform mat4 u_cameraTranslationMatrix;
       uniform mat4 u_WorldToViewMatrix;
       uniform mat4 u_ViewToProjectionMatrix;
 
-      varying vec4 v_color;
+      varying lowp vec4 v_color;
 
-      void main() {
-        mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
-        gl_Position = modelToProjection * a_position;
-        v_color = u_color;
-        v_normal = (modelToProjection * vec4(a_normal.xyz, 0.0)).xyz;
+      void main(void) {
+        gl_Position = u_ViewToProjectionMatrix * u_cameraTranslationMatrix * u_cameraModelMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+        v_color = a_color;
       }
     `
     let fragmentShaderCode = `
       precision mediump float;
 
-      varying vec4 v_color;
-      varying vec3 v_normal;
+      varying lowp vec4 v_color;
 
-      uniform vec3 u_reverseLightDirection;
-
-      void main() {
-        vec3 normal = normalize(v_normal);
-        float light = dot(normal, u_reverseLightDirection);
+      void main(void) {
         gl_FragColor = v_color;
-        gl_FragColor.rgb *= light;
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
     myCamera = new Camera3D(glCntxt, shader, math)
-    
-    // myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
-    // myTriangleMesh.draw()
-    myCamera.draw()
   })
 
   it("should have the parent class Renderable3D", function() {
     expect(myCamera.__proto__.__proto__.constructor.name).toEqual('Renderable3D')
   })
 
-  it("should have a matrix 4x4 for tranforming from world space to view space", function() {
+  it("should have a matrix for rotating the camera in view space", function() {
+    expect(myCamera.camModelMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+  })
+
+  it("should have a matrix for translating the camera in view space", function() {
+    expect(myCamera.camTranslationMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+  })
+
+  it("should have a matrix 4x4 for transforming from world space to view space", function() {
     expect(myCamera.worldToViewMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
   })
 
@@ -78,6 +70,46 @@ describe("Camera", function() {
 
   it("should have a matrix 4x4 for tranforming from world space to view space", function() {
     expect(myCamera.worldToViewMatrix.constructor.name).toEqual('Matrix4x4View')
+  })
+
+  describe("update", function() {
+    it("should set the shaders model matrix 4x4 uniform", function() {
+      spyOn(glCntxt, 'uniformMatrix4fv')
+      myCamera.update()
+      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_modelMatrix'], false, myCamera.modelMatrix.cells)
+
+    })
+
+    it("should set the shaders model to world matrix 4x4 uniform", function() {
+      spyOn(glCntxt, 'uniformMatrix4fv')
+      myCamera.update()
+      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, myCamera.modelToWorldMatrix.cells)
+
+    })
+
+    it("should set the shaders camera matrix 4x4 uniform", function() {
+      spyOn(glCntxt, 'uniformMatrix4fv')
+      myCamera.update()
+      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraModelMatrix'], false, myCamera.camModelMatrix.cells)
+    })
+
+    it("should set the shaders camera translation matrix 4x4 uniform", function() {
+      spyOn(glCntxt, 'uniformMatrix4fv')
+      myCamera.update()
+      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraTranslationMatrix'], false, myCamera.camTranslationMatrix.cells)
+    })
+
+    it("should set the shaders world to view matrix 4x4 uniform", function() {
+      spyOn(glCntxt, 'uniformMatrix4fv')
+      myCamera.update()
+      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_WorldToViewMatrix'], false, myCamera.worldToViewMatrix.cells)
+    })
+
+    it("should set the shaders world to view matrix 4x4 uniform", function() {
+      spyOn(glCntxt, 'uniformMatrix4fv')
+      myCamera.update()
+      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, myCamera.viewToProjection.cells)
+    })
   })
  
 })
