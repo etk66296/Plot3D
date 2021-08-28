@@ -80,7 +80,7 @@ describe("Renderable3D", function() {
   describe('exceptions.ShaderUniformNotFound', function() {
     var  myShaderUniformNotFound
 
-    beforeAll(function() {
+    beforeEach(function() {
       myShaderUniformNotFound = new myRenderable3D.exceptions.ShaderUniformNotFound('blablba')
     })
 
@@ -93,36 +93,4 @@ describe("Renderable3D", function() {
     })
 
   })
-
-  describe('updateShaderUniforms', function() {
-
-    it('should update the shaders model matrix uniform', function() {
-      spyOn(myRenderable3D.glCntxt, 'uniformMatrix4fv')
-      myRenderable3D.updateShaderUniforms()
-      expect(myRenderable3D.glCntxt.uniformMatrix4fv)
-        .toHaveBeenCalledWith(
-          myRenderable3D.shader.glVertexUniformLocation['u_modelMatrix'],
-          false,
-          myRenderable3D.modelMatrix.cells
-        )
-    })
-
-    it('should update the shaders model to world matrix uniform', function() {
-      spyOn(myRenderable3D.glCntxt, 'uniformMatrix4fv')
-      myRenderable3D.updateShaderUniforms()
-      expect(myRenderable3D.glCntxt.uniformMatrix4fv)
-        .toHaveBeenCalledWith(
-          myRenderable3D.shader.glVertexUniformLocation['u_modelToWorldMatrix'],
-          false,
-          myRenderable3D.modelToWorldMatrix.cells
-        )
-    })
-
-
-  })
-
-  describe('processShaderAttributes', function() {
-
-  })
-
 })

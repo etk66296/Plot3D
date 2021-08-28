@@ -26,15 +26,6 @@ class Renderable3D extends Renderable {
     this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
   }
 
-  updateShaderUniforms() {
-    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
-    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)
-  }
-
-  processShaderAttributes() {
-    
-  }
-
   update() {
    
   }

@@ -4,14 +4,8 @@ class Renderable extends Plot3DObject {
     this.glCntxt = glCntxt
     this.shader = shader
     this.math = null
-  }
 
-  updateShaderUniforms() {
-
-  }
-
-  processShaderAttributes() {
-    
+    this.isActive = true
   }
 
   update() {

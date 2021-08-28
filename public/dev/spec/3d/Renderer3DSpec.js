@@ -6,7 +6,6 @@ describe("Renderer3D", function() {
 
   beforeEach(function() {    
     myRenderer3D = new Renderer3D()
-
   })
 
   it("should have the parent class Renderable3D", function() {
@@ -28,7 +27,7 @@ describe("Renderer3D", function() {
   describe('exceptions.NoRenderable3DObject', function() {
     var  myNoRenderableException
 
-    beforeAll(function() {
+    beforeEach(function() {
       myNoRenderableException = new myRenderer3D.exceptions.NoRenderable3DObject('blablba')
     })
 
@@ -49,7 +48,7 @@ describe("Renderer3D", function() {
   describe('exceptions.NoCamera3DObject', function() {
     var  myNoCamera3DException
 
-    beforeAll(function() {
+    beforeEach(function() {
       myNoCamera3DException = new myRenderer3D.exceptions.NoCamera3DObject('blablba')
     })
 
@@ -102,8 +101,13 @@ describe("Renderer3D", function() {
   })
 
   describe('process', function() {
+    class Camera3D { constructor(){} update(){} draw(){}}
+    class TriangleMesh3D {
+      constructor(){
+        this.isActive = true
+    } update(){} draw(){} }
+
     it('should call the draw function of the current camera', function() {
-      class Camera3D { constructor(){} update(){} draw(){}}
       myRenderer3D.activeCamera = new Camera3D()
       spyOn(myRenderer3D.activeCamera, 'draw')
       myRenderer3D.process()
@@ -111,7 +115,6 @@ describe("Renderer3D", function() {
     })
 
     it('should call the update function of the current camera', function() {
-      class Camera3D { constructor(){} update(){} draw(){}}
       myRenderer3D.activeCamera = new Camera3D()
       spyOn(myRenderer3D.activeCamera, 'update')
       myRenderer3D.process()
@@ -124,6 +127,38 @@ describe("Renderer3D", function() {
         `Processing the active camera failed.`
       ))
     })
+
+    it("should update loop through all drawings", function() {
+      myRenderer3D.activeCamera = new Camera3D()
+      myRenderer3D.renderables.drawings.push(new TriangleMesh3D())
+      myRenderer3D.renderables.drawings.push(new TriangleMesh3D())
+      spyOn(myRenderer3D.renderables.drawings, 'forEach').and.callThrough()
+      myRenderer3D.process()
+      expect(myRenderer3D.renderables.drawings.forEach).toHaveBeenCalled()
+    })
+
+    it("should throw an error if the drawing is not a rederer 3D", function() {
+      myRenderer3D.activeCamera = new Camera3D()
+      myRenderer3D.renderables.drawings.push({})
+      expect(() => { myRenderer3D.process() }).toThrow(
+        new myRenderer3D.exceptions.NoRenderable3DObject('Object is not an instance of Renderable3D')
+      )
+    })
+
+    it("should call the update method of all active drawings", function() {
+      myRenderer3D.activeCamera = new Camera3D()
+      triMeshA = new TriangleMesh3D()
+      triMeshB = new TriangleMesh3D()
+      triMeshB.isActive = false
+      myRenderer3D.renderables.drawings.push(triMeshA)
+      myRenderer3D.renderables.drawings.push(triMeshB)
+      spyOn(triMeshA, 'update')
+      spyOn(triMeshB, 'update')
+      myRenderer3D.process()
+      expect(triMeshA.update).toHaveBeenCalled()
+      expect(triMeshB.update).not.toHaveBeenCalled()
+    })
+
   })
 
 })

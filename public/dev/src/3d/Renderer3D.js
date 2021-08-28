@@ -22,6 +22,18 @@ class Renderer3D extends Renderer {
     } else {
       throw new this.exceptions.NoCamera3DObject('Processing the active camera failed.')
     }
+
+    this.renderables.drawings.forEach((drawing) => {
+      if (drawing.constructor.name === 'TriangleMesh3D') {
+        if (drawing.isActive) {
+          drawing.update()
+        }
+
+      } else {
+        throw new this.exceptions.NoRenderable3DObject('Object is not an instance of Renderable3D')
+      }
+      
+    })
   }
 
   addRenderable3D(renderable3dObj) {

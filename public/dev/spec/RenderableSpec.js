@@ -65,6 +65,11 @@ describe("Renderable", function() {
     expect(myRenderable.shader.constructor.name).toEqual('Plot3DShader')
   })
 
+  it("should have a boolean attribute which indicates if the renderable is active", function() {
+    expect(myRenderable.isActive).toEqual(true)
+  })
+
+
   it("should have a method update", function() {
     expect(typeof myRenderable.update).toEqual('function')
   })
@@ -73,11 +78,5 @@ describe("Renderable", function() {
     expect(typeof myRenderable.draw).toEqual('function')
   })
 
-  it("should have a method for updating the shader uniforms", function() {
-    expect(typeof myRenderable.updateShaderUniforms).toEqual('function')
-  })
-
-  it("should have a method for processing the shader attributes", function() {
-    expect(typeof myRenderable.processShaderAttributes).toEqual('function')
-  })
+  
 })
