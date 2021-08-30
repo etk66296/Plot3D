@@ -27,8 +27,8 @@ class Renderer3D extends Renderer {
       if (drawing.constructor.name === 'TriangleMesh3D') {
         if (drawing.isActive) {
           drawing.update()
+          drawing.draw()
         }
-
       } else {
         throw new this.exceptions.NoRenderable3DObject('Object is not an instance of Renderable3D')
       }

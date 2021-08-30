@@ -26,6 +26,7 @@ class Camera3D extends Renderable3D {
   }
 
   update() {
+    this.glCntxt.useProgram(this.shader.program)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_cameraModelMatrix'], false, this.camModelMatrix.cells)

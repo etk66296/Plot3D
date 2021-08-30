@@ -2,14 +2,12 @@ describe("Plot3DKeyboard", function() {
 
   var canvas
   var glCntxt
-  var myRenderable3d
 
   var myPlot3DKeyboard
 
   beforeAll(function() {
     canvas = document.getElementById("renderCanvas")
     glCntxt = canvas.getContext("webgl2")
-    myRenderable3d = new Renderable3D(glCntxt, {}, {})
   })
 
   beforeEach(function() {
@@ -69,7 +67,7 @@ describe("Plot3DKeyboard", function() {
   describe("imposeKeyDownWasdCtrlTo", function() {
     it ("push the renderable3d object to the wasd keydown list", function() {
       spyOn(myPlot3DKeyboard.kbWasdCtrlObjects, 'push')
-      myPlot3DKeyboard.imposeKeyDownWasdCtrlTo(myRenderable3d)
+      myPlot3DKeyboard.imposeKeyDownWasdCtrlTo({})
       expect(myPlot3DKeyboard.kbWasdCtrlObjects.push).toHaveBeenCalled()
     })
   })
@@ -81,7 +79,7 @@ describe("Plot3DKeyboard", function() {
   describe("updateWasdCtrl", function() {
     it ("should iterate trough the kbwasd object list and translate the particular object", function() {
       spyOn(myPlot3DKeyboard.kbWasdCtrlObjects, 'forEach')
-      myPlot3DKeyboard.imposeKeyDownWasdCtrlTo(myRenderable3d)
+      myPlot3DKeyboard.imposeKeyDownWasdCtrlTo({})
       myPlot3DKeyboard.updateWasdCtrl()
       expect(myPlot3DKeyboard.kbWasdCtrlObjects.forEach).toHaveBeenCalled()
     })
@@ -99,7 +97,7 @@ describe("Plot3DKeyboard", function() {
   describe("imposeKeyDownWasdCtrlTo", function() {
     it ("push the renderable3d object to the arrow fly keydown list", function() {
       spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects, 'push')
-      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
+      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo({})
       expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects.push).toHaveBeenCalled()
     })
   })
@@ -111,7 +109,7 @@ describe("Plot3DKeyboard", function() {
   describe("updateArrowFlyCtrl", function() {
     it ("should iterate trough the arrow fly object list and rotate the particular object", function() {
       spyOn(myPlot3DKeyboard.kbArrowFlyCtrlObjects, 'forEach')
-      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo(myRenderable3d)
+      myPlot3DKeyboard.imposeKeyDownArrowFlyCtrlTo({})
       myPlot3DKeyboard.updateArrowFlyCtrl()
       expect(myPlot3DKeyboard.kbArrowFlyCtrlObjects.forEach).toHaveBeenCalled()
     })

@@ -5,9 +5,19 @@ class Renderable3D extends Renderable {
     this.modelToWorldMatrix = new Matrix4x4()
     this.worldPos = new Vector3()
 
+    this.math = math
+
     this.exceptions.ShaderUniformNotFound = function(message) {
       this.message = message
       this.name = 'ShaderUniformNotFound'
+    }
+
+    if(this.shader.glVertexUniformLocation['u_modelMatrix'] === undefined) {
+      throw new this.exceptions.ShaderUniformNotFound('shader does not provide the uniform u_modelMatrix')
+    }
+
+    if(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'] === undefined) {
+      throw new this.exceptions.ShaderUniformNotFound('shader does not provide the uniform u_modelToWorldMatrix')
     }
   }
 

@@ -139,14 +139,11 @@ class TriangleMesh3D extends Renderable3D {
 
 
   update() {
+    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
+    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)
   }
 
   draw() {
-    // this.glCntxt.useProgram(this.shader.program)
-
-    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
-    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)
-       
     this.meshData.forEach((primitive, primitiveIndex) => { 
       this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
       this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticesBuffers[primitiveIndex])

@@ -19,41 +19,30 @@ describe("TriangleMesh3D", function() {
 
   beforeEach(function() {
     let vertexShaderCode = `
-      attribute vec4 a_position;
-      attribute vec3 a_normal;
-
-      varying vec3 v_normal;
-      // [View To Projection]x[World To View]x[Model to World]
-      uniform vec4 u_color;
-
+      attribute vec3 a_position;
+      attribute vec4 a_color;
 
       uniform mat4 u_modelMatrix;
       uniform mat4 u_modelToWorldMatrix;
+      uniform mat4 u_cameraModelMatrix;
+      uniform mat4 u_cameraTranslationMatrix;
       uniform mat4 u_WorldToViewMatrix;
       uniform mat4 u_ViewToProjectionMatrix;
 
-      varying vec4 v_color;
+      varying lowp vec4 v_color;
 
-      void main() {
-        mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
-        gl_Position = modelToProjection * a_position;
-        v_color = u_color;
-        v_normal = (modelToProjection * vec4(a_normal.xyz, 0.0)).xyz;
+      void main(void) {
+        gl_Position = u_ViewToProjectionMatrix * u_cameraTranslationMatrix * u_cameraModelMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+        v_color = a_color;
       }
     `
     let fragmentShaderCode = `
       precision mediump float;
 
-      varying vec4 v_color;
-      varying vec3 v_normal;
+      varying lowp vec4 v_color;
 
-      uniform vec3 u_reverseLightDirection;
-
-      void main() {
-        vec3 normal = normalize(v_normal);
-        float light = dot(normal, u_reverseLightDirection);
+      void main(void) {
         gl_FragColor = v_color;
-        gl_FragColor.rgb *= light;
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
@@ -127,6 +116,19 @@ describe("TriangleMesh3D", function() {
   })
 
   describe("update", function() {
+    
+    it("should set the model matrix uniform", function() {
+      spyOn(glCntxt, 'uniformMatrix4fv')
+      myTriangleMesh.update()
+      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(shader.glVertexUniformLocation['u_modelMatrix'], false, myTriangleMesh.modelMatrix.cells)
+    })
+
+    it("should set the model to world matrix uniform", function() {
+      spyOn(glCntxt, 'uniformMatrix4fv')
+      myTriangleMesh.modelToWorldMatrix.cells[10] = 12
+      myTriangleMesh.update()
+      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, myTriangleMesh.modelToWorldMatrix.cells)
+    })
 
   })
 

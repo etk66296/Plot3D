@@ -27,7 +27,7 @@ describe("Renderable3D", function() {
       uniform vec4 u_color;
 
 
-      uniform mat4 u_modelTransformationMatrix;
+      uniform mat4 u_modelMatrix;
       uniform mat4 u_modelToWorldMatrix;
       uniform mat4 u_WorldToViewMatrix;
       uniform mat4 u_ViewToProjectionMatrix;
@@ -35,7 +35,7 @@ describe("Renderable3D", function() {
       varying vec4 v_color;
 
       void main() {
-        mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelTransformationMatrix;
+        mat4 modelToProjection = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix;
         gl_Position = modelToProjection * a_position;
         v_color = u_color;
         v_normal = (modelToProjection * vec4(a_normal.xyz, 0.0)).xyz;
@@ -70,6 +70,40 @@ describe("Renderable3D", function() {
 
   it("should have a matrix 4x4 for rotating, scale and translate it in world space", function() {
     expect(myRenderable3D.modelToWorldMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+  })
+
+  it("should throw an exception in the constructor when the shader does not provide the model matrix uniform matrix", function() {
+    let tmpVertexShaderCode = `
+      attribute vec3 a_position;
+      uniform mat4 u_modelToWorldMatrix;
+      void main(void) {
+        
+      }
+    `
+    let tmpFragmentShaderCode = `
+      void main(void) {
+      }
+    `
+    let tmpShader = myPlot3DShaderBuilder.buildShader(tmpVertexShaderCode, tmpFragmentShaderCode)
+    expect(function() { new Renderable3D(glCntxt, tmpShader, math) }).toThrow()
+
+  })
+
+  it("should throw an exception in the constructor when the shader does not provide the model to world uniform matrix", function() {
+    let tmpVertexShaderCode = `
+      attribute vec3 a_position;
+      uniform mat4 u_modelMatrix;
+      void main(void) {
+        
+      }
+    `
+    let tmpFragmentShaderCode = `
+      void main(void) {
+      }
+    `
+    let tmpShader = myPlot3DShaderBuilder.buildShader(tmpVertexShaderCode, tmpFragmentShaderCode)
+    expect(function() { new Renderable3D(glCntxt, tmpShader, math) }).toThrow()
+
   })
   
 

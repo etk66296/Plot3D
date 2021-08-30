@@ -159,6 +159,19 @@ describe("Renderer3D", function() {
       expect(triMeshB.update).not.toHaveBeenCalled()
     })
 
+    it("should call the draw method of all active drawings", function() {
+      myRenderer3D.activeCamera = new Camera3D()
+      triMeshA = new TriangleMesh3D()
+      triMeshB = new TriangleMesh3D()
+      triMeshB.isActive = false
+      myRenderer3D.renderables.drawings.push(triMeshA)
+      myRenderer3D.renderables.drawings.push(triMeshB)
+      spyOn(triMeshA, 'draw')
+      spyOn(triMeshB, 'draw')
+      myRenderer3D.process()
+      expect(triMeshA.draw).toHaveBeenCalled()
+      expect(triMeshB.draw).not.toHaveBeenCalled()
+    })
   })
 
 })

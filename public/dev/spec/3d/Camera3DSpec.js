@@ -73,6 +73,12 @@ describe("Camera", function() {
   })
 
   describe("update", function() {
+    it("should call the use programm from the webgl context", function() {
+      spyOn(glCntxt, 'useProgram')
+      myCamera.update()
+      expect(glCntxt.useProgram).toHaveBeenCalledWith(myCamera.shader.program)
+    })
+
     it("should set the shaders model matrix 4x4 uniform", function() {
       spyOn(glCntxt, 'uniformMatrix4fv')
       myCamera.update()
