@@ -56,6 +56,11 @@ class TriangleMesh3D extends Renderable3D {
   ) {
     super(glCntxt, shader, math)
 
+    this.exceptions.ShaderAttributeNotFound = function(message) {
+      this.message = message
+      this.name = 'ShaderAttributeNotFound'
+    }
+
     this.meshData = meshData
 
     this.glVerticesBuffers = []
@@ -135,6 +140,20 @@ class TriangleMesh3D extends Renderable3D {
       )
     })
 
+    console.log(this.shader.glAttrLocation['a_normal'])
+
+    if(this.shader.glAttrLocation['a_normal'] === undefined) {
+      throw new this.exceptions.ShaderAttributeNotFound('shader does not provide the attribute a_normal')
+    }
+
+    if(this.shader.glAttrLocation['a_color'] === undefined) {
+      throw new this.exceptions.ShaderAttributeNotFound('shader does not provide the attribute a_color')
+    }
+
+    if(this.shader.glAttrLocation['a_position'] === undefined) {
+      throw new this.exceptions.ShaderAttributeNotFound('shader does not provide the attribute a_position')
+    }
+
   }
 
 
@@ -145,16 +164,16 @@ class TriangleMesh3D extends Renderable3D {
 
   draw() {
     this.meshData.forEach((primitive, primitiveIndex) => { 
-      this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
-      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticesBuffers[primitiveIndex])
-      this.glCntxt.vertexAttribPointer(
-        this.shader.glAttrLocation['a_position'],
-        3,
-        this.glCntxt.FLOAT,
-        false,
-        0,
-        0
-      )
+      // this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
+      // this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glVerticesBuffers[primitiveIndex])
+      // this.glCntxt.vertexAttribPointer(
+      //   this.shader.glAttrLocation['a_position'],
+      //   3,
+      //   this.glCntxt.FLOAT,
+      //   false,
+      //   0,
+      //   0
+      // )
         
       // this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_normal'])
       // this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glNormalsBuffers[primitiveIndex])
@@ -167,22 +186,22 @@ class TriangleMesh3D extends Renderable3D {
       //   0
       // )
           
-      this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_color'])
-      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorBuffers[primitiveIndex])
-      this.glCntxt.vertexAttribPointer(
-        this.shader.glAttrLocation['a_color'],
-        4,
-        this.glCntxt.FLOAT,
-        false,
-        0,
-        0
-      )
+      // this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_color'])
+      // this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorBuffers[primitiveIndex])
+      // this.glCntxt.vertexAttribPointer(
+      //   this.shader.glAttrLocation['a_color'],
+      //   4,
+      //   this.glCntxt.FLOAT,
+      //   false,
+      //   0,
+      //   0
+      // )
             
-      this.glCntxt.bindBuffer(this.glCntxt.ELEMENT_ARRAY_BUFFER, this.glIndicesBuffers[primitiveIndex])
-      let vertexCount = this.primitivesIndices[primitiveIndex].length
-      let type = this.glCntxt.UNSIGNED_SHORT
-      let offset = 0
-      this.glCntxt.drawElements(this.glCntxt.TRIANGLES, vertexCount, type, offset)
+      // this.glCntxt.bindBuffer(this.glCntxt.ELEMENT_ARRAY_BUFFER, this.glIndicesBuffers[primitiveIndex])
+      // let vertexCount = this.primitivesIndices[primitiveIndex].length
+      // let type = this.glCntxt.UNSIGNED_SHORT
+      // let offset = 0
+      // this.glCntxt.drawElements(this.glCntxt.TRIANGLES, vertexCount, type, offset)
       
       
       // *******************************************************************************************************************

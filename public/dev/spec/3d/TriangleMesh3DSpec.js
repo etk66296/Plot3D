@@ -20,6 +20,7 @@ describe("TriangleMesh3D", function() {
   beforeEach(function() {
     let vertexShaderCode = `
       attribute vec3 a_position;
+      attribute vec3 a_normal;
       attribute vec4 a_color;
 
       uniform mat4 u_modelMatrix;
@@ -51,6 +52,27 @@ describe("TriangleMesh3D", function() {
   
   it("has the parent class Renderable", function() {
     expect(myTriangleMesh.__proto__.__proto__.constructor.name).toEqual('Renderable3D')
+  })
+
+  it("should append the exception message ShaderAttributeNotFound", function() {
+    expect(typeof myTriangleMesh.exceptions.ShaderAttributeNotFound).toEqual('function')
+  })
+
+  describe('exceptions.ShaderAttributeNotFound', function() {
+    var  myShaderAttributeNotFound
+
+    beforeEach(function() {
+      myShaderAttributeNotFound = new myTriangleMesh.exceptions.ShaderAttributeNotFound('blablba')
+    })
+
+    it("should have an attribute message, which is passed by the function parameter", function() {
+      expect(myShaderAttributeNotFound.message).toEqual('blablba')
+    })
+
+    it("should have an attribute name", function() {
+      expect(myShaderAttributeNotFound.name).toEqual('ShaderAttributeNotFound')
+    })
+
   })
 
   it("should have a list of web gl buffer objects for the vertices buffers", function() {
@@ -99,6 +121,57 @@ describe("TriangleMesh3D", function() {
     myTriangleMesh.primitivesColors.forEach((colors) => {
       expect(colors.constructor.name).toEqual('Float32Array')
     })
+  })
+
+  it("should throw an error when the shader does not provide the color attribute", function() {
+    let tmpVertexShaderCode = `
+      attribute vec3 a_position;
+      attribute vec3 a_normal;
+      uniform mat4 u_modelToWorldMatrix;
+      uniform mat4 u_modelMatrix;
+      void main(void) {
+      }
+    `
+    let tmpFragmentShaderCode = `
+      void main(void) {
+      }
+    `
+    let tmpShader = myPlot3DShaderBuilder.buildShader(tmpVertexShaderCode, tmpFragmentShaderCode)
+    expect(function() { new TriangleMesh3D(glCntxt, tmpShader, math) }).toThrow()
+  })
+
+  it("should throw an error when the shader does not provide the vertex position attribute", function() {
+    let tmpVertexShaderCode = `
+      attribute vec3 a_normal;
+      attribute vec4 a_color;
+      uniform mat4 u_modelToWorldMatrix;
+      uniform mat4 u_modelMatrix;
+      void main(void) {
+      }
+    `
+    let tmpFragmentShaderCode = `
+      void main(void) {
+      }
+    `
+    let tmpShader = myPlot3DShaderBuilder.buildShader(tmpVertexShaderCode, tmpFragmentShaderCode)
+    expect(function() { new TriangleMesh3D(glCntxt, tmpShader, math) }).toThrow()
+  })
+
+  it("should throw an error when the shader does not provide the normals attribute", function() {
+    let tmpVertexShaderCode = `
+      attribute vec4 a_color;
+      attribute vec3 a_position;
+      uniform mat4 u_modelToWorldMatrix;
+      uniform mat4 u_modelMatrix;
+      void main(void) {
+      }
+    `
+    let tmpFragmentShaderCode = `
+      void main(void) {
+      }
+    `
+    let tmpShader = myPlot3DShaderBuilder.buildShader(tmpVertexShaderCode, tmpFragmentShaderCode)
+    expect(function() { new TriangleMesh3D(glCntxt, tmpShader, math) }).toThrow()
   })
 
   it("should have a method update", function() {
