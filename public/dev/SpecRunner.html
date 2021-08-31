@@ -130,6 +130,7 @@
         let myCamera = new Camera3D(glCntxt, shader, math)
         
         glCntxt.useProgram(shader.program)
+        myCamera.update()
         myCamera.draw()
         glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_modelMatrix'], false, (new Matrix4x4()).cells)
         glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, (new Matrix4x4()).cells)
@@ -137,6 +138,7 @@
         glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_cameraTranslationMatrix'], false, (new Matrix4x4()).cells)
 
         let myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
+        myTriangleMesh.update()
         myTriangleMesh.draw()
         // let squareVerticesBuffer = glCntxt.createBuffer();
         // glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, squareVerticesBuffer)

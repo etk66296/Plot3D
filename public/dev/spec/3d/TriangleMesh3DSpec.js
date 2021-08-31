@@ -210,7 +210,95 @@ describe("TriangleMesh3D", function() {
   })
 
   describe("draw", function() {
-    
+
+    it("should loop trough all primitives", function() {
+      spyOn(myTriangleMesh.meshData, 'forEach')
+      myTriangleMesh.draw()
+      expect(myTriangleMesh.meshData.forEach).toHaveBeenCalled()
+    })
+
+
+    it("should enable vertex attribute array for the a_position shader attribute", function() {
+      spyOn(glCntxt, 'enableVertexAttribArray')
+      myTriangleMesh.draw()
+      expect(glCntxt.enableVertexAttribArray).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_position'])
+    })
+
+    it("should bind buffer for the vertex data array", function() {
+      spyOn(glCntxt, 'bindBuffer')
+      myTriangleMesh.draw()
+      expect(glCntxt.bindBuffer).toHaveBeenCalledWith(glCntxt.ARRAY_BUFFER, myTriangleMesh.glVerticesBuffers[0])
+    })
+
+    it("should configure the vertex attribute pointer", function() {
+      spyOn(glCntxt, 'vertexAttribPointer')
+      myTriangleMesh.draw()
+      expect(glCntxt.vertexAttribPointer).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_position'],
+        3,
+        glCntxt.FLOAT,
+        false,
+        0,
+        0)
+    })
+
+
+    it("should enable normals attribute array for the a_normal shader attribute", function() {
+      spyOn(glCntxt, 'enableVertexAttribArray')
+      myTriangleMesh.draw()
+      expect(glCntxt.enableVertexAttribArray).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_normal'])
+    })
+
+    it("should bind buffer for the normal data array", function() {
+      spyOn(glCntxt, 'bindBuffer')
+      myTriangleMesh.draw()
+      expect(glCntxt.bindBuffer).toHaveBeenCalledWith(glCntxt.ARRAY_BUFFER, myTriangleMesh.glNormalsBuffers[0])
+    })
+
+    it("should configure the normal attribute pointer", function() {
+      spyOn(glCntxt, 'vertexAttribPointer')
+      myTriangleMesh.draw()
+      expect(glCntxt.vertexAttribPointer).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_normal'],
+        3,
+        glCntxt.FLOAT,
+        false,
+        0,
+        0)
+    })
+
+    it("should enable color attribute array for the a_normal shader attribute", function() {
+      spyOn(glCntxt, 'enableVertexAttribArray')
+      myTriangleMesh.draw()
+      expect(glCntxt.enableVertexAttribArray).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_color'])
+    })
+
+    it("should bind buffer for the color data array", function() {
+      spyOn(glCntxt, 'bindBuffer')
+      myTriangleMesh.draw()
+      expect(glCntxt.bindBuffer).toHaveBeenCalledWith(glCntxt.ARRAY_BUFFER, myTriangleMesh.glColorBuffers[0])
+    })
+
+    it("should configure the normal attribute pointer", function() {
+      spyOn(glCntxt, 'vertexAttribPointer')
+      myTriangleMesh.draw()
+      expect(glCntxt.vertexAttribPointer).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_color'],
+        4,
+        glCntxt.FLOAT,
+        false,
+        0,
+        0)
+    })
+
+    it("should bind the element array buffer with the indices", function() {
+      spyOn(glCntxt, 'bindBuffer')
+      myTriangleMesh.draw()
+      expect(glCntxt.bindBuffer).toHaveBeenCalledWith(glCntxt.ELEMENT_ARRAY_BUFFER, myTriangleMesh.glIndicesBuffers[0])
+    })
+
+    it("should draw the defined elements", function() {
+      spyOn(glCntxt, 'drawElements')
+      myTriangleMesh.draw()
+      expect(glCntxt.drawElements).toHaveBeenCalledWith(glCntxt.TRIANGLES, myTriangleMesh.primitivesIndices[0].length, glCntxt.UNSIGNED_SHORT, 0)
+    })
   })
 
 })
