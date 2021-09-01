@@ -6,10 +6,10 @@ class TriangleMesh3D extends Renderable3D {
     meshData = [
       {
         vertices: [
-          1.0,  1.0,  -2.0,
-          -1.0, 1.0,  -2.0,
-          1.0,  -1.0, -2.0,
-          -1.0, -1.0, -2.0
+          -1.5,  1.5,  -2.1,
+          1.5, 1.5,  -0.5,
+          -1.5,  -1.5, -2.1,
+          1.5, -1.5, -0.5
         ],
         normals: [
           0,1,0,
@@ -19,21 +19,22 @@ class TriangleMesh3D extends Renderable3D {
         ],
         indices: [
           2,1,0,
-          2,3,1
+          2,3,1,
+          1,2,3
         ],
         colors: [
-          0.04400941729545593, 0.8000000715255737, 0.014428908936679363, 1,
-          0.04400941729545593, 0.8000000715255737, 0.014428908936679363, 1,
+          0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
+          0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
           0.04400941729545593, 0.8000000715255737, 0.014428908936679363, 1,
           0.04400941729545593, 0.8000000715255737, 0.014428908936679363, 1
         ]
       },
       {
         vertices: [
-          -1.0,  1.0,  -2.0,
-          1.0, 1.0,  -2.0,
-          -1.0,  -1.0, -2.0,
-          1.0, -1.0, -2.0
+          -2.0,  1.0,  -1,
+          4.0, 1.0,  -2.0,
+          -2.0,  -1.0, -1,
+          4.0, -1.0, -2.0
         ],
         normals: [
           0,1,0,
@@ -43,13 +44,14 @@ class TriangleMesh3D extends Renderable3D {
         ],
         indices: [
           2,1,0,
-          2,3,1
+          2,3,1,
+          1,2,3
         ],
         colors: [
-          0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
-          0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
-          0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
-          0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1
+          0.8000000715255737, 0.04400941729545593, 0.814428908936679363, 1,
+          0.8000000715255737, 0.04400941729545593, 0.814428908936679363, 1,
+          0.64400941729545593, 0.8000000715255737, 0.014428908936679363, 1,
+          0.64400941729545593, 0.8000000715255737, 0.014428908936679363, 1
         ]
       }
     ] 
@@ -194,29 +196,13 @@ class TriangleMesh3D extends Renderable3D {
         0,
         0
       )
-            
+
       this.glCntxt.bindBuffer(this.glCntxt.ELEMENT_ARRAY_BUFFER, this.glIndicesBuffers[primitiveIndex])
       let vertexCount = this.primitivesIndices[primitiveIndex].length
       let type = this.glCntxt.UNSIGNED_SHORT
       let offset = 0
       this.glCntxt.drawElements(this.glCntxt.TRIANGLES, vertexCount, type, offset)
       
-      
-      // *******************************************************************************************************************
-      // let squareVerticesBuffer = this.glCntxt.createBuffer()
-      // this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, squareVerticesBuffer)
-      // var vertices = [
-      //   1.0,  1.0,  -2.0,
-      //   -1.0, 1.0,  -2.0,
-      //   1.0,  -1.0, -2.0,
-      //   -1.0, -1.0, -2.0
-      // ]
-      // this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_position'])
-      // this.glCntxt.bufferData(this.glCntxt.ARRAY_BUFFER, new Float32Array(vertices), this.glCntxt.STATIC_DRAW)
-      // this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, squareVerticesBuffer)
-      // this.glCntxt.vertexAttribPointer(this.shader.glAttrLocation['a_position'], 3, this.glCntxt.FLOAT, false, 0, 0)
-      // this.glCntxt.drawArrays(this.glCntxt.TRIANGLE_STRIP, 0, 4)
-      // *******************************************************************************************************************
     })
   }
 }

@@ -6,9 +6,15 @@ class Renderer3D extends Renderer {
       this.message = message
       this.name = 'NoRenderable3D'
     }
+
     this.exceptions.NoCamera3DObject = function(message) {
       this.message = message
       this.name = 'NoCamera3D'
+    }
+
+    this.exceptions.NoRenderable2DObject = function(message) {
+      this.message = message
+      this.name = 'NoRenderable2D'
     }
 
     this.activeCamera = null
@@ -24,7 +30,10 @@ class Renderer3D extends Renderer {
     }
 
     this.renderables.drawings.forEach((drawing) => {
-      if (drawing.constructor.name === 'TriangleMesh3D') {
+      if (drawing.constructor.name === 'Background') {
+        drawing.update()
+        drawing.draw()
+      } else if (drawing.constructor.name === 'TriangleMesh3D') {
         if (drawing.isActive) {
           drawing.update()
           drawing.draw()
@@ -32,7 +41,6 @@ class Renderer3D extends Renderer {
       } else {
         throw new this.exceptions.NoRenderable3DObject('Object is not an instance of Renderable3D')
       }
-      
     })
   }
 
@@ -47,6 +55,18 @@ class Renderer3D extends Renderer {
       throw new this.exceptions.NoRenderable3DObject(
         `Renderer3D does noch accept the object. Just instances
         of the classes Camera3D and TriangleMesh3D are allowed.`
+      )
+    }
+  }
+
+  addRenderable2D(renderable2dObj) {
+    let objectIsInstanceOf = renderable2dObj.constructor.name
+    if (objectIsInstanceOf === 'Background') {
+      this.renderables.drawings.push(renderable2dObj)
+    } else {
+      throw new this.exceptions.NoRenderable2DObject(
+        `Renderer3D does noch accept the 2D object. Just instances
+        of the classes Background are accepted.`
       )
     }
   }

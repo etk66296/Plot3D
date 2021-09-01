@@ -62,6 +62,27 @@ describe("Renderer3D", function() {
 
   })
 
+  it("should append the exception message NoRenderable2DObject", function() {
+    expect(typeof myRenderer3D.exceptions.NoRenderable2DObject).toEqual('function')
+  })
+
+  describe('exceptions.NoRenderable2DObject', function() {
+    var  NoRenderable2DException
+
+    beforeEach(function() {
+      NoRenderable2DException = new myRenderer3D.exceptions.NoRenderable2DObject('blablba2d')
+    })
+
+    it("should have an attribute message, which is passed by the function parameter", function() {
+      expect(NoRenderable2DException.message).toEqual('blablba2d')
+    })
+
+    it("should have an attribute name", function() {
+      expect(NoRenderable2DException.name).toEqual('NoRenderable2D')
+    })
+
+  })
+
   describe("addRenderer3D", function() {
     it("should check if the passed object is a instance of a renderable3d.", function() {
       expect(function() { myRenderer3D.addRenderable3D({}) }).toThrow(new myRenderer3D.exceptions.NoRenderable3DObject(
@@ -107,6 +128,10 @@ describe("Renderer3D", function() {
         this.isActive = true
     } update(){} draw(){} }
 
+    class Background {
+      constructor(){
+    } update(){} draw(){} }
+
     it('should call the draw function of the current camera', function() {
       myRenderer3D.activeCamera = new Camera3D()
       spyOn(myRenderer3D.activeCamera, 'draw')
@@ -147,30 +172,60 @@ describe("Renderer3D", function() {
 
     it("should call the update method of all active drawings", function() {
       myRenderer3D.activeCamera = new Camera3D()
-      triMeshA = new TriangleMesh3D()
-      triMeshB = new TriangleMesh3D()
+      let tmpBackground = new Background()
+      let triMeshA = new TriangleMesh3D()
+      let triMeshB = new TriangleMesh3D()
       triMeshB.isActive = false
+      myRenderer3D.renderables.drawings.push(tmpBackground)
       myRenderer3D.renderables.drawings.push(triMeshA)
       myRenderer3D.renderables.drawings.push(triMeshB)
+      spyOn(tmpBackground, 'update')
       spyOn(triMeshA, 'update')
       spyOn(triMeshB, 'update')
       myRenderer3D.process()
+      expect(tmpBackground.update).toHaveBeenCalled()
       expect(triMeshA.update).toHaveBeenCalled()
       expect(triMeshB.update).not.toHaveBeenCalled()
     })
 
     it("should call the draw method of all active drawings", function() {
       myRenderer3D.activeCamera = new Camera3D()
-      triMeshA = new TriangleMesh3D()
-      triMeshB = new TriangleMesh3D()
+      let tmpBackground = new Background()
+      let triMeshA = new TriangleMesh3D()
+      let triMeshB = new TriangleMesh3D()
       triMeshB.isActive = false
+      myRenderer3D.renderables.drawings.push(tmpBackground)
       myRenderer3D.renderables.drawings.push(triMeshA)
       myRenderer3D.renderables.drawings.push(triMeshB)
+      spyOn(tmpBackground, 'draw')
       spyOn(triMeshA, 'draw')
       spyOn(triMeshB, 'draw')
       myRenderer3D.process()
+      expect(tmpBackground.draw).toHaveBeenCalled()
       expect(triMeshA.draw).toHaveBeenCalled()
       expect(triMeshB.draw).not.toHaveBeenCalled()
+    })
+  })
+
+  it("should be able to take renderables2D and put them in the processing queue", function() {
+    expect(typeof myRenderer3D.addRenderable2D).toBe('function')
+  })
+
+  describe("addRenderer3D", function() {
+    it("should check if the passed object is a instance of a renderable2d.", function() {
+      expect(function() { myRenderer3D.addRenderable2D({}) }).toThrow(new myRenderer3D.exceptions.NoRenderable2DObject(
+        `Renderer3D does noch accept the 2D object. Just instances
+        of the classes Background are accepted.`
+      ))
+    })
+
+    it("should append backgrounds to the drawings list", function() {
+      class Background { constructor() {} }
+      let myBackground = new Background()
+      spyOn(myRenderer3D.renderables.drawings, 'push').and.callThrough()
+      myRenderer3D.addRenderable2D(myBackground)
+      expect(myRenderer3D.renderables.drawings.push).toHaveBeenCalled()
+      expect(myRenderer3D.renderables.drawings.length).toEqual(1)
     })
   })
 

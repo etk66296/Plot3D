@@ -126,33 +126,23 @@
             gl_FragColor = v_color;
           }
         `
+
+        let myBackground = new Background(glCntxt)
+        myBackground.clearColor.cells[1] = 0.9
         let shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
         let myCamera = new Camera3D(glCntxt, shader, math)
-        
-        glCntxt.useProgram(shader.program)
-        myCamera.update()
-        myCamera.draw()
-        glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_modelMatrix'], false, (new Matrix4x4()).cells)
-        glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, (new Matrix4x4()).cells)
-        glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_cameraModelMatrix'], false, (new Matrix4x4()).cells)
-        glCntxt.uniformMatrix4fv(shader.glVertexUniformLocation['u_cameraTranslationMatrix'], false, (new Matrix4x4()).cells)
-
         let myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
-        myTriangleMesh.update()
-        myTriangleMesh.draw()
-        // let squareVerticesBuffer = glCntxt.createBuffer();
-        // glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, squareVerticesBuffer)
-        // var vertices = [
-        //   1.0,  1.0,  -2.0,
-        //   -1.0, 1.0,  -2.0,
-        //   1.0,  -1.0, -2.0,
-        //   -1.0, -1.0, -2.0
-        // ]
-        // glCntxt.enableVertexAttribArray(shader.glAttrLocation['a_position'])
-        // glCntxt.bufferData(glCntxt.ARRAY_BUFFER, new Float32Array(vertices), glCntxt.STATIC_DRAW)
-        // glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, squareVerticesBuffer)
-        // glCntxt.vertexAttribPointer(shader.glAttrLocation['a_position'], 3, glCntxt.FLOAT, false, 0, 0)
-        // glCntxt.drawArrays(glCntxt.TRIANGLE_STRIP, 0, 4)
+        let myRenderer3D = new Renderer3D()
+
+        myRenderer3D.addRenderable2D(myBackground)
+        myRenderer3D.addRenderable3D(myCamera)
+        myRenderer3D.addRenderable3D(myTriangleMesh)
+        myRenderer3D.process()
+        // myCamera.update()
+        // myCamera.draw()
+        // myTriangleMesh.update()
+        // myTriangleMesh.draw()
+
       }
     )
   </script>
@@ -161,7 +151,7 @@
 <body>
   <div>
     <div style="display: inline-block;" id="canvasContainer">
-      <canvas id="renderCanvas" width="100" height="100"></canvas>
+      <canvas id="renderCanvas" width="90" height="90"></canvas>
     </div>
     <div style="display: inline-block;" id="canvasContainer2">
       <canvas id="renderCanvas2" width="160" height="90"></canvas>
