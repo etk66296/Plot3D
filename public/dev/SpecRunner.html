@@ -134,10 +134,13 @@
         let myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
         let myRenderer3D = new Renderer3D()
 
+        myCamera.camModelMatrix.cells[14] += 1.5
         myRenderer3D.addRenderable2D(myBackground)
         myRenderer3D.addRenderable3D(myCamera)
         myRenderer3D.addRenderable3D(myTriangleMesh)
-        myRenderer3D.process()
+        setInterval(() => {
+          myRenderer3D.process()
+        }, 50)
         // myCamera.update()
         // myCamera.draw()
         // myTriangleMesh.update()

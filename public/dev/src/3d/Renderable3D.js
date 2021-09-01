@@ -19,6 +19,7 @@ class Renderable3D extends Renderable {
     if(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'] === undefined) {
       throw new this.exceptions.ShaderUniformNotFound('shader does not provide the uniform u_modelToWorldMatrix')
     }
+
   }
 
   translateXIncremental(distance) {

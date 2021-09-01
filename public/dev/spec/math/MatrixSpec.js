@@ -252,7 +252,7 @@ describe("Matrix4x4Projection", function() {
   })
 
   it("has an attribute, which holds the near frustum range", function() {
-    expect(myProjectionMatrix.near).toEqual(1)
+    expect(myProjectionMatrix.near).toEqual(0.1)
   })
 
   it("has an attribute, which holds the far frustum range", function() {
@@ -393,6 +393,30 @@ describe("Matrix4x4Math", function() {
        -0.25,  0.25,  0.25,  0.25
      ])
     })
+  })
+
+  it("should have a function for appending x axis rotation to a matrix", function() {
+    expect(typeof myMatrix4x4Math.appendXRotationToM4X4).toBe('function')
+  })
+
+  describe("appendXRotationToM4X4", function() {
+
+  })
+
+  it("should have a function for appending y axis rotation to a matrix", function() {
+    expect(typeof myMatrix4x4Math.appendYRotationToM4X4).toBe('function')
+  })
+
+  describe("appendYRotationToM4X4", function() {
+    
+  })
+
+  it("should have a function for appending z axis rotation to a matrix", function() {
+    expect(typeof myMatrix4x4Math.appendZRotationToM4X4).toBe('function')
+  })
+
+  describe("appendZRotationToM4X4", function() {
+    
   })
 })
 

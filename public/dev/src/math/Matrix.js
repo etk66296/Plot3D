@@ -234,7 +234,7 @@ class Matrix4x4 extends Matrix {
 }
 
 class Matrix4x4Projection extends Matrix4x4 {
-  constructor(fieldOfViewY = 2 / 3 * Math.PI, aspect = 16 / 9, near = 1, far = 1000) {
+  constructor(fieldOfViewY = 2 / 3 * Math.PI, aspect = 16 / 9, near = 0.1, far = 1000) {
     super()
     this.fieldOfViewY = fieldOfViewY
     this.aspect = aspect
@@ -386,6 +386,74 @@ class Matrix4x4Math {
       ma.cells[12] * mb.cells[2] + ma.cells[13] * mb.cells[6] + ma.cells[14] * mb.cells[10] + ma.cells[15] *  mb.cells[14],
       ma.cells[12] * mb.cells[3] + ma.cells[13] * mb.cells[7] + ma.cells[14] * mb.cells[11] + ma.cells[15] *  mb.cells[15]
     ])
+  }
+
+  appendXRotationToM4X4(m, angleInRad) {
+    let s = Math.sin(angleInRad)
+    let c = Math.cos(angleInRad)  
+    let a10 = m.cells[4]
+    let a11 = m.cells[5]
+    let a12 = m.cells[6]
+    let a13 = m.cells[7]
+    let a20 = m.cells[8]
+    let a21 = m.cells[9]
+    let a22 = m.cells[10]
+    let a23 = m.cells[11]
+  
+    m.cells[4] = a10 * c + a20 * s
+    m.cells[5] = a11 * c + a21 * s
+    m.cells[6] = a12 * c + a22 * s
+    m.cells[7] = a13 * c + a23 * s
+    m.cells[8] = a20 * c - a10 * s
+    m.cells[9] = a21 * c - a11 * s
+    m.cells[10] = a22 * c - a12 * s
+    m.cells[11] = a23 * c - a13 * s
+  }
+
+  appendYRotationToM4X4(m, angleInRad) {
+    let s = Math.sin(angleInRad)
+    let c = Math.cos(angleInRad)
+  
+    let a00 = m.cells[0]
+    let a01 = m.cells[1]
+    let a02 = m.cells[2]
+    let a03 = m.cells[3]
+    let a20 = m.cells[8]
+    let a21 = m.cells[9]
+    let a22 = m.cells[10]
+    let a23 = m.cells[11]
+
+    m.cells[0] = a00 * c - a20 * s  
+    m.cells[1] = a01 * c - a21 * s
+    m.cells[2] = a02 * c - a22 * s
+    m.cells[3] = a03 * c - a23 * s
+    m.cells[8] = a00 * s + a20 * c
+    m.cells[9] = a01 * s + a21 * c
+    m.cells[10] = a02 * s + a22 * c
+    m.cells[11] = a03 * s + a23 * c
+  }
+
+  appendZRotationToM4X4(m, angleInRad) {
+    let s = Math.sin(angleInRad)
+    let c = Math.cos(angleInRad)
+  
+    let a00 = m.cells[0]
+    let a01 = m.cells[1]
+    let a02 = m.cells[2]
+    let a03 = m.cells[3]
+    let a10 = m.cells[4]
+    let a11 = m.cells[5]
+    let a12 = m.cells[6]
+    let a13 = m.cells[7]
+
+    m.cells[0] = a00 * c + a10 * s
+    m.cells[1] = a01 * c + a11 * s
+    m.cells[2] = a02 * c + a12 * s
+    m.cells[3] = a03 * c + a13 * s
+    m.cells[4] = a10 * c - a00 * s
+    m.cells[5] = a11 * c - a01 * s
+    m.cells[6] = a12 * c - a02 * s
+    m.cells[7] = a13 * c - a03 * s
   }
 
   transpose(m) {
