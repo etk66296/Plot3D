@@ -288,24 +288,19 @@ class Matrix4x4View extends Matrix4x4 {
     let eyex = eye.cells[0]
     let eyey = eye.cells[1]
     let eyez = eye.cells[2]
-
-    let upx = up.cells[0]  
+    let upx = up.cells[0]
     let upy = up.cells[1]
     let upz = up.cells[2]
-  
     let centerx = center.cells[0]
     let centery = center.cells[1]
     let centerz = center.cells[2]
-  
     if (
-      Math.abs(eyex - centerx) < this.EPSILON &&
-      Math.abs(eyey - centery) < this.EPSILON &&
-      Math.abs(eyez - centerz) < this.EPSILON
+      Math.abs(eyex - centerx) < 0.0001 &&
+      Math.abs(eyey - centery) < 0.0001 &&
+      Math.abs(eyez - centerz) < 0.0001
     ) {
-      this.reset()
-      return this
+      return this.reset()
     }
-  
     z0 = eyex - centerx
     z1 = eyey - centery
     z2 = eyez - centerz
@@ -327,7 +322,6 @@ class Matrix4x4View extends Matrix4x4 {
       x1 *= len
       x2 *= len
     }
-  
     y0 = z1 * x2 - z2 * x1
     y1 = z2 * x0 - z0 * x2
     y2 = z0 * x1 - z1 * x0
@@ -342,7 +336,6 @@ class Matrix4x4View extends Matrix4x4 {
       y1 *= len
       y2 *= len
     }
-  
     this.cells[0] = x0
     this.cells[1] = y0
     this.cells[2] = z0
@@ -359,8 +352,6 @@ class Matrix4x4View extends Matrix4x4 {
     this.cells[13] = -(y0 * eyex + y1 * eyey + y2 * eyez)
     this.cells[14] = -(z0 * eyex + z1 * eyey + z2 * eyez)
     this.cells[15] = 1
-
-    this.invert()
   }
 }
 

@@ -295,10 +295,10 @@ describe("Matrix4x4View", function() {
 
   it("should have the cell values as expected", function() {
     expect(myViewMatrix.cells).toEqual([
-      0.995893206467704, 3.469446951953614e-18, -0.09053574604251854, 0,
-      -0.030827658034323767, 0.940243570046875, -0.33910423837756143, 0,
-      0.08512565307587486, 0.3405026123034994, 0.9363821838346236, -0,
-      2.7755575615628914e-17, 4, 10.000000000000002, 1
+      0.9958932064677037, -0.030827658034323774, 0.08512565307587486, 0,
+      0, 0.9402435700468752, 0.34050261230349943, 0,
+      -0.09053574604251852, -0.3391042383775615, 0.9363821838346235, 0,
+      0.9053574604251852, -0.36993189641188584, -10.725832287560232, 1
     ])
   })
 
@@ -401,6 +401,24 @@ describe("Matrix4x4Math", function() {
 
   describe("appendXRotationToM4X4", function() {
 
+    it("should calculate the sin of the passed angle", function() {
+      spyOn(Math, 'sin')
+      myMatrix4x4Math.appendXRotationToM4X4(new Matrix4x4(), Math.PI * 0.5)
+      expect(Math.sin).toHaveBeenCalledWith(Math.PI * 0.5)
+    })
+
+    it("should calculate the cos of the passed angle", function() {
+      spyOn(Math, 'cos')
+      myMatrix4x4Math.appendXRotationToM4X4(new Matrix4x4(), Math.PI * 0.5)
+      expect(Math.cos).toHaveBeenCalledWith(Math.PI * 0.5)
+    })
+
+    it("should append the rotation to the matrix cells", function() {
+      let m = new Matrix4x4()
+      myMatrix4x4Math.appendXRotationToM4X4(m, Math.PI * 0.5)
+      expect(m.cells).toEqual([ 1, 0, 0, 0, 0, 6.123233995736766e-17, 1, 0, 0, -1, 6.123233995736766e-17, 0, 0, 0, 0, 1 ])
+    })
+
   })
 
   it("should have a function for appending y axis rotation to a matrix", function() {
@@ -408,7 +426,25 @@ describe("Matrix4x4Math", function() {
   })
 
   describe("appendYRotationToM4X4", function() {
-    
+
+    it("should calculate the sin of the passed angle", function() {
+      spyOn(Math, 'sin')
+      myMatrix4x4Math.appendYRotationToM4X4(new Matrix4x4(), Math.PI * 0.5)
+      expect(Math.sin).toHaveBeenCalledWith(Math.PI * 0.5)
+    })
+
+    it("should calculate the cos of the passed angle", function() {
+      spyOn(Math, 'cos')
+      myMatrix4x4Math.appendYRotationToM4X4(new Matrix4x4(), Math.PI * 0.5)
+      expect(Math.cos).toHaveBeenCalledWith(Math.PI * 0.5)
+    })
+
+    it("should append the rotation to the matrix cells", function() {
+      let m = new Matrix4x4()
+      myMatrix4x4Math.appendYRotationToM4X4(m, Math.PI * 0.5)
+      expect(m.cells).toEqual([ 6.123233995736766e-17, 0, -1, 0, 0, 1, 0, 0, 1, 0, 6.123233995736766e-17, 0, 0, 0, 0, 1 ])
+    })
+
   })
 
   it("should have a function for appending z axis rotation to a matrix", function() {
@@ -417,6 +453,24 @@ describe("Matrix4x4Math", function() {
 
   describe("appendZRotationToM4X4", function() {
     
+    it("should calculate the sin of the passed angle", function() {
+      spyOn(Math, 'sin')
+      myMatrix4x4Math.appendZRotationToM4X4(new Matrix4x4(), Math.PI * 0.5)
+      expect(Math.sin).toHaveBeenCalledWith(Math.PI * 0.5)
+    })
+
+    it("should calculate the cos of the passed angle", function() {
+      spyOn(Math, 'cos')
+      myMatrix4x4Math.appendZRotationToM4X4(new Matrix4x4(), Math.PI * 0.5)
+      expect(Math.cos).toHaveBeenCalledWith(Math.PI * 0.5)
+    })
+
+    it("should append the rotation to the matrix cells", function() {
+      let m = new Matrix4x4()
+      myMatrix4x4Math.appendYRotationToM4X4(m, Math.PI * 0.5)
+      expect(m.cells).toEqual([ 6.123233995736766e-17, 0, -1, 0, 0, 1, 0, 0, 1, 0, 6.123233995736766e-17, 0, 0, 0, 0, 1 ])
+    })
+
   })
 })
 

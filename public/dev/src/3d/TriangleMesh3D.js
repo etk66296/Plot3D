@@ -6,21 +6,20 @@ class TriangleMesh3D extends Renderable3D {
     meshData = [
       {
         vertices: [
-          -1.5,  1.5,  -4.1,
-          1.5, 1.5,  -2.5,
-          -1.5,  -1.5, -4.1,
-          1.5, -1.5, -2.5
+          -1,  1, 0,
+          -1, -1,  0,
+          1,  -1, 0,
+          1, 1, 0
         ],
         normals: [
-          0,1,0,
-          0,1,0,
-          0,1,0,
-          0,1,0
+          0,0,1,
+          0,0,1,
+          0,0,1,
+          0,0,1
         ],
         indices: [
-          2,1,0,
-          2,3,1,
-          1,2,3
+          0,1,2,
+          0,2,3
         ],
         colors: [
           0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
@@ -31,21 +30,20 @@ class TriangleMesh3D extends Renderable3D {
       },
       {
         vertices: [
-          -2.0,  1.0,  -3,
-          4.0, 1.0,  -5.0,
-          -2.0,  -1.0, -3,
-          4.0, -1.0, -5.0
+          0,  1, 1,
+          0, -1,  1,
+          0,  -1, -1,
+          0, 1, -1
         ],
         normals: [
-          0,1,0,
-          0,1,0,
-          0,1,0,
-          0,1,0
+          1,0,0,
+          1,0,0,
+          1,0,0,
+          1,0,0
         ],
         indices: [
-          2,1,0,
-          2,3,1,
-          1,2,3
+          0,1,2,
+          0,2,3
         ],
         colors: [
           0.8000000715255737, 0.04400941729545593, 0.814428908936679363, 1,
@@ -158,6 +156,9 @@ class TriangleMesh3D extends Renderable3D {
 
 
   update() {
+    this.math.matrix4x4.appendXRotationToM4X4(this.modelMatrix, 0.01)
+    this.math.matrix4x4.appendYRotationToM4X4(this.modelMatrix, 0.01)
+    this.math.matrix4x4.appendZRotationToM4X4(this.modelMatrix, 0.01)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)
   }

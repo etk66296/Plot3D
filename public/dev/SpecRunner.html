@@ -90,7 +90,8 @@
 
         let canvas = document.getElementById("renderCanvas2")
         let glCntxt = canvas.getContext("webgl2")
-        glCntxt.enable(glCntxt.CULL_FACE)
+        // glCntxt.enable(glCntxt.CULL_FACE)
+        // glCntxt.cullFace(glCntxt.FRONT_AND_BACK)
         glCntxt.cullFace(glCntxt.BACK)
         glCntxt.enable(glCntxt.DEPTH_TEST)
         let math = {
@@ -114,6 +115,8 @@
 
           void main(void) {
             gl_Position = u_ViewToProjectionMatrix * u_cameraTranslationMatrix * u_cameraModelMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+            // gl_Position = u_ViewToProjectionMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+            // gl_Position = u_ViewToProjectionMatrix * u_modelMatrix * vec4(a_position, 1.0);
             v_color = a_color;
           }
         `
@@ -134,13 +137,42 @@
         let myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
         let myRenderer3D = new Renderer3D()
 
-        myCamera.camModelMatrix.cells[14] += 1.5
+        let xPos = 0
+        let yPos = 0
+        let zPos = -1
+        let xDir = 1
+        let yDir = 1
+        let zDir = 1
+        myCamera.setWorldPos(0, 0, zPos)
         myRenderer3D.addRenderable2D(myBackground)
         myRenderer3D.addRenderable3D(myCamera)
         myRenderer3D.addRenderable3D(myTriangleMesh)
         setInterval(() => {
+          if (xPos < -4) {
+            xDir = 1
+          }
+          if (xPos > 4) {
+            xDir = -1
+          }
+          if (yPos < -4) {
+            yDir = 1
+          }
+          if (yPos > 4) {
+            yDir = -1
+          }
+          if (zPos < -4) {
+            zDir = 1
+          }
+          if (zPos > 4) {
+            zDir = -1
+          }
+          xPos += (0.3 * xDir)
+          yPos += (0.3 * yDir)
+          zPos += (0.3 * zDir)
+          myCamera.setWorldPos(xPos, yPos, zPos)
           myRenderer3D.process()
-        }, 50)
+          // myCamera.worldToViewMatrix.log()
+        }, 30)
         // myCamera.update()
         // myCamera.draw()
         // myTriangleMesh.update()
