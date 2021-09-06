@@ -307,7 +307,100 @@ describe("Matrix4x4View", function() {
   })
 
   describe("setCellsLookAtFromWorldPosition", function() {
-    
+    it("should calculate the X distance between the world position and the look at point", function() {
+      spyOn(Math, 'abs')
+      let myWorldPos = { cells: [ 1, 0, 0 ] }
+      let myWorldPointToLookAt = { cells: [ 10, 0, 0 ] }
+      let myCameraDeviceWorldUpDir = { cells: [ 0, 1, 0 ] }
+      myViewMatrix.setCellsLookAtFromWorldPosition(myWorldPos, myWorldPointToLookAt, myCameraDeviceWorldUpDir)
+      expect(Math.abs).toHaveBeenCalledWith(1 - 10)
+    })
+
+    it("should calculate the Y distance between the world position and the look at point", function() {
+      spyOn(Math, 'abs')
+      let myWorldPos = { cells: [ 0, 2, 0 ] }
+      let myWorldPointToLookAt = { cells: [ 0, 20, 0 ] }
+      let myCameraDeviceWorldUpDir = { cells: [ 0, 1, 0 ] }
+      myViewMatrix.setCellsLookAtFromWorldPosition(myWorldPos, myWorldPointToLookAt, myCameraDeviceWorldUpDir)
+      expect(Math.abs).toHaveBeenCalledWith(2 - 20)
+    })
+
+    it("should calculate the Z distance between the world position and the look at point", function() {
+      spyOn(Math, 'abs')
+      let myWorldPos = { cells: [ 0, 0, 3 ] }
+      let myWorldPointToLookAt = { cells: [ 0, 0, 30 ] }
+      let myCameraDeviceWorldUpDir = { cells: [ 0, 1, 0 ] }
+      myViewMatrix.setCellsLookAtFromWorldPosition(myWorldPos, myWorldPointToLookAt, myCameraDeviceWorldUpDir)
+      expect(Math.abs).toHaveBeenCalledWith(3 - 30)
+    })
+
+    it("should return the identity matrix when the distance between the world position and the point to view at is smaller then a defined value", function() {
+      let myWorldPos = { cells: [ 0, 0, 0 ] }
+      let myWorldPointToLookAt = { cells: [ 0, 0, 0 ] }
+      let myCameraDeviceWorldUpDir = { cells: [ 0, 1, 0 ] }
+      myViewMatrix.setCellsLookAtFromWorldPosition(myWorldPos, myWorldPointToLookAt, myCameraDeviceWorldUpDir)
+      expect(myViewMatrix.cells).toEqual([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ])
+    })
+
+    it("should the inverse dinstance from point to view to the world pisition for normalizing the new z vector", function() {
+      let myWorldPos = { cells: [ 1, 2, 3 ] }
+      let myWorldPointToLookAt = { cells: [ 4, 5, 6 ] }
+      let myCameraDeviceWorldUpDir = { cells: [ 0, 1, 0 ] }
+      let z0 = myWorldPos.cells[0] - myWorldPointToLookAt.cells[0]
+      let z1 = myWorldPos.cells[1] - myWorldPointToLookAt.cells[1]
+      let z2 = myWorldPos.cells[2] - myWorldPointToLookAt.cells[2]
+      spyOn(Math, 'hypot')
+      myViewMatrix.setCellsLookAtFromWorldPosition(myWorldPos, myWorldPointToLookAt, myCameraDeviceWorldUpDir)
+      expect(Math.hypot).toHaveBeenCalledWith(z0, z1, z2)
+    })
+
+    it("should calculate the new x direction out of the up vector and the calculated z compontents", function() {
+      let myWorldPos = { cells: [ 10, 20, 30 ] }
+      let myWorldPointToLookAt = { cells: [ 4, 5, 6 ] }
+      let myCameraDeviceWorldUpDir = { cells: [ 0, 1, 0 ] }
+      let z0 = myWorldPos.cells[0] - myWorldPointToLookAt.cells[0]
+      let z1 = myWorldPos.cells[1] - myWorldPointToLookAt.cells[1]
+      let z2 = myWorldPos.cells[2] - myWorldPointToLookAt.cells[2]
+      let len = 1 / Math.hypot(z0, z1, z2)
+      z0 *= len
+      z1 *= len
+      z2 *= len
+      let x0 = myCameraDeviceWorldUpDir.cells[1] * z2 - myCameraDeviceWorldUpDir.cells[2] * z1
+      let x1 = myCameraDeviceWorldUpDir.cells[2] * z0 - myCameraDeviceWorldUpDir.cells[0] * z2
+      let x2 = myCameraDeviceWorldUpDir.cells[0] * z1 - myCameraDeviceWorldUpDir.cells[1] * z0
+      console.log(x0, x1, x2)
+      spyOn(Math, 'hypot').and.callThrough()
+      myViewMatrix.setCellsLookAtFromWorldPosition(myWorldPos, myWorldPointToLookAt, myCameraDeviceWorldUpDir)
+      expect(Math.hypot).toHaveBeenCalledWith(x0, x1, x2)
+    })
+
+    it("should calculate the new y direction out of the calculated x vector and z compontents", function() {
+      let myWorldPos = { cells: [ 10, 20, 30 ] }
+      let myWorldPointToLookAt = { cells: [ 4, 5, 6 ] }
+      let myCameraDeviceWorldUpDir = { cells: [ 0, 1, 0 ] }
+      let z0 = myWorldPos.cells[0] - myWorldPointToLookAt.cells[0]
+      let z1 = myWorldPos.cells[1] - myWorldPointToLookAt.cells[1]
+      let z2 = myWorldPos.cells[2] - myWorldPointToLookAt.cells[2]
+      let len = 1 / Math.hypot(z0, z1, z2)
+      z0 *= len
+      z1 *= len
+      z2 *= len
+      let x0 = myCameraDeviceWorldUpDir.cells[1] * z2 - myCameraDeviceWorldUpDir.cells[2] * z1
+      let x1 = myCameraDeviceWorldUpDir.cells[2] * z0 - myCameraDeviceWorldUpDir.cells[0] * z2
+      let x2 = myCameraDeviceWorldUpDir.cells[0] * z1 - myCameraDeviceWorldUpDir.cells[1] * z0
+      len = 1 / Math.hypot(x0, x1, x2)
+      x0 *= len
+      x1 *= len
+      x2 *= len
+      let y0 = z1 * x2 - z2 * x1
+      let y1 = z2 * x0 - z0 * x2
+      let y2 = z0 * x1 - z1 * x0
+      console.log(x0, x1, x2)
+      spyOn(Math, 'hypot').and.callThrough()
+      myViewMatrix.setCellsLookAtFromWorldPosition(myWorldPos, myWorldPointToLookAt, myCameraDeviceWorldUpDir)
+      expect(Math.hypot).toHaveBeenCalledWith(y0, y1, y2)
+    })
+
   })
 
 })

@@ -284,17 +284,18 @@ class Matrix4x4View extends Matrix4x4 {
   }
 
   setCellsLookAtFromWorldPosition(worldPosition, pointToLookAt, upDirection) {
-    let x0, x1, x2, y0, y1, y2, z0, z1, z2, len
-    if (
-      Math.abs(worldPosition.cells[0] - pointToLookAt.cells[0]) < this.EPSILON  &&
-      Math.abs(worldPosition.cells[1] - pointToLookAt.cells[1]) < this.EPSILON  &&
-      Math.abs(worldPosition.cells[2] - pointToLookAt.cells[2]) < this.EPSILON
-    ) {
+    let x0, x1, x2, y0, y1, y2, len
+    let z0 = worldPosition.cells[0] - pointToLookAt.cells[0]
+    let z1 = worldPosition.cells[1] - pointToLookAt.cells[1]
+    let z2 = worldPosition.cells[2] - pointToLookAt.cells[2]
+    let xToClose = Math.abs(z0) < this.EPSILON
+    let yToClose = Math.abs(z1) < this.EPSILON
+    let zToClose = Math.abs(z2) < this.EPSILON
+      Math.abs(z1) < this.EPSILON &&
+      Math.abs(z0) < this.EPSILON
+    if (xToClose && yToClose && zToClose) {
       return this.reset()
     }
-    z0 = worldPosition.cells[0] - pointToLookAt.cells[0]
-    z1 = worldPosition.cells[1] - pointToLookAt.cells[1]
-    z2 = worldPosition.cells[2] - pointToLookAt.cells[2]
     len = 1 / Math.hypot(z0, z1, z2)
     z0 *= len
     z1 *= len

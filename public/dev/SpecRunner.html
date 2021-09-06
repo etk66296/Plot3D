@@ -148,38 +148,8 @@
         myRenderer3D.addRenderable3D(myCamera)
         myRenderer3D.addRenderable3D(myTriangleMesh)
         setInterval(() => {
-          myTriangleMesh.math.matrix4x4.appendXRotationToM4X4(myTriangleMesh.modelMatrix, 0.01)
-          myTriangleMesh.math.matrix4x4.appendYRotationToM4X4(myTriangleMesh.modelMatrix, 0.01)
-          myTriangleMesh.math.matrix4x4.appendZRotationToM4X4(myTriangleMesh.modelMatrix, 0.01)
-          if (xPos < -4) {
-            xDir = 1
-          }
-          if (xPos > 4) {
-            xDir = -1
-          }
-          if (yPos < -4) {
-            yDir = 1
-          }
-          if (yPos > 4) {
-            yDir = -1
-          }
-          if (zPos < -4) {
-            zDir = 1
-          }
-          if (zPos > 4) {
-            zDir = -1
-          }
-          xPos += (0.1 * xDir)
-          yPos += (0.1 * yDir)
-          zPos += (0.1 * zDir)
-          myCamera.setWorldPos(xPos, yPos, zPos)
           myRenderer3D.process()
-          // myCamera.worldToViewMatrix.log()
         }, 60)
-        // myCamera.update()
-        // myCamera.draw()
-        // myTriangleMesh.update()
-        // myTriangleMesh.draw()
 
       }
     )
