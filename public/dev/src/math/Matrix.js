@@ -278,39 +278,30 @@ class Matrix4x4Projection extends Matrix4x4 {
 }
 
 class Matrix4x4View extends Matrix4x4 {
-  constructor(eye, center, up) {
+  constructor(worldPosition, pointToLookAt, upDirection) {
     super()
-    this.setCellsForViewAt(eye, center, up)
+    this.setCellsLookAtFromWorldPosition(worldPosition, pointToLookAt, upDirection)
   }
 
-  setCellsForViewAt(eye, center, up) {
+  setCellsLookAtFromWorldPosition(worldPosition, pointToLookAt, upDirection) {
     let x0, x1, x2, y0, y1, y2, z0, z1, z2, len
-    let eyex = eye.cells[0]
-    let eyey = eye.cells[1]
-    let eyez = eye.cells[2]
-    let upx = up.cells[0]
-    let upy = up.cells[1]
-    let upz = up.cells[2]
-    let centerx = center.cells[0]
-    let centery = center.cells[1]
-    let centerz = center.cells[2]
     if (
-      Math.abs(eyex - centerx) < 0.0001 &&
-      Math.abs(eyey - centery) < 0.0001 &&
-      Math.abs(eyez - centerz) < 0.0001
+      Math.abs(worldPosition.cells[0] - pointToLookAt.cells[0]) < this.EPSILON  &&
+      Math.abs(worldPosition.cells[1] - pointToLookAt.cells[1]) < this.EPSILON  &&
+      Math.abs(worldPosition.cells[2] - pointToLookAt.cells[2]) < this.EPSILON
     ) {
       return this.reset()
     }
-    z0 = eyex - centerx
-    z1 = eyey - centery
-    z2 = eyez - centerz
+    z0 = worldPosition.cells[0] - pointToLookAt.cells[0]
+    z1 = worldPosition.cells[1] - pointToLookAt.cells[1]
+    z2 = worldPosition.cells[2] - pointToLookAt.cells[2]
     len = 1 / Math.hypot(z0, z1, z2)
     z0 *= len
     z1 *= len
     z2 *= len
-    x0 = upy * z2 - upz * z1
-    x1 = upz * z0 - upx * z2
-    x2 = upx * z1 - upy * z0
+    x0 = upDirection.cells[1] * z2 - upDirection.cells[2] * z1
+    x1 = upDirection.cells[2] * z0 - upDirection.cells[0] * z2
+    x2 = upDirection.cells[0] * z1 - upDirection.cells[1] * z0
     len = Math.hypot(x0, x1, x2)
     if (!len) {
       x0 = 0
@@ -348,9 +339,9 @@ class Matrix4x4View extends Matrix4x4 {
     this.cells[9] = y2
     this.cells[10] = z2
     this.cells[11] = 0
-    this.cells[12] = -(x0 * eyex + x1 * eyey + x2 * eyez)
-    this.cells[13] = -(y0 * eyex + y1 * eyey + y2 * eyez)
-    this.cells[14] = -(z0 * eyex + z1 * eyey + z2 * eyez)
+    this.cells[12] = -(x0 * worldPosition.cells[0] + x1 * worldPosition.cells[1] + x2 * worldPosition.cells[2])
+    this.cells[13] = -(y0 * worldPosition.cells[0] + y1 * worldPosition.cells[1] + y2 * worldPosition.cells[2])
+    this.cells[14] = -(z0 * worldPosition.cells[0] + z1 * worldPosition.cells[1] + z2 * worldPosition.cells[2])
     this.cells[15] = 1
   }
 }

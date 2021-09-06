@@ -302,6 +302,14 @@ describe("Matrix4x4View", function() {
     ])
   })
 
+  it("should have a function for calculating the look at view matrix", function() {
+    expect(typeof myViewMatrix.setCellsLookAtFromWorldPosition).toBe('function')
+  })
+
+  describe("setCellsLookAtFromWorldPosition", function() {
+    
+  })
+
 })
 
 describe("Matrix4x4Math", function() {

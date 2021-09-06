@@ -156,9 +156,6 @@ class TriangleMesh3D extends Renderable3D {
 
 
   update() {
-    this.math.matrix4x4.appendXRotationToM4X4(this.modelMatrix, 0.01)
-    this.math.matrix4x4.appendYRotationToM4X4(this.modelMatrix, 0.01)
-    this.math.matrix4x4.appendZRotationToM4X4(this.modelMatrix, 0.01)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)
   }

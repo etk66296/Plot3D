@@ -19,7 +19,7 @@ class Camera3D extends Renderable3D {
   }
 
   lookAt() {
-    this.worldToViewMatrix.setCellsForViewAt( this.worldPos,
+    this.worldToViewMatrix.setCellsLookAtFromWorldPosition( this.worldPos,
       this.center,
       this.up
     )
