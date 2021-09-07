@@ -1,2 +1,2 @@
-# 3dPlotter
-plot curves for demonstrating purposes
+#  Plot3D
+3D from scratch and easy to understand
