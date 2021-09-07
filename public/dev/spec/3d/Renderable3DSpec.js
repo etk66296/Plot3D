@@ -189,4 +189,60 @@ describe("Renderable3D", function() {
   it("should have a function for rotating the around the model space x axis incremental", function() {
     expect(typeof myRenderable3D.rotateXIncremental).toBe('function')
   })
+
+  describe("rotateXIncremental", function() {
+    it("should use the injected matrix math for appending the x axis rotation to the model matrix", function() {
+      spyOn(myRenderable3D.math.matrix4x4, 'appendXRotationToM4X4')
+      myRenderable3D.rotateXIncremental(0.01)
+      expect(myRenderable3D.math.matrix4x4.appendXRotationToM4X4).toHaveBeenCalledWith(
+        myRenderable3D.modelMatrix,
+        0.01
+      )
+    })
+
+    it("should manipulate the necessary model matrix cells", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.5)
+      expect(myRenderable3D.modelMatrix.cells).toEqual([ 1, 0, 0, 0, 0, 6.123233995736766e-17, 1, 0, 0, -1, 6.123233995736766e-17, 0, 0, 0, 0, 1 ])
+    })
+  })
+
+  it("should have a function for rotating the around the model space y axis incremental", function() {
+    expect(typeof myRenderable3D.rotateYIncremental).toBe('function')
+  })
+
+  describe("rotateYIncremental", function() {
+    it("should use the injected matrix math for appending the y axis rotation to the model matrix", function() {
+      spyOn(myRenderable3D.math.matrix4x4, 'appendYRotationToM4X4')
+      myRenderable3D.rotateYIncremental(0.03)
+      expect(myRenderable3D.math.matrix4x4.appendYRotationToM4X4).toHaveBeenCalledWith(
+        myRenderable3D.modelMatrix,
+        0.03
+      )
+    })
+
+    it("should manipulate the necessary model matrix cells", function() {
+      myRenderable3D.rotateYIncremental(Math.PI * 0.5)
+      expect(myRenderable3D.modelMatrix.cells).toEqual([ 6.123233995736766e-17, 0, -1, 0, 0, 1, 0, 0, 1, 0, 6.123233995736766e-17, 0, 0, 0, 0, 1 ])
+    })
+  })
+
+  it("should have a function for rotating the around the model space z axis incremental", function() {
+    expect(typeof myRenderable3D.rotateZIncremental).toBe('function')
+  })
+
+  describe("rotateZIncremental", function() {
+    it("should use the injected matrix math for appending the z axis rotation to the model matrix", function() {
+      spyOn(myRenderable3D.math.matrix4x4, 'appendZRotationToM4X4')
+      myRenderable3D.rotateZIncremental(0.03)
+      expect(myRenderable3D.math.matrix4x4.appendZRotationToM4X4).toHaveBeenCalledWith(
+        myRenderable3D.modelMatrix,
+        0.03
+      )
+    })
+
+    it("should manipulate the necessary model matrix cells", function() {
+      myRenderable3D.rotateZIncremental(Math.PI * 0.5)
+      expect(myRenderable3D.modelMatrix.cells).toEqual([ 6.123233995736766e-17, 1, 0, 0, -1, 6.123233995736766e-17, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ])
+    })
+  })
 })
