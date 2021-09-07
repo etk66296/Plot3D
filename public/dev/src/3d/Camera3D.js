@@ -5,6 +5,8 @@ class Camera3D extends Renderable3D {
     this.center = new Vector3([ 0, 0, 0 ])
     this.up = new Vector3([ 0, 1, 0 ])
 
+    this.viewWorldPos = new Vector3()
+
     this.camModelMatrix = new Matrix4x4()
     this.camTranslationMatrix = new Matrix4x4()
 
@@ -35,19 +37,19 @@ class Camera3D extends Renderable3D {
     // this.lookAt()
   }
 
-  translateXIncremental(distance) {
-    this.worldPos.cells[0] += distance
-    this.camTranslationMatrix.cells[12] = this.worldPos.cells[0]
+  translateViewXIncremental(distance) {
+    this.viewWorldPos.cells[0] += distance
+    this.camTranslationMatrix.cells[12] = this.viewWorldPos.cells[0]
   }
 
-  translateYIncremental(distance) {
-    this.worldPos.cells[1] += distance
-    this.camTranslationMatrix.cells[13] = this.worldPos.cells[1]
+  translateViewYIncremental(distance) {
+    this.viewWorldPos.cells[1] += distance
+    this.camTranslationMatrix.cells[13] = this.viewWorldPos.cells[1]
   }
 
-  translateZIncremental(distance) {
-    this.worldPos.cells[2] += distance
-    this.camTranslationMatrix.cells[14] = this.worldPos.cells[2]
+  translateViewZIncremental(distance) {
+    this.viewWorldPos.cells[2] += distance
+    this.camTranslationMatrix.cells[14] = this.viewWorldPos.cells[2]
   }
 
   update() {

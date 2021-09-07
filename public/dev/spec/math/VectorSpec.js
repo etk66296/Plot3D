@@ -13,6 +13,17 @@ describe("Vector3", function() {
     expect(typeof myVector3.cross).toBe("function")
   })
 
+  it("should have a function set cells", function() {
+    expect(typeof myVector3.setCells).toBe('function')
+  })
+
+  describe("setCells", function() {
+    it("should set the cells of the vector3 object", function() {
+      myVector3.setCells(1, 2, 3)
+      expect(myVector3.cells).toEqual([1, 2, 3])
+    })
+  })
+
   describe("cross", function() {
     it("should take one paramater as multiplier of object type Vector3", function() {
       var myMultiplierVector3 = new Vector3()

@@ -5,6 +5,10 @@ class Renderable3D extends Renderable {
     this.modelToWorldMatrix = new Matrix4x4()
     this.worldPos = new Vector3()
 
+    this.modelUpDir = new Vector3()
+    this.modelFwdDir = new Vector3()
+    this.modelSideDir = new Vector3()
+
     this.math = math
 
     this.exceptions.ShaderUniformNotFound = function(message) {
@@ -39,14 +43,59 @@ class Renderable3D extends Renderable {
 
   rotateXIncremental(angleInRad) {
     this.math.matrix4x4.appendXRotationToM4X4(this.modelMatrix, angleInRad)
+    this.modelSideDir.setCells(
+      this.modelMatrix.cells[0],
+      this.modelMatrix.cells[1],
+      this.modelMatrix.cells[2]
+    )
+    this.modelUpDir.setCells(
+      this.modelMatrix.cells[4],
+      this.modelMatrix.cells[5],
+      this.modelMatrix.cells[6]
+    )
+    this.modelFwdDir.setCells(
+      this.modelMatrix.cells[8],
+      this.modelMatrix.cells[9],
+      this.modelMatrix.cells[10]
+    )
   }
 
   rotateYIncremental(angleInRad) {
     this.math.matrix4x4.appendYRotationToM4X4(this.modelMatrix, angleInRad)
+    this.modelSideDir.setCells(
+      this.modelMatrix[0],
+      this.modelMatrix[1],
+      this.modelMatrix[2]
+    )
+    this.modelUpDir.setCells(
+      this.modelMatrix[4],
+      this.modelMatrix[5],
+      this.modelMatrix[6]
+    )
+    this.modelFwdDir.setCells(
+      this.modelMatrix[8],
+      this.modelMatrix[9],
+      this.modelMatrix[10]
+    )
   }
 
   rotateZIncremental(angleInRad) {
     this.math.matrix4x4.appendZRotationToM4X4(this.modelMatrix, angleInRad)
+    this.modelSideDir.setCells(
+      this.modelMatrix[0],
+      this.modelMatrix[1],
+      this.modelMatrix[2]
+    )
+    this.modelUpDir.setCells(
+      this.modelMatrix[4],
+      this.modelMatrix[5],
+      this.modelMatrix[6]
+    )
+    this.modelFwdDir.setCells(
+      this.modelMatrix[8],
+      this.modelMatrix[9],
+      this.modelMatrix[10]
+    )
   }
 
   update() {

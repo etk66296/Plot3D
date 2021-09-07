@@ -186,6 +186,18 @@ describe("Renderable3D", function() {
     expect(myRenderable3D.modelToWorldMatrix.cells).toEqual([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 100, 200, 300, 1 ])
   })
 
+  it("should have a 3d vector which gives the renderable3d an up direction", function() {
+    expect(myRenderable3D.modelUpDir.constructor.name).toEqual('Vector3')
+  })
+
+  it("should have a 3d vector which gives the renderable3d a forward direction", function() {
+    expect(myRenderable3D.modelFwdDir.constructor.name).toEqual('Vector3')
+  })
+
+  it("should have a 3d vector which gives the renderable3d a side direction", function() {
+    expect(myRenderable3D.modelSideDir.constructor.name).toEqual('Vector3')
+  })
+
   it("should have a function for rotating the around the model space x axis incremental", function() {
     expect(typeof myRenderable3D.rotateXIncremental).toBe('function')
   })
@@ -245,4 +257,18 @@ describe("Renderable3D", function() {
       expect(myRenderable3D.modelMatrix.cells).toEqual([ 6.123233995736766e-17, 1, 0, 0, -1, 6.123233995736766e-17, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ])
     })
   })
+
+  it("should be possible to concatenate the rotations", function() {
+    myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+    myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+    myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+    expect(myRenderable3D.modelMatrix.cells).toEqual([
+      0.5000000000000001, 0.8535533905932737, 0.1464466094067261 ,0,
+      -0.5 , 0.14644660940672644, 0.8535533905932737 , 0,
+      0.7071067811865475, -0.5, 0.5000000000000001, 0,
+      0, 0, 0, 1
+    ])
+  })
+
+  
 })

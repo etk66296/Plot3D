@@ -137,18 +137,16 @@
         let myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
         let myRenderer3D = new Renderer3D()
         let kbControl = new Plot3DKeyboard()
-        kbControl.imposeKeyDownArrowFlyCtrlTo(myCamera)
-        kbControl.imposeKeyDownWasdCtrlTo(myCamera)
+        kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMesh)
+        kbControl.imposeKeyDownWasdCtrlTo(myTriangleMesh)
 
-        myCamera.setWorldPos(0, 0, -1)
+        myCamera.setWorldPos(0, 0, -2)
         myRenderer3D.addRenderable2D(myBackground)
         myRenderer3D.addRenderable3D(myCamera)
         myRenderer3D.addRenderable3D(myTriangleMesh)
         setInterval(() => {
-          myTriangleMesh.rotateXIncremental(0.01)
-          myTriangleMesh.rotateYIncremental(0.01)
-          myTriangleMesh.rotateZIncremental(0.01)
           kbControl.update()
+          myTriangleMesh.rotateXIncremental(0.1)
           myRenderer3D.process()
         }, 60)
 

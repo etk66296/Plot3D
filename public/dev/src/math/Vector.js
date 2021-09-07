@@ -13,6 +13,16 @@ class Vector3 extends Vector {
     super(cells)
   }
 
+  setCells(x, y, z) {
+    this.cells[0] = x
+    this.cells[1] = y
+    this.cells[2] = z
+  }
+
+  log() {
+    console.log(this.cells[0], this.cells[1], this.cells[2])
+  }
+
   cross(multiplier) {
     let ax = this.cells[0]
     let ay = this.cells[1]

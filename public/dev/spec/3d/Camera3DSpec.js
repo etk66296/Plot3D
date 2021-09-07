@@ -116,6 +116,58 @@ describe("Camera", function() {
       myCamera.update()
       expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, myCamera.viewToProjection.cells)
     })
+
+    it("should have a attribte for safing the view world position", function() {
+      expect(myCamera.viewWorldPos.constructor.name).toBe('Vector3')
+    })
+
+    it("should have a function for translating along the x axis in camera space", function() {
+      expect(typeof myCamera.translateViewXIncremental).toBe('function')
+    })
+
+    describe("translateViewXIncremental", function() {
+      it("add the passed distance to the world view position", function() {
+        myCamera.translateViewXIncremental(10)
+        expect(myCamera.viewWorldPos.cells).toEqual([10, 0, 0])
+      })
+
+      it("should put the new view world position in the camera translation matrix", function() {
+        myCamera.translateViewXIncremental(11)
+        expect(myCamera.camTranslationMatrix.cells[12]).toEqual(11)
+      })
+    })
+
+    it("should have a function for translating alonge the y axis in camera space", function() {
+      expect(typeof myCamera.translateViewYIncremental).toBe('function')
+    })
+
+    describe("translateViewYIncremental", function() {
+      it("add the passed distance to the world view position", function() {
+        myCamera.translateViewYIncremental(12)
+        expect(myCamera.viewWorldPos.cells).toEqual([0, 12, 0])
+      })
+
+      it("should put the new view world position in the camera translation matrix", function() {
+        myCamera.translateViewYIncremental(13)
+        expect(myCamera.camTranslationMatrix.cells[13]).toEqual(13)
+      })
+    })
+
+    it("should have a function for translating alonge the z axis in camera space", function() {
+      expect(typeof myCamera.translateViewZIncremental).toBe('function')
+    })
+
+    describe("translateViewZIncremental", function() {
+      it("add the passed distance to the world view position", function() {
+        myCamera.translateViewZIncremental(14)
+        expect(myCamera.viewWorldPos.cells).toEqual([0, 0, 14])
+      })
+
+      it("should put the new view world position in the camera translation matrix", function() {
+        myCamera.translateViewZIncremental(15)
+        expect(myCamera.camTranslationMatrix.cells[14]).toEqual(15)
+      })
+    })
   })
  
 })
