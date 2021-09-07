@@ -127,4 +127,66 @@ describe("Renderable3D", function() {
     })
 
   })
+
+  it("should have a x axis translation function for moving the renderable incremental in world space.", function() {
+    expect(typeof myRenderable3D.translateXIncremental).toBe('function')
+  })
+
+  describe("translateXIncremental", function() {
+
+    it("should append the passed distance to the world position vector", function() {
+      myRenderable3D.translateXIncremental(11)
+      expect(myRenderable3D.worldPos.cells).toEqual([ 11, 0, 0 ])
+    })
+
+    it("should append the position to the world matrix", function() {
+      myRenderable3D.translateXIncremental(12)
+      expect(myRenderable3D.modelToWorldMatrix.cells).toEqual([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 12, 0, 0, 1 ])
+    })
+  })
+
+  it("should have a y axis translation function for moving the renderable incremental in world space.", function() {
+    expect(typeof myRenderable3D.translateYIncremental).toBe('function')
+  })
+
+  describe("translateYIncremental", function() {
+
+    it("should append the passed distance to the world position vector", function() {
+      myRenderable3D.translateYIncremental(18)
+      expect(myRenderable3D.worldPos.cells).toEqual([ 0, 18, 0 ])
+    })
+
+    it("should append the position to the world matrix", function() {
+      myRenderable3D.translateYIncremental(19)
+      expect(myRenderable3D.modelToWorldMatrix.cells).toEqual([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 19, 0, 1 ])
+    })
+  })
+
+  it("should have a z axis translation function for moving the renderable incremental in world space.", function() {
+    expect(typeof myRenderable3D.translateYIncremental).toBe('function')
+  })
+
+  describe("translateZIncremental", function() {
+
+    it("should append the passed distance to the world position vector", function() {
+      myRenderable3D.translateZIncremental(29)
+      expect(myRenderable3D.worldPos.cells).toEqual([ 0, 0, 29 ])
+    })
+
+    it("should append the position to the world matrix", function() {
+      myRenderable3D.translateZIncremental(31)
+      expect(myRenderable3D.modelToWorldMatrix.cells).toEqual([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 31, 1 ])
+    })
+  })
+
+  it("should allow concatenation to incremental translations", function() {
+    myRenderable3D.translateXIncremental(100)
+    myRenderable3D.translateYIncremental(200)
+    myRenderable3D.translateZIncremental(300)
+    expect(myRenderable3D.modelToWorldMatrix.cells).toEqual([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 100, 200, 300, 1 ])
+  })
+
+  it("should have a function for rotating the around the model space x axis incremental", function() {
+    expect(typeof myRenderable3D.rotateXIncremental).toBe('function')
+  })
 })

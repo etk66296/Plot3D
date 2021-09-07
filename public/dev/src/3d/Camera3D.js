@@ -32,11 +32,25 @@ class Camera3D extends Renderable3D {
     this.camTranslationMatrix.cells[12] = x
     this.camTranslationMatrix.cells[13] = y
     this.camTranslationMatrix.cells[14] = z
-    this.lookAt()
+    // this.lookAt()
+  }
+
+  translateXIncremental(distance) {
+    this.worldPos.cells[0] += distance
+    this.camTranslationMatrix.cells[12] = this.worldPos.cells[0]
+  }
+
+  translateYIncremental(distance) {
+    this.worldPos.cells[1] += distance
+    this.camTranslationMatrix.cells[13] = this.worldPos.cells[1]
+  }
+
+  translateZIncremental(distance) {
+    this.worldPos.cells[2] += distance
+    this.camTranslationMatrix.cells[14] = this.worldPos.cells[2]
   }
 
   update() {
-    this.lookAt()
     this.glCntxt.useProgram(this.shader.program)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)

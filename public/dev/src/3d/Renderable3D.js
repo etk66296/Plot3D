@@ -37,6 +37,18 @@ class Renderable3D extends Renderable {
     this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
   }
 
+  rotateXIncremental(angleInRad) {
+    this.math.matrix4x4.appendXRotationToM4X4(this.modelMatrix, angleInRad)
+  }
+
+  rotateYIncremental(angleInRad) {
+    this.math.matrix4x4.appendYRotationToM4X4(this.modelMatrix, angleInRad)
+  }
+
+  rotateZIncremental(angleInRad) {
+    this.math.matrix4x4.appendZRotationToM4X4(this.modelMatrix, angleInRad)
+  }
+
   update() {
    
   }

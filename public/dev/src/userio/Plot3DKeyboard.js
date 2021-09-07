@@ -37,16 +37,20 @@ class Plot3DKeyboard extends Plot3DUserIO{
   updateWasdCtrl() {
     this.kbWasdCtrlObjects.forEach(renderable3d => {
       if (this.keysDown[87] /*w*/) {
-       
+      //  console.log('w')
+       renderable3d.translateZIncremental(0.1)
       }
       if (this.keysDown[65] /*a*/) {
-        
+        // console.log('a')
+        renderable3d.translateXIncremental(0.1)
       }
       if (this.keysDown[83] /*s*/) {
-      
+        // console.log('s')
+        renderable3d.translateZIncremental(-0.1)
       }
       if(this.keysDown[68] /*d*/) {
-      
+        // console.log('d')
+        renderable3d.translateXIncremental(-0.1)
       }
     })
   }

@@ -368,7 +368,6 @@ describe("Matrix4x4View", function() {
       let x0 = myCameraDeviceWorldUpDir.cells[1] * z2 - myCameraDeviceWorldUpDir.cells[2] * z1
       let x1 = myCameraDeviceWorldUpDir.cells[2] * z0 - myCameraDeviceWorldUpDir.cells[0] * z2
       let x2 = myCameraDeviceWorldUpDir.cells[0] * z1 - myCameraDeviceWorldUpDir.cells[1] * z0
-      console.log(x0, x1, x2)
       spyOn(Math, 'hypot').and.callThrough()
       myViewMatrix.setCellsLookAtFromWorldPosition(myWorldPos, myWorldPointToLookAt, myCameraDeviceWorldUpDir)
       expect(Math.hypot).toHaveBeenCalledWith(x0, x1, x2)
@@ -395,7 +394,6 @@ describe("Matrix4x4View", function() {
       let y0 = z1 * x2 - z2 * x1
       let y1 = z2 * x0 - z0 * x2
       let y2 = z0 * x1 - z1 * x0
-      console.log(x0, x1, x2)
       spyOn(Math, 'hypot').and.callThrough()
       myViewMatrix.setCellsLookAtFromWorldPosition(myWorldPos, myWorldPointToLookAt, myCameraDeviceWorldUpDir)
       expect(Math.hypot).toHaveBeenCalledWith(y0, y1, y2)
