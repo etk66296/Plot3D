@@ -146,7 +146,6 @@
         myRenderer3D.addRenderable3D(myTriangleMesh)
         setInterval(() => {
           kbControl.update()
-          myTriangleMesh.rotateXIncremental(0.1)
           myRenderer3D.process()
         }, 60)
 

@@ -5,9 +5,9 @@ class Renderable3D extends Renderable {
     this.modelToWorldMatrix = new Matrix4x4()
     this.worldPos = new Vector3()
 
-    this.modelUpDir = new Vector3()
-    this.modelFwdDir = new Vector3()
-    this.modelSideDir = new Vector3()
+    this.modelUpDir = new Vector3([ 0, 1, 0 ])
+    this.modelFwdDir = new Vector3([ 0, 0, 1 ])
+    this.modelSideDir = new Vector3([ 1, 0, 0 ])
 
     this.math = math
 
@@ -25,6 +25,18 @@ class Renderable3D extends Renderable {
     }
 
   }
+
+  // moveForward(distance) {
+  //   let distanceX = distance * this.modelFwdDir.cells[0]
+  //   let distanceY = distance * this.modelFwdDir.cells[1]
+  //   let distanceZ = distance * this.modelFwdDir.cells[2]
+  //   this.worldPos.cells[0] += distanceX
+  //   this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
+  //   this.worldPos.cells[1] += distanceY
+  //   this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
+  //   this.worldPos.cells[2] += distanceZ
+  //   this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  // }
 
   translateXIncremental(distance) {
     this.worldPos.cells[0] += distance
