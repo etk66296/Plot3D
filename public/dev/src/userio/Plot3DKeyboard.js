@@ -66,10 +66,10 @@ class Plot3DKeyboard extends Plot3DUserIO{
   updateArrowFlyCtrl() {
     this.kbArrowFlyCtrlObjects.forEach((renderable3d) => {
       if(this.keysDown[33] /*bild up*/) {
-        renderable3d.rotateZIncremental(0.1)
+        renderable3d.rotateZIncremental(-0.1)
       }
       if(this.keysDown[34] /*bild down*/) {
-        renderable3d.rotateZIncremental(-0.1)
+        renderable3d.rotateZIncremental(0.1)
       }
       if(this.keysDown[37] /*left arrow*/) {
         renderable3d.rotateYIncremental(0.1)
