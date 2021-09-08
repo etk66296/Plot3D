@@ -18,6 +18,12 @@ class Camera3D extends Renderable3D {
     
     this.viewToProjection = new Matrix4x4Projection()
 
+    this.modelToFollow = {
+      follow: false,
+      model: undefined,
+      viewFrom: new Vector3()
+    }
+
   }
 
   lookAt() {
@@ -25,6 +31,11 @@ class Camera3D extends Renderable3D {
       this.center,
       this.up
     )
+  }
+
+  follow(renderable) {
+    this.modelToFollow.follow = true
+    this.modelToFollow.model = renderable
   }
 
   setWorldPos(x, y, z) {
@@ -53,6 +64,9 @@ class Camera3D extends Renderable3D {
   }
 
   update() {
+    if(this.modelToFollow.follow) {
+      
+    }
     this.glCntxt.useProgram(this.shader.program)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)

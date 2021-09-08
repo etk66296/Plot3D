@@ -169,5 +169,25 @@ describe("Camera", function() {
       })
     })
   })
+
+  it("should be able to follow a renderable3d model thus it can hold a reference to such an object", function() {
+    expect(typeof myCamera.modelToFollow).toBe('object')
+    expect(myCamera.modelToFollow.follow).toEqual(false)
+    expect(myCamera.modelToFollow.model).toEqual(undefined)
+  })
+
+  it("should have a function to append a renderable, which the camera is following", function() {
+    expect(typeof myCamera.follow).toBe('function')
+  })
+
+  describe("follow", function() {
+    it("should set the modelToFollow Object", function() {
+      class Renderable {constructor() {}}
+      let tmpRenderable = new Renderable()
+      myCamera.follow(tmpRenderable)
+      expect(myCamera.modelToFollow.follow).toEqual(true)
+      expect(myCamera.modelToFollow.model).toEqual(tmpRenderable)
+    })
+  })
  
 })

@@ -141,6 +141,7 @@
         kbControl.imposeKeyDownWasdCtrlTo(myTriangleMesh)
 
         myCamera.setWorldPos(0, 0, -2)
+        myCamera.follow(myTriangleMesh)
         myRenderer3D.addRenderable2D(myBackground)
         myRenderer3D.addRenderable3D(myCamera)
         myRenderer3D.addRenderable3D(myTriangleMesh)
