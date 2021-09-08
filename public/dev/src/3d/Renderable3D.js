@@ -74,6 +74,31 @@ class Renderable3D extends Renderable {
     this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
   }
 
+  moveUp(distance) {
+    let distanceX = distance * this.modelUpDir.cells[0]
+    let distanceY = distance * this.modelUpDir.cells[1]
+    let distanceZ = distance * this.modelUpDir.cells[2]
+    this.worldPos.cells[0] += distanceX
+    this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
+    this.worldPos.cells[1] += distanceY
+    this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
+    this.worldPos.cells[2] += distanceZ
+    this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  }
+
+  moveDown(distance) {
+    let distanceX = (-1) * distance * this.modelUpDir.cells[0]
+    let distanceY = (-1) * distance * this.modelUpDir.cells[1]
+    let distanceZ = (-1) * distance * this.modelUpDir.cells[2]
+    this.worldPos.cells[0] += distanceX
+    this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
+    this.worldPos.cells[1] += distanceY
+    this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
+    this.worldPos.cells[2] += distanceZ
+    this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  }
+
+
   translateXIncremental(distance) {
     this.worldPos.cells[0] += distance
     this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
