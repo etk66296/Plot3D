@@ -26,17 +26,78 @@ class Renderable3D extends Renderable {
 
   }
 
-  // moveForward(distance) {
-  //   let distanceX = distance * this.modelFwdDir.cells[0]
-  //   let distanceY = distance * this.modelFwdDir.cells[1]
-  //   let distanceZ = distance * this.modelFwdDir.cells[2]
-  //   this.worldPos.cells[0] += distanceX
-  //   this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
-  //   this.worldPos.cells[1] += distanceY
-  //   this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
-  //   this.worldPos.cells[2] += distanceZ
-  //   this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
-  // }
+  moveForward(distance) {
+    let distanceX = distance * this.modelFwdDir.cells[0]
+    let distanceY = distance * this.modelFwdDir.cells[1]
+    let distanceZ = distance * this.modelFwdDir.cells[2]
+    this.worldPos.cells[0] += distanceX
+    this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
+    this.worldPos.cells[1] += distanceY
+    this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
+    this.worldPos.cells[2] += distanceZ
+    this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  }
+
+  moveBackwards(distance) {
+    let distanceX = (-1) * distance * this.modelFwdDir.cells[0]
+    let distanceY = (-1) * distance * this.modelFwdDir.cells[1]
+    let distanceZ = (-1) * distance * this.modelFwdDir.cells[2]
+    this.worldPos.cells[0] += distanceX
+    this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
+    this.worldPos.cells[1] += distanceY
+    this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
+    this.worldPos.cells[2] += distanceZ
+    this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  }
+
+  moveRight(distance) {
+    let distanceX = (-1) * distance * this.modelSideDir.cells[0]
+    let distanceY = (-1) * distance * this.modelSideDir.cells[1]
+    let distanceZ = (-1) * distance * this.modelSideDir.cells[2]
+    this.worldPos.cells[0] += distanceX
+    this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
+    this.worldPos.cells[1] += distanceY
+    this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
+    this.worldPos.cells[2] += distanceZ
+    this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  }
+
+  moveLeft(distance) {
+    let distanceX = distance * this.modelSideDir.cells[0]
+    let distanceY = distance * this.modelSideDir.cells[1]
+    let distanceZ = distance * this.modelSideDir.cells[2]
+    this.worldPos.cells[0] += distanceX
+    this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
+    this.worldPos.cells[1] += distanceY
+    this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
+    this.worldPos.cells[2] += distanceZ
+    this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  }
+
+  moveUp(distance) {
+    let distanceX = distance * this.modelUpDir.cells[0]
+    let distanceY = distance * this.modelUpDir.cells[1]
+    let distanceZ = distance * this.modelUpDir.cells[2]
+    this.worldPos.cells[0] += distanceX
+    this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
+    this.worldPos.cells[1] += distanceY
+    this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
+    this.worldPos.cells[2] += distanceZ
+    this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  }
+
+  moveDown(distance) {
+    let distanceX = (-1) * distance * this.modelUpDir.cells[0]
+    let distanceY = (-1) * distance * this.modelUpDir.cells[1]
+    let distanceZ = (-1) * distance * this.modelUpDir.cells[2]
+    this.worldPos.cells[0] += distanceX
+    this.modelToWorldMatrix.cells[12] = this.worldPos.cells[0]
+    this.worldPos.cells[1] += distanceY
+    this.modelToWorldMatrix.cells[13] = this.worldPos.cells[1]
+    this.worldPos.cells[2] += distanceZ
+    this.modelToWorldMatrix.cells[14] = this.worldPos.cells[2]
+  }
+
 
   translateXIncremental(distance) {
     this.worldPos.cells[0] += distance
@@ -75,38 +136,38 @@ class Renderable3D extends Renderable {
   rotateYIncremental(angleInRad) {
     this.math.matrix4x4.appendYRotationToM4X4(this.modelMatrix, angleInRad)
     this.modelSideDir.setCells(
-      this.modelMatrix[0],
-      this.modelMatrix[1],
-      this.modelMatrix[2]
+      this.modelMatrix.cells[0],
+      this.modelMatrix.cells[1],
+      this.modelMatrix.cells[2]
     )
     this.modelUpDir.setCells(
-      this.modelMatrix[4],
-      this.modelMatrix[5],
-      this.modelMatrix[6]
+      this.modelMatrix.cells[4],
+      this.modelMatrix.cells[5],
+      this.modelMatrix.cells[6]
     )
     this.modelFwdDir.setCells(
-      this.modelMatrix[8],
-      this.modelMatrix[9],
-      this.modelMatrix[10]
+      this.modelMatrix.cells[8],
+      this.modelMatrix.cells[9],
+      this.modelMatrix.cells[10]
     )
   }
 
   rotateZIncremental(angleInRad) {
     this.math.matrix4x4.appendZRotationToM4X4(this.modelMatrix, angleInRad)
     this.modelSideDir.setCells(
-      this.modelMatrix[0],
-      this.modelMatrix[1],
-      this.modelMatrix[2]
+      this.modelMatrix.cells[0],
+      this.modelMatrix.cells[1],
+      this.modelMatrix.cells[2]
     )
     this.modelUpDir.setCells(
-      this.modelMatrix[4],
-      this.modelMatrix[5],
-      this.modelMatrix[6]
+      this.modelMatrix.cells[4],
+      this.modelMatrix.cells[5],
+      this.modelMatrix.cells[6]
     )
     this.modelFwdDir.setCells(
-      this.modelMatrix[8],
-      this.modelMatrix[9],
-      this.modelMatrix[10]
+      this.modelMatrix.cells[8],
+      this.modelMatrix.cells[9],
+      this.modelMatrix.cells[10]
     )
   }
 

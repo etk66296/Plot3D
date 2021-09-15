@@ -216,6 +216,13 @@ describe("Renderable3D", function() {
       myRenderable3D.rotateXIncremental(Math.PI * 0.5)
       expect(myRenderable3D.modelMatrix.cells).toEqual([ 1, 0, 0, 0, 0, 6.123233995736766e-17, 1, 0, 0, -1, 6.123233995736766e-17, 0, 0, 0, 0, 1 ])
     })
+
+    it("should set the direction vectors cells", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      expect(myRenderable3D.modelSideDir.cells).toEqual([1, 0, 0])
+      expect(myRenderable3D.modelFwdDir.cells).toEqual([0, -0.7071067811865475, 0.7071067811865476])
+      expect(myRenderable3D.modelUpDir.cells).toEqual([0, 0.7071067811865476, 0.7071067811865475])
+    })
   })
 
   it("should have a function for rotating the around the model space y axis incremental", function() {
@@ -235,6 +242,13 @@ describe("Renderable3D", function() {
     it("should manipulate the necessary model matrix cells", function() {
       myRenderable3D.rotateYIncremental(Math.PI * 0.5)
       expect(myRenderable3D.modelMatrix.cells).toEqual([ 6.123233995736766e-17, 0, -1, 0, 0, 1, 0, 0, 1, 0, 6.123233995736766e-17, 0, 0, 0, 0, 1 ])
+    })
+
+    it("should set the direction vectors cells", function() {
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      expect(myRenderable3D.modelSideDir.cells).toEqual([ 0.7071067811865476, 0, -0.7071067811865475 ])
+      expect(myRenderable3D.modelFwdDir.cells).toEqual([ 0.7071067811865475, 0, 0.7071067811865476 ])
+      expect(myRenderable3D.modelUpDir.cells).toEqual([ 0, 1, 0 ])
     })
   })
 
@@ -256,6 +270,13 @@ describe("Renderable3D", function() {
       myRenderable3D.rotateZIncremental(Math.PI * 0.5)
       expect(myRenderable3D.modelMatrix.cells).toEqual([ 6.123233995736766e-17, 1, 0, 0, -1, 6.123233995736766e-17, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ])
     })
+
+    it("should set the direction vectors cells", function() {
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      expect(myRenderable3D.modelSideDir.cells).toEqual([ 0.7071067811865476,  0.7071067811865475, 0 ])
+      expect(myRenderable3D.modelFwdDir.cells).toEqual([ 0, 0, 1 ])
+      expect(myRenderable3D.modelUpDir.cells).toEqual([ -0.7071067811865475, 0.7071067811865476, 0 ])
+    })
   })
 
   it("should be possible to concatenate the rotations", function() {
@@ -268,6 +289,150 @@ describe("Renderable3D", function() {
       0.7071067811865475, -0.5, 0.5000000000000001, 0,
       0, 0, 0, 1
     ])
+  })
+
+  it("should have a function moveForward", function() {
+    expect(typeof myRenderable3D.moveForward).toBe('function')
+  })
+
+  describe("moveForward", function() {
+    it("should add the direction ratios to the models world position", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveForward(10)
+      expect(myRenderable3D.worldPos.cells).toEqual([ 7.071067811865475, -5, 5.000000000000001 ])
+    })
+
+    it("should set the modelToWorldMatrix translation components", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveForward(10)
+      expect(myRenderable3D.modelToWorldMatrix.cells[12]).toEqual(7.071067811865475)
+      expect(myRenderable3D.modelToWorldMatrix.cells[13]).toEqual(-5)
+      expect(myRenderable3D.modelToWorldMatrix.cells[14]).toEqual(5.000000000000001)
+    })
+  })
+
+  it("should have a function moveBackwards", function() {
+    expect(typeof myRenderable3D.moveBackwards).toBe('function')
+  })
+
+  describe("moveForward", function() {
+    it("should add the direction ratios to the models world position", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveBackwards(10)
+      expect(myRenderable3D.worldPos.cells).toEqual([ -7.071067811865475, 5, -5.000000000000001 ])
+    })
+
+    it("should set the modelToWorldMatrix translation components", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveBackwards(10)
+      expect(myRenderable3D.modelToWorldMatrix.cells[12]).toEqual(-7.071067811865475)
+      expect(myRenderable3D.modelToWorldMatrix.cells[13]).toEqual(5)
+      expect(myRenderable3D.modelToWorldMatrix.cells[14]).toEqual(-5.000000000000001)
+    })
+  })
+
+  it("should have a function moveRight", function() {
+    expect(typeof myRenderable3D.moveRight).toBe('function')
+  })
+
+  describe("moveForward", function() {
+    it("should add the direction ratios to the models world position", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveRight(10)
+      expect(myRenderable3D.worldPos.cells).toEqual([ -5.000000000000001, -8.535533905932738, -1.464466094067261 ])
+    })
+
+    it("should set the modelToWorldMatrix translation components", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveRight(10)
+      expect(myRenderable3D.modelToWorldMatrix.cells[12]).toEqual(-5.000000000000001)
+      expect(myRenderable3D.modelToWorldMatrix.cells[13]).toEqual(-8.535533905932738)
+      expect(myRenderable3D.modelToWorldMatrix.cells[14]).toEqual(-1.464466094067261)
+    })
+  })
+
+  it("should have a function moveLeft", function() {
+    expect(typeof myRenderable3D.moveLeft).toBe('function')
+  })
+
+  describe("moveForward", function() {
+    it("should add the direction ratios to the models world position", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveLeft(10)
+      expect(myRenderable3D.worldPos.cells).toEqual([ 5.000000000000001, 8.535533905932738, 1.464466094067261 ])
+    })
+
+    it("should set the modelToWorldMatrix translation components", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveLeft(10)
+      expect(myRenderable3D.modelToWorldMatrix.cells[12]).toEqual(5.000000000000001)
+      expect(myRenderable3D.modelToWorldMatrix.cells[13]).toEqual(8.535533905932738)
+      expect(myRenderable3D.modelToWorldMatrix.cells[14]).toEqual(1.464466094067261)
+    })
+  })
+
+  it("should have a function moveUp", function() {
+    expect(typeof myRenderable3D.moveUp).toBe('function')
+  })
+
+  describe("moveForward", function() {
+    it("should add the direction ratios to the models world position", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveUp(10)
+      expect(myRenderable3D.worldPos.cells).toEqual([ -5, 1.4644660940672645, 8.535533905932738 ])
+    })
+
+    it("should set the modelToWorldMatrix translation components", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveUp(10)
+      expect(myRenderable3D.modelToWorldMatrix.cells[12]).toEqual(-5)
+      expect(myRenderable3D.modelToWorldMatrix.cells[13]).toEqual(1.4644660940672645)
+      expect(myRenderable3D.modelToWorldMatrix.cells[14]).toEqual(8.535533905932738)
+    })
+  })
+
+  it("should have a function moveDown", function() {
+    expect(typeof myRenderable3D.moveDown).toBe('function')
+  })
+
+  describe("moveForward", function() {
+    it("should add the direction ratios to the models world position", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveDown(10)
+      expect(myRenderable3D.worldPos.cells).toEqual([ 5, -1.4644660940672645, -8.535533905932738 ])
+    })
+
+    it("should set the modelToWorldMatrix translation components", function() {
+      myRenderable3D.rotateXIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateYIncremental(Math.PI * 0.25)
+      myRenderable3D.rotateZIncremental(Math.PI * 0.25)
+      myRenderable3D.moveDown(10)
+      expect(myRenderable3D.modelToWorldMatrix.cells[12]).toEqual(5)
+      expect(myRenderable3D.modelToWorldMatrix.cells[13]).toEqual(-1.4644660940672645)
+      expect(myRenderable3D.modelToWorldMatrix.cells[14]).toEqual(-8.535533905932738)
+    })
   })
 
   

@@ -38,42 +38,50 @@ class Plot3DKeyboard extends Plot3DUserIO{
     this.kbWasdCtrlObjects.forEach(renderable3d => {
       if (this.keysDown[87] /*w*/) {
       //  console.log('w')
-       renderable3d.translateZIncremental(0.1)
+       renderable3d.moveForward(0.1)
       }
       if (this.keysDown[65] /*a*/) {
         // console.log('a')
-        renderable3d.translateXIncremental(0.1)
+        renderable3d.moveLeft(0.1)
       }
       if (this.keysDown[83] /*s*/) {
         // console.log('s')
-        renderable3d.translateZIncremental(-0.1)
+        renderable3d.moveBackwards(0.1)
       }
       if(this.keysDown[68] /*d*/) {
         // console.log('d')
-        renderable3d.translateXIncremental(-0.1)
+        renderable3d.moveRight(0.1)
+      }
+      if(this.keysDown[82] /*r*/) {
+        // console.log('r')
+        renderable3d.moveUp(0.1)
+      }
+      if(this.keysDown[70] /*f*/) {
+        // console.log('f')
+        renderable3d.moveDown(0.1)
       }
     })
   }
 
   updateArrowFlyCtrl() {
-    this.kbArrowFlyCtrlObjects.forEach(() => {
+    this.kbArrowFlyCtrlObjects.forEach((renderable3d) => {
       if(this.keysDown[33] /*bild up*/) {
-       
+        renderable3d.rotateZIncremental(-0.1)
       }
       if(this.keysDown[34] /*bild down*/) {
-       
+        renderable3d.rotateZIncremental(0.1)
       }
       if(this.keysDown[37] /*left arrow*/) {
-       
+        renderable3d.rotateYIncremental(0.1)
       }
       if(this.keysDown[38] /*up arrow*/) {
-        
+        renderable3d.rotateXIncremental(0.1)
       }
       if(this.keysDown[39] /*right arrow*/) {
-        
+        renderable3d.rotateYIncremental(-0.1)
       }
       if(this.keysDown[40] /*down arrow*/) {
-       
+        renderable3d.rotateXIncremental(-0.1)
       }
     })
   }
