@@ -19,22 +19,40 @@ describe("Camera", function() {
   beforeEach(function() {
     let vertexShaderCode = `
       attribute vec3 a_position;
+      attribute vec3 a_normal;
       attribute vec4 a_color;
 
       uniform mat4 u_modelMatrix;
       uniform mat4 u_modelToWorldMatrix;
-      uniform mat4 u_cameraModelMatrix;
-      uniform mat4 u_cameraTranslationMatrix;
-      uniform mat4 u_WorldToViewMatrix;
       uniform mat4 u_ViewToProjectionMatrix;
+      
+      mat4 worldToViewMatrix;
+      uniform vec3 u_cameraUpDir;
+      uniform vec3 u_cameraWorldPos;
+      uniform vec3 u_cameraWorldPosToLookAt;
+
+      vec3 cameraZDir;
+      vec3 cameraYDir;
+      vec3 cameraXDir;
 
       varying lowp vec4 v_color;
 
       void main(void) {
-        gl_Position = u_ViewToProjectionMatrix * u_cameraTranslationMatrix * u_cameraModelMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+        // calculate the camera direction vectors
+        cameraZDir = normalize(u_cameraWorldPos - u_cameraWorldPosToLookAt);
+        cameraXDir = normalize(cross(u_cameraUpDir, cameraZDir));
+        cameraYDir = normalize(cross(cameraZDir, cameraXDir));
+
+        worldToViewMatrix[0].xyz = cameraXDir;
+        worldToViewMatrix[1].xyz = cameraYDir;
+        worldToViewMatrix[2].xyz = cameraZDir;
+        worldToViewMatrix[3] = vec4(u_cameraWorldPos, 1);
+
+        gl_Position = u_ViewToProjectionMatrix * worldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
         v_color = a_color;
       }
     `
+
     let fragmentShaderCode = `
       precision mediump float;
 
@@ -52,24 +70,8 @@ describe("Camera", function() {
     expect(myCamera.__proto__.__proto__.constructor.name).toEqual('Renderable3D')
   })
 
-  it("should have a matrix for rotating the camera in view space", function() {
-    expect(myCamera.camModelMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
-  })
-
-  it("should have a matrix for translating the camera in view space", function() {
-    expect(myCamera.camTranslationMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
-  })
-
-  it("should have a matrix 4x4 for transforming from world space to view space", function() {
-    expect(myCamera.worldToViewMatrix.cells).toEqual([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
-  })
-
-  it("should have a matrix 4x4 for tranforming from view space to projection space", function() {
-    expect(myCamera.viewToProjection.constructor.name).toEqual('Matrix4x4Projection')
-  })
-
-  it("should have a matrix 4x4 for tranforming from world space to view space", function() {
-    expect(myCamera.worldToViewMatrix.constructor.name).toEqual('Matrix4x4View')
+  it("should have a function for updating the camera each cycle", function() {
+    expect(typeof myCamera.update).toBe('function')
   })
 
   describe("update", function() {
@@ -77,6 +79,24 @@ describe("Camera", function() {
       spyOn(glCntxt, 'useProgram')
       myCamera.update()
       expect(glCntxt.useProgram).toHaveBeenCalledWith(myCamera.shader.program)
+    })
+
+     it("should set the shaders camera vec3 up direction vector", function() {
+      spyOn(glCntxt, 'uniform3fv')
+      myCamera.update()
+      expect(glCntxt.uniform3fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraUpDir'], myCamera.up.cells)
+    })
+
+    it("should set the shaders camera vec3 up direction vector", function() {
+      spyOn(glCntxt, 'uniform3fv')
+      myCamera.update()
+      expect(glCntxt.uniform3fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraWorldPos'], myCamera.worldPos.cells)
+    })
+
+    it("should set the shaders camera vec3 up direction vector", function() {
+      spyOn(glCntxt, 'uniform3fv')
+      myCamera.update()
+      expect(glCntxt.uniform3fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraWorldPosToLookAt'], myCamera.worldPosToLookAt.cells)
     })
 
     it("should set the shaders model matrix 4x4 uniform", function() {
@@ -93,101 +113,12 @@ describe("Camera", function() {
 
     })
 
-    it("should set the shaders camera matrix 4x4 uniform", function() {
-      spyOn(glCntxt, 'uniformMatrix4fv')
-      myCamera.update()
-      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraModelMatrix'], false, myCamera.camModelMatrix.cells)
-    })
-
-    it("should set the shaders camera translation matrix 4x4 uniform", function() {
-      spyOn(glCntxt, 'uniformMatrix4fv')
-      myCamera.update()
-      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraTranslationMatrix'], false, myCamera.camTranslationMatrix.cells)
-    })
-
-    it("should set the shaders world to view matrix 4x4 uniform", function() {
-      spyOn(glCntxt, 'uniformMatrix4fv')
-      myCamera.update()
-      expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_WorldToViewMatrix'], false, myCamera.worldToViewMatrix.cells)
-    })
-
     it("should set the shaders world to view matrix 4x4 uniform", function() {
       spyOn(glCntxt, 'uniformMatrix4fv')
       myCamera.update()
       expect(glCntxt.uniformMatrix4fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, myCamera.viewToProjection.cells)
     })
-
-    it("should have a attribte for safing the view world position", function() {
-      expect(myCamera.viewWorldPos.constructor.name).toBe('Vector3')
-    })
-
-    it("should have a function for translating along the x axis in camera space", function() {
-      expect(typeof myCamera.translateViewXIncremental).toBe('function')
-    })
-
-    describe("translateViewXIncremental", function() {
-      it("add the passed distance to the world view position", function() {
-        myCamera.translateViewXIncremental(10)
-        expect(myCamera.viewWorldPos.cells).toEqual([10, 0, 0])
-      })
-
-      it("should put the new view world position in the camera translation matrix", function() {
-        myCamera.translateViewXIncremental(11)
-        expect(myCamera.camTranslationMatrix.cells[12]).toEqual(11)
-      })
-    })
-
-    it("should have a function for translating alonge the y axis in camera space", function() {
-      expect(typeof myCamera.translateViewYIncremental).toBe('function')
-    })
-
-    describe("translateViewYIncremental", function() {
-      it("add the passed distance to the world view position", function() {
-        myCamera.translateViewYIncremental(12)
-        expect(myCamera.viewWorldPos.cells).toEqual([0, 12, 0])
-      })
-
-      it("should put the new view world position in the camera translation matrix", function() {
-        myCamera.translateViewYIncremental(13)
-        expect(myCamera.camTranslationMatrix.cells[13]).toEqual(13)
-      })
-    })
-
-    it("should have a function for translating alonge the z axis in camera space", function() {
-      expect(typeof myCamera.translateViewZIncremental).toBe('function')
-    })
-
-    describe("translateViewZIncremental", function() {
-      it("add the passed distance to the world view position", function() {
-        myCamera.translateViewZIncremental(14)
-        expect(myCamera.viewWorldPos.cells).toEqual([0, 0, 14])
-      })
-
-      it("should put the new view world position in the camera translation matrix", function() {
-        myCamera.translateViewZIncremental(15)
-        expect(myCamera.camTranslationMatrix.cells[14]).toEqual(15)
-      })
-    })
   })
 
-  it("should be able to follow a renderable3d model thus it can hold a reference to such an object", function() {
-    expect(typeof myCamera.modelToFollow).toBe('object')
-    expect(myCamera.modelToFollow.follow).toEqual(false)
-    expect(myCamera.modelToFollow.model).toEqual(undefined)
-  })
-
-  it("should have a function to append a renderable, which the camera is following", function() {
-    expect(typeof myCamera.follow).toBe('function')
-  })
-
-  describe("follow", function() {
-    it("should set the modelToFollow Object", function() {
-      class Renderable {constructor() {}}
-      let tmpRenderable = new Renderable()
-      myCamera.follow(tmpRenderable)
-      expect(myCamera.modelToFollow.follow).toEqual(true)
-      expect(myCamera.modelToFollow.model).toEqual(tmpRenderable)
-    })
-  })
- 
+  
 })
