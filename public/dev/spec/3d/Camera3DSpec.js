@@ -43,16 +43,15 @@ describe("Camera", function() {
         cameraXDir = normalize(cross(u_cameraUpDir, cameraZDir));
         cameraYDir = normalize(cross(cameraZDir, cameraXDir));
 
-        worldToViewMatrix[0].xyz = cameraXDir;
-        worldToViewMatrix[1].xyz = cameraYDir;
-        worldToViewMatrix[2].xyz = cameraZDir;
+        worldToViewMatrix[0] = vec4(cameraXDir, 0);
+        worldToViewMatrix[1] = vec4(cameraYDir, 0);
+        worldToViewMatrix[2] = vec4(cameraZDir, 0);
         worldToViewMatrix[3] = vec4(u_cameraWorldPos, 1);
 
         gl_Position = u_ViewToProjectionMatrix * worldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
         v_color = a_color;
       }
     `
-
     let fragmentShaderCode = `
       precision mediump float;
 
@@ -70,6 +69,14 @@ describe("Camera", function() {
     expect(myCamera.__proto__.__proto__.constructor.name).toEqual('Renderable3D')
   })
 
+  it("should have a vector 3 for describing the world point to view at", function() {
+    expect(myCamera.worldPosToLookAt.constructor.name).toEqual('Vector3')
+  })
+
+  it("should have a vector 3 for describing the cameras up direction in world space", function() {
+    expect(myCamera.up.constructor.name).toEqual('Vector3')
+  })
+
   it("should have a function for updating the camera each cycle", function() {
     expect(typeof myCamera.update).toBe('function')
   })
@@ -81,19 +88,19 @@ describe("Camera", function() {
       expect(glCntxt.useProgram).toHaveBeenCalledWith(myCamera.shader.program)
     })
 
-     it("should set the shaders camera vec3 up direction vector", function() {
+    it("should set the shaders camera vec3 up direction vector", function() {
       spyOn(glCntxt, 'uniform3fv')
       myCamera.update()
       expect(glCntxt.uniform3fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraUpDir'], myCamera.up.cells)
     })
 
-    it("should set the shaders camera vec3 up direction vector", function() {
+    it("should set the shaders camera world position direction vector", function() {
       spyOn(glCntxt, 'uniform3fv')
       myCamera.update()
       expect(glCntxt.uniform3fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraWorldPos'], myCamera.worldPos.cells)
     })
 
-    it("should set the shaders camera vec3 up direction vector", function() {
+    it("should set the shaders camera world look at position vector", function() {
       spyOn(glCntxt, 'uniform3fv')
       myCamera.update()
       expect(glCntxt.uniform3fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraWorldPosToLookAt'], myCamera.worldPosToLookAt.cells)
