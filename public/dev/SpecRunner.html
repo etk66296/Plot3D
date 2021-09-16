@@ -107,30 +107,12 @@
           uniform mat4 u_modelMatrix;
           uniform mat4 u_modelToWorldMatrix;
           uniform mat4 u_ViewToProjectionMatrix;
-      
-          mat4 worldToViewMatrix;
-          uniform vec3 u_cameraUpDir;
-          uniform vec3 u_cameraWorldPos;
-          uniform vec3 u_cameraWorldPosToLookAt;
-
-          vec3 cameraZDir;
-          vec3 cameraYDir;
-          vec3 cameraXDir;
-
+          uniform mat4 u_worldToViewMatrix;
+        
           varying lowp vec4 v_color;
 
           void main(void) {
-            // calculate the camera direction vectors
-            cameraZDir = normalize(u_cameraWorldPos - u_cameraWorldPosToLookAt);
-            cameraXDir = normalize(cross(u_cameraUpDir, cameraZDir));
-            cameraYDir = normalize(cross(cameraZDir, cameraXDir));
-
-            worldToViewMatrix[0] = vec4(cameraXDir, 0);
-            worldToViewMatrix[1] = vec4(cameraYDir, 0);
-            worldToViewMatrix[2] = vec4(cameraZDir, 0);
-            worldToViewMatrix[3] = vec4(u_cameraWorldPos, 1);
-
-            gl_Position = u_ViewToProjectionMatrix * worldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+            gl_Position = u_ViewToProjectionMatrix * u_worldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
             v_color = a_color;
           }
         `
@@ -143,6 +125,9 @@
             gl_FragColor = v_color;
           }
         `
+
+        console.log(glCntxt.getParameter(glCntxt.VERSION))
+        console.log(glCntxt.getParameter(glCntxt.SHADING_LANGUAGE_VERSION))
 
         let myBackground = new Background(glCntxt)
         myBackground.clearColor.cells[1] = 0.9
@@ -161,6 +146,8 @@
         let kbControl = new Plot3DKeyboard()
         kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMesh)
         kbControl.imposeKeyDownWasdCtrlTo(myTriangleMesh)
+
+        // myCamera.followTheRenderable3d(myTriangleMesh)
 
         // myCamera.follow(myTriangleMesh)
         myRenderer3D.addRenderable2D(myBackground)
