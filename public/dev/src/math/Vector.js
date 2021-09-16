@@ -19,6 +19,12 @@ class Vector3 extends Vector {
     this.cells[2] = z
   }
 
+  setFromVector3(v) {
+    this.cells[0] = v.cells[0]
+    this.cells[1] = v.cells[1]
+    this.cells[2] = v.cells[2]
+  }
+
   log() {
     console.log(this.cells[0], this.cells[1], this.cells[2])
   }

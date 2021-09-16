@@ -18,39 +18,21 @@ describe("Camera", function() {
 
   beforeEach(function() {
     let vertexShaderCode = `
-      attribute vec3 a_position;
-      attribute vec3 a_normal;
-      attribute vec4 a_color;
+    attribute vec3 a_position;
+    attribute vec3 a_normal;
+    attribute vec4 a_color;
 
-      uniform mat4 u_modelMatrix;
-      uniform mat4 u_modelToWorldMatrix;
-      uniform mat4 u_ViewToProjectionMatrix;
-      
-      mat4 worldToViewMatrix;
-      uniform vec3 u_cameraUpDir;
-      uniform vec3 u_cameraWorldPos;
-      uniform vec3 u_cameraWorldPosToLookAt;
+    uniform mat4 u_modelMatrix;
+    uniform mat4 u_modelToWorldMatrix;
+    uniform mat4 u_worldToViewMatrix;
+    uniform mat4 u_ViewToProjectionMatrix;
+  
+    varying lowp vec4 v_color;
 
-      vec3 cameraZDir;
-      vec3 cameraYDir;
-      vec3 cameraXDir;
-
-      varying lowp vec4 v_color;
-
-      void main(void) {
-        // calculate the camera direction vectors
-        cameraZDir = normalize(u_cameraWorldPos - u_cameraWorldPosToLookAt);
-        cameraXDir = normalize(cross(u_cameraUpDir, cameraZDir));
-        cameraYDir = normalize(cross(cameraZDir, cameraXDir));
-
-        worldToViewMatrix[0] = vec4(cameraXDir, 0);
-        worldToViewMatrix[1] = vec4(cameraYDir, 0);
-        worldToViewMatrix[2] = vec4(cameraZDir, 0);
-        worldToViewMatrix[3] = vec4(u_cameraWorldPos, 1);
-
-        gl_Position = u_ViewToProjectionMatrix * worldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
-        v_color = a_color;
-      }
+    void main(void) {
+      gl_Position = u_ViewToProjectionMatrix * u_worldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+      v_color = a_color;
+    }
     `
     let fragmentShaderCode = `
       precision mediump float;
@@ -81,29 +63,44 @@ describe("Camera", function() {
     expect(typeof myCamera.update).toBe('function')
   })
 
+  it("should have an object for storing data of an 3d object to follow", function() {
+    expect(myCamera.traceObject.constructor.name).toEqual('Object')
+  })
+
+  describe("traceObject", function() {
+    it("should have a attribute for storing the reference to the renderable to follow", function() {
+      expect(myCamera.traceObject.refToRenderable).toEqual(null)
+    })
+
+    it("should have a boolean shifter for enable and disable follow the referenced object", function() {
+      expect(myCamera.traceObject.chaseIt).toEqual(false)
+    })
+  })
+
+  it("should have a method for setting the reference to a follow object and enabling the camera follow feature", function() {
+    expect(typeof myCamera.followTheRenderable3d).toBe('function')
+  })
+
+  describe("followTheRenderable", function() {
+    it("should safe the reference to the internal trace object attribute", function() {
+      class Renderable3D { }
+      let myRenderable3D = new Renderable3D()
+      myCamera.followTheRenderable3d(myRenderable3D)
+      expect(myCamera.traceObject.refToRenderable).toEqual(myRenderable3D)
+    })
+    it("should enable the camera to follow the object by setting the corresponding boolean", function() {
+      class Renderable3D { }
+      let myRenderable3D = new Renderable3D()
+      myCamera.followTheRenderable3d(myRenderable3D)
+      expect(myCamera.traceObject.chaseIt).toEqual(true)
+    })
+  })
+
   describe("update", function() {
     it("should call the use programm from the webgl context", function() {
       spyOn(glCntxt, 'useProgram')
       myCamera.update()
       expect(glCntxt.useProgram).toHaveBeenCalledWith(myCamera.shader.program)
-    })
-
-    it("should set the shaders camera vec3 up direction vector", function() {
-      spyOn(glCntxt, 'uniform3fv')
-      myCamera.update()
-      expect(glCntxt.uniform3fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraUpDir'], myCamera.up.cells)
-    })
-
-    it("should set the shaders camera world position direction vector", function() {
-      spyOn(glCntxt, 'uniform3fv')
-      myCamera.update()
-      expect(glCntxt.uniform3fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraWorldPos'], myCamera.worldPos.cells)
-    })
-
-    it("should set the shaders camera world look at position vector", function() {
-      spyOn(glCntxt, 'uniform3fv')
-      myCamera.update()
-      expect(glCntxt.uniform3fv).toHaveBeenCalledWith(myCamera.shader.glVertexUniformLocation['u_cameraWorldPosToLookAt'], myCamera.worldPosToLookAt.cells)
     })
 
     it("should set the shaders model matrix 4x4 uniform", function() {
