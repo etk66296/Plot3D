@@ -123,23 +123,6 @@ describe("TriangleMesh3D", function() {
     })
   })
 
-  it("should throw an error when the shader does not provide the color attribute", function() {
-    let tmpVertexShaderCode = `
-      attribute vec3 a_position;
-      attribute vec3 a_normal;
-      uniform mat4 u_modelToWorldMatrix;
-      uniform mat4 u_modelMatrix;
-      void main(void) {
-      }
-    `
-    let tmpFragmentShaderCode = `
-      void main(void) {
-      }
-    `
-    let tmpShader = myPlot3DShaderBuilder.buildShader(tmpVertexShaderCode, tmpFragmentShaderCode)
-    expect(function() { new TriangleMesh3D(glCntxt, tmpShader, math) }).toThrow()
-  })
-
   it("should throw an error when the shader does not provide the vertex position attribute", function() {
     let tmpVertexShaderCode = `
       attribute vec3 a_normal;
@@ -259,29 +242,6 @@ describe("TriangleMesh3D", function() {
       myTriangleMesh.draw()
       expect(glCntxt.vertexAttribPointer).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_normal'],
         3,
-        glCntxt.FLOAT,
-        false,
-        0,
-        0)
-    })
-
-    it("should enable color attribute array for the a_normal shader attribute", function() {
-      spyOn(glCntxt, 'enableVertexAttribArray')
-      myTriangleMesh.draw()
-      expect(glCntxt.enableVertexAttribArray).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_color'])
-    })
-
-    it("should bind buffer for the color data array", function() {
-      spyOn(glCntxt, 'bindBuffer')
-      myTriangleMesh.draw()
-      expect(glCntxt.bindBuffer).toHaveBeenCalledWith(glCntxt.ARRAY_BUFFER, myTriangleMesh.glColorBuffers[0])
-    })
-
-    it("should configure the normal attribute pointer", function() {
-      spyOn(glCntxt, 'vertexAttribPointer')
-      myTriangleMesh.draw()
-      expect(glCntxt.vertexAttribPointer).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_color'],
-        4,
         glCntxt.FLOAT,
         false,
         0,

@@ -20,13 +20,14 @@ class TriangleMesh3D extends Renderable3D {
         indices: [
           0,1,2,
           0,2,3
-        ],
-        colors: [
-          0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
-          0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
-          0.04400941729545593, 0.8000000715255737, 0.014428908936679363, 1,
-          0.04400941729545593, 0.8000000715255737, 0.014428908936679363, 1
         ]
+        // ,
+        // colors: [
+        //   0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
+        //   0.8000000715255737, 0.04400941729545593, 0.014428908936679363, 1,
+        //   0.04400941729545593, 0.8000000715255737, 0.014428908936679363, 1,
+        //   0.04400941729545593, 0.8000000715255737, 0.014428908936679363, 1
+        // ]
       },
       {
         vertices: [
@@ -44,13 +45,14 @@ class TriangleMesh3D extends Renderable3D {
         indices: [
           0,1,2,
           0,2,3
-        ],
-        colors: [
-          0.8000000715255737, 0.04400941729545593, 0.814428908936679363, 1,
-          0.8000000715255737, 0.04400941729545593, 0.814428908936679363, 1,
-          0.64400941729545593, 0.8000000715255737, 0.014428908936679363, 1,
-          0.64400941729545593, 0.8000000715255737, 0.014428908936679363, 1
         ]
+        // ,
+        // colors: [
+        //   0.8000000715255737, 0.04400941729545593, 0.814428908936679363, 1,
+        //   0.8000000715255737, 0.04400941729545593, 0.814428908936679363, 1,
+        //   0.64400941729545593, 0.8000000715255737, 0.014428908936679363, 1,
+        //   0.64400941729545593, 0.8000000715255737, 0.014428908936679363, 1
+        // ]
       }
     ] 
   ) {
@@ -124,29 +126,29 @@ class TriangleMesh3D extends Renderable3D {
         glCntxt.STATIC_DRAW
       )
 
-      this.glColorBuffers.push(this.glCntxt.createBuffer())
-      this.glCntxt.bindBuffer(
-        this.glCntxt.ARRAY_BUFFER,
-        this.glColorBuffers[this.glColorBuffers.length -1]
-      )
-      this.primitivesColors.push(
-        (primitiveData.indices.constructor.name === 'Float32Array') ?
-          primitiveData.colors :
-            new Float32Array(primitiveData.colors))
-      this.glCntxt.bufferData(
-        glCntxt.ARRAY_BUFFER,
-        this.primitivesColors[this.primitivesColors.length -1],
-        glCntxt.STATIC_DRAW
-      )
+      // this.glColorBuffers.push(this.glCntxt.createBuffer())
+      // this.glCntxt.bindBuffer(
+      //   this.glCntxt.ARRAY_BUFFER,
+      //   this.glColorBuffers[this.glColorBuffers.length -1]
+      // )
+      // this.primitivesColors.push(
+      //   (primitiveData.indices.constructor.name === 'Float32Array') ?
+      //     primitiveData.colors :
+      //       new Float32Array(primitiveData.colors))
+      // this.glCntxt.bufferData(
+      //   glCntxt.ARRAY_BUFFER,
+      //   this.primitivesColors[this.primitivesColors.length -1],
+      //   glCntxt.STATIC_DRAW
+      // )
     })
 
     if(this.shader.glAttrLocation['a_normal'] === undefined) {
       throw new this.exceptions.ShaderAttributeNotFound('shader does not provide the attribute a_normal')
     }
 
-    if(this.shader.glAttrLocation['a_color'] === undefined) {
-      throw new this.exceptions.ShaderAttributeNotFound('shader does not provide the attribute a_color')
-    }
+    // if(this.shader.glAttrLocation['a_color'] === undefined) {
+    //   throw new this.exceptions.ShaderAttributeNotFound('shader does not provide the attribute a_color')
+    // }
 
     if(this.shader.glAttrLocation['a_position'] === undefined) {
       throw new this.exceptions.ShaderAttributeNotFound('shader does not provide the attribute a_position')
@@ -184,16 +186,16 @@ class TriangleMesh3D extends Renderable3D {
         0
       )
           
-      this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_color'])
-      this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorBuffers[primitiveIndex])
-      this.glCntxt.vertexAttribPointer(
-        this.shader.glAttrLocation['a_color'],
-        4,
-        this.glCntxt.FLOAT,
-        false,
-        0,
-        0
-      )
+      // this.glCntxt.enableVertexAttribArray(this.shader.glAttrLocation['a_color'])
+      // this.glCntxt.bindBuffer(this.glCntxt.ARRAY_BUFFER, this.glColorBuffers[primitiveIndex])
+      // this.glCntxt.vertexAttribPointer(
+      //   this.shader.glAttrLocation['a_color'],
+      //   4,
+      //   this.glCntxt.FLOAT,
+      //   false,
+      //   0,
+      //   0
+      // )
 
       this.glCntxt.bindBuffer(this.glCntxt.ELEMENT_ARRAY_BUFFER, this.glIndicesBuffers[primitiveIndex])
       let vertexCount = this.primitivesIndices[primitiveIndex].length
