@@ -145,7 +145,9 @@
         let myRenderer3D = new Renderer3D()
         let kbControl = new Plot3DKeyboard()
         kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMesh)
+        // kbControl.imposeKeyDownArrowFlyCtrlTo(myCamera)
         kbControl.imposeKeyDownWasdCtrlTo(myTriangleMesh)
+        // kbControl.imposeKeyDownWasdCtrlTo(myCamera)
 
         // myCamera.followTheRenderable3d(myTriangleMesh)
 
@@ -154,24 +156,24 @@
         myRenderer3D.addRenderable3D(myCamera)
         myRenderer3D.addRenderable3D(myTriangleMesh)
         myRenderer3D.addRenderable3D(myTriangleMeshB)
-        let xDir = 1
+        let zDir = 1
         setInterval(() => {
           
-          if (myCamera.worldPosToLookAt.cells[0] < -3) {
-            xDir = 1
+          if (myCamera.worldPosToLookAt.cells[2] < -3) {
+            zDir = 1
           } 
-          if (myCamera.worldPosToLookAt.cells[0] > 3) {
-            xDir = -1
+          if (myCamera.worldPosToLookAt.cells[2] > 3) {
+            zDir = -1
           }
-          myCamera.worldPosToLookAt.cells[0] += (0.1 * xDir)
+          myCamera.worldPosToLookAt.cells[2] += (0.1 * zDir)
   
-          if (myCamera.worldPos.cells[0] < -3) {
-            xDir = 1
+          if (myCamera.worldPos.cells[2] < -3) {
+            zDir = 1
           } 
-          if (myCamera.worldPos.cells[0] > 3) {
-            xDir = -1
+          if (myCamera.worldPos.cells[2] > 3) {
+            zDir = -1
           }
-          myCamera.worldPos.cells[0] += (0.1 * xDir)
+          myCamera.worldPos.cells[2] += (0.1 * zDir)
 
           kbControl.update()
           myRenderer3D.process()

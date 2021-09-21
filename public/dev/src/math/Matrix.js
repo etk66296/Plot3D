@@ -230,6 +230,75 @@ class Matrix4x4 extends Matrix {
     this.cells[14] = 0
     this.cells[15] = 1
   }
+
+  appendXRotationToM4X4(angleInRad) {
+    let s = Math.sin(angleInRad)
+    let c = Math.cos(angleInRad)  
+    let a10 = this.cells[4]
+    let a11 = this.cells[5]
+    let a12 = this.cells[6]
+    let a13 = this.cells[7]
+    let a20 = this.cells[8]
+    let a21 = this.cells[9]
+    let a22 = this.cells[10]
+    let a23 = this.cells[11]
+  
+    this.cells[4] = a10 * c + a20 * s
+    this.cells[5] = a11 * c + a21 * s
+    this.cells[6] = a12 * c + a22 * s
+    this.cells[7] = a13 * c + a23 * s
+    this.cells[8] = a20 * c - a10 * s
+    this.cells[9] = a21 * c - a11 * s
+    this.cells[10] = a22 * c - a12 * s
+    this.cells[11] = a23 * c - a13 * s
+  }
+
+  appendYRotationToM4X4(angleInRad) {
+    let s = Math.sin(angleInRad)
+    let c = Math.cos(angleInRad)
+  
+    let a00 = this.cells[0]
+    let a01 = this.cells[1]
+    let a02 = this.cells[2]
+    let a03 = this.cells[3]
+    let a20 = this.cells[8]
+    let a21 = this.cells[9]
+    let a22 = this.cells[10]
+    let a23 = this.cells[11]
+
+    this.cells[0] = a00 * c - a20 * s  
+    this.cells[1] = a01 * c - a21 * s
+    this.cells[2] = a02 * c - a22 * s
+    this.cells[3] = a03 * c - a23 * s
+    this.cells[8] = a00 * s + a20 * c
+    this.cells[9] = a01 * s + a21 * c
+    this.cells[10] = a02 * s + a22 * c
+    this.cells[11] = a03 * s + a23 * c
+  }
+
+  appendZRotationToM4X4(angleInRad) {
+    let s = Math.sin(angleInRad)
+    let c = Math.cos(angleInRad)
+  
+    let a00 = this.cells[0]
+    let a01 = this.cells[1]
+    let a02 = this.cells[2]
+    let a03 = this.cells[3]
+    let a10 = this.cells[4]
+    let a11 = this.cells[5]
+    let a12 = this.cells[6]
+    let a13 = this.cells[7]
+
+    this.cells[0] = a00 * c + a10 * s
+    this.cells[1] = a01 * c + a11 * s
+    this.cells[2] = a02 * c + a12 * s
+    this.cells[3] = a03 * c + a13 * s
+    this.cells[4] = a10 * c - a00 * s
+    this.cells[5] = a11 * c - a01 * s
+    this.cells[6] = a12 * c - a02 * s
+    this.cells[7] = a13 * c - a03 * s
+  }
+
   
 }
 
@@ -280,71 +349,101 @@ class Matrix4x4Projection extends Matrix4x4 {
 class Matrix4x4View extends Matrix4x4 {
   constructor(worldPosition, pointToLookAt, upDirection) {
     super()
+    this.x0 = 0
+    this.x1 = 0
+    this.x2 = 0
+    this.y0 = 0
+    this.y1 = 0
+    this.y2 = 0
+    this.z0 = 0
+    this.z1 = 0
+    this.z2 = 0
     this.setCellsLookAtFromWorldPosition(worldPosition, pointToLookAt, upDirection)
   }
 
   setCellsLookAtFromWorldPosition(worldPosition, pointToLookAt, upDirection) {
-    let x0, x1, x2, y0, y1, y2, len
-    let z0 = worldPosition.cells[0] - pointToLookAt.cells[0]
-    let z1 = worldPosition.cells[1] - pointToLookAt.cells[1]
-    let z2 = worldPosition.cells[2] - pointToLookAt.cells[2]
-    let xToClose = Math.abs(z0) < this.EPSILON
-    let yToClose = Math.abs(z1) < this.EPSILON
-    let zToClose = Math.abs(z2) < this.EPSILON
-      Math.abs(z1) < this.EPSILON &&
-      Math.abs(z0) < this.EPSILON
+    let len
+    this.z0 = worldPosition.cells[0] - pointToLookAt.cells[0]
+    this.z1 = worldPosition.cells[1] - pointToLookAt.cells[1]
+    this.z2 = worldPosition.cells[2] - pointToLookAt.cells[2]
+    let xToClose = Math.abs(this.z0) < this.EPSILON
+    let yToClose = Math.abs(this.z1) < this.EPSILON
+    let zToClose = Math.abs(this.z2) < this.EPSILON
     if (xToClose && yToClose && zToClose) {
       return this.reset()
     }
-    len = 1 / Math.hypot(z0, z1, z2)
-    z0 *= len
-    z1 *= len
-    z2 *= len
-    x0 = upDirection.cells[1] * z2 - upDirection.cells[2] * z1
-    x1 = upDirection.cells[2] * z0 - upDirection.cells[0] * z2
-    x2 = upDirection.cells[0] * z1 - upDirection.cells[1] * z0
-    len = Math.hypot(x0, x1, x2)
+    len = 1 / Math.hypot(this.z0, this.z1, this.z2)
+    this.z0 *= len
+    this.z1 *= len
+    this.z2 *= len
+    this.x0 = upDirection.cells[1] * this.z2 - upDirection.cells[2] * this.z1
+    this.x1 = upDirection.cells[2] * this.z0 - upDirection.cells[0] * this.z2
+    this.x2 = upDirection.cells[0] * this.z1 - upDirection.cells[1] * this.z0
+    len = Math.hypot(this.x0, this.x1, this.x2)
     if (!len) {
-      x0 = 0
-      x1 = 0
-      x2 = 0
+      this.x0 = 0
+      this.x1 = 0
+      this.x2 = 0
     } else {
       len = 1 / len
-      x0 *= len
-      x1 *= len
-      x2 *= len
+      this.x0 *= len
+      this.x1 *= len
+      this.x2 *= len
     }
-    y0 = z1 * x2 - z2 * x1
-    y1 = z2 * x0 - z0 * x2
-    y2 = z0 * x1 - z1 * x0
-    len = Math.hypot(y0, y1, y2)
+    this.y0 = this.z1 * this.x2 - this.z2 * this.x1
+    this.y1 = this.z2 * this.x0 - this.z0 * this.x2
+    this.y2 = this.z0 * this.x1 - this.z1 * this.x0
+    len = Math.hypot(this.y0, this.y1, this.y2)
     if (!len) {
-      y0 = 0
-      y1 = 0
-      y2 = 0
+      this.y0 = 0
+      this.y1 = 0
+      this.y2 = 0
     } else {
       len = 1 / len
-      y0 *= len
-      y1 *= len
-      y2 *= len
+      this.y0 *= len
+      this.y1 *= len
+      this.y2 *= len
     }
-    this.cells[0] = x0
-    this.cells[1] = y0
-    this.cells[2] = z0
+    this.cells[0] = this.x0
+    this.cells[1] = this.y0
+    this.cells[2] = this.z0
     this.cells[3] = 0
-    this.cells[4] = x1
-    this.cells[5] = y1
-    this.cells[6] = z1
+    this.cells[4] = this.x1
+    this.cells[5] = this.y1
+    this.cells[6] = this.z1
     this.cells[7] = 0
-    this.cells[8] = x2
-    this.cells[9] = y2
-    this.cells[10] = z2
+    this.cells[8] = this.x2
+    this.cells[9] = this.y2
+    this.cells[10] = this.z2
     this.cells[11] = 0
-    this.cells[12] = -(x0 * worldPosition.cells[0] + x1 * worldPosition.cells[1] + x2 * worldPosition.cells[2])
-    this.cells[13] = -(y0 * worldPosition.cells[0] + y1 * worldPosition.cells[1] + y2 * worldPosition.cells[2])
-    this.cells[14] = -(z0 * worldPosition.cells[0] + z1 * worldPosition.cells[1] + z2 * worldPosition.cells[2])
+    this.cells[12] = -(this.x0 * worldPosition.cells[0] + this.x1 * worldPosition.cells[1] + this.x2 * worldPosition.cells[2])
+    this.cells[13] = -(this.y0 * worldPosition.cells[0] + this.y1 * worldPosition.cells[1] + this.y2 * worldPosition.cells[2])
+    this.cells[14] = -(this.z0 * worldPosition.cells[0] + this.z1 * worldPosition.cells[1] + this.z2 * worldPosition.cells[2])
     this.cells[15] = 1
+    this.invert()
+    return this
   }
+
+  // setWorldPosition(worldPosition) {
+  //   this.cells[0] = this.x0
+  //   this.cells[1] = this.y0
+  //   this.cells[2] = this.z0
+  //   this.cells[3] = 0
+  //   this.cells[4] = this.x1
+  //   this.cells[5] = this.y1
+  //   this.cells[6] = this.z1
+  //   this.cells[7] = 0
+  //   this.cells[8] = this.x2
+  //   this.cells[9] = this.y2
+  //   this.cells[10] = this.z2
+  //   this.cells[11] = 0
+  //   this.cells[12] = -(this.x0 * worldPosition.cells[0] + this.x1 * worldPosition.cells[1] + this.x2 * worldPosition.cells[2])
+  //   this.cells[13] = -(this.y0 * worldPosition.cells[0] + this.y1 * worldPosition.cells[1] + this.y2 * worldPosition.cells[2])
+  //   this.cells[14] = -(this.z0 * worldPosition.cells[0] + this.z1 * worldPosition.cells[1] + this.z2 * worldPosition.cells[2])
+  //   this.invert()
+  //   return this
+  // }
+
 }
 
 class Matrix4x4Math {
