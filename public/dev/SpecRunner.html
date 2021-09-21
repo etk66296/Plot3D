@@ -66,7 +66,7 @@
   <script src="spec/3d/Renderer3DSpec.js"></script>
   <script src="spec/3d/Renderable3DSpec.js"></script>
   <script src="spec/3d/TriangleMesh3DSpec.js"></script>
-  <script src="spec/3d/ColoredMesh3DSpec.js"></script>
+  <script src="spec/3d/ColoredTriangleMesh3DSpec.js"></script>
   <script src="spec/3d/TexturedTriangleMesh3DSpec.js"></script>
   <script src="spec/3d/Camera3DSpec.js"></script>
   <script src="spec/3d/MeshFactory3DSpec.js"></script>
@@ -140,8 +140,8 @@
         myCamera.worldPos.cells = [ 0, 0, 0 ]
         myCamera.worldPosToLookAt.cells = [ 0, 0, -3 ]
         myCamera.up.cells = [ 0, 1, 0 ]
-        let myTriangleMesh = new TriangleMesh3D(glCntxt, shader, math)
-        myTriangleMeshB = new TriangleMesh3D(glCntxt, shader, math)
+        let myTriangleMesh = new ColoredTriangleMesh3D(glCntxt, shader, math)
+        let myTriangleMeshB = new ColoredTriangleMesh3D(glCntxt, shader, math)
         myTriangleMesh.translateZIncremental(-3)
         myTriangleMeshB.translateZIncremental(-3)
         myTriangleMesh.translateXIncremental(-3)
@@ -155,29 +155,69 @@
 
         // myCamera.followTheRenderable3d(myTriangleMesh)
 
+        
+
         // myCamera.follow(myTriangleMesh)
         myRenderer3D.addRenderable2D(myBackground)
         myRenderer3D.addRenderable3D(myCamera)
         myRenderer3D.addRenderable3D(myTriangleMesh)
         myRenderer3D.addRenderable3D(myTriangleMeshB)
+
+        let myTriangleMeshC = undefined
+        let myLoader = new Plot3DGlTfLoader(glCntxt)
+        let meshData = []
+        myLoader.requestGlTf('http://localhost:9999/dev/spec/assets/mesh3d/cube.gltf').then(() => {
+          myLoader.loaded[0].meshes.forEach(mesh => {
+            mesh.primitives.forEach(primitive => {
+              meshData.push({
+                  vertices: [],
+                  normals: [],
+                  indices: [],
+                  colors: []
+                }
+              )
+              let verticeIndex = primitive.attributes.POSITION
+              let normalsIndex = primitive.attributes.NORMAL
+              let indicesIndex = primitive.indices
+              let colorIndex = primitive.material
+              myLoader.loaded[0].bufferViews[verticeIndex].cells.forEach(cell => { meshData[meshData.length - 1].vertices.push(cell) })
+              myLoader.loaded[0].bufferViews[normalsIndex].cells.forEach(cell => { meshData[meshData.length - 1].normals.push(cell) })
+              myLoader.loaded[0].bufferViews[indicesIndex].cells.forEach(cell => { meshData[meshData.length - 1].indices.push(cell) })
+              for (let i = 0; i < myLoader.loaded[0].bufferViews[indicesIndex].cells.length; i++) {
+                meshData[meshData.length - 1].colors.push(myLoader.loaded[0].materials[colorIndex].pbrMetallicRoughness.baseColorFactor[0])
+                meshData[meshData.length - 1].colors.push(myLoader.loaded[0].materials[colorIndex].pbrMetallicRoughness.baseColorFactor[1])
+                meshData[meshData.length - 1].colors.push(myLoader.loaded[0].materials[colorIndex].pbrMetallicRoughness.baseColorFactor[2])
+                meshData[meshData.length - 1].colors.push(myLoader.loaded[0].materials[colorIndex].pbrMetallicRoughness.baseColorFactor[3])
+              }
+            })
+          })
+          myTriangleMeshC = new ColoredTriangleMesh3D(glCntxt, shader, math, meshData)
+          myTriangleMeshC.translateZIncremental(-4)
+          myRenderer3D.addRenderable3D(myTriangleMeshC)
+        })
+
         let zDir = 1
         setInterval(() => {
-          
-          if (myCamera.worldPosToLookAt.cells[2] < -3) {
-            zDir = 1
-          } 
-          if (myCamera.worldPosToLookAt.cells[2] > 3) {
-            zDir = -1
+          if (myTriangleMeshC != undefined) {
+            myTriangleMeshC.rotateXIncremental(0.01)
+            myTriangleMeshC.rotateYIncremental(0.01)
+            myTriangleMeshC.rotateZIncremental(0.01)
           }
-          myCamera.worldPosToLookAt.cells[2] += (0.1 * zDir)
+          // if (myCamera.worldPosToLookAt.cells[2] < -3) {
+          //   zDir = 1
+          // } 
+          // if (myCamera.worldPosToLookAt.cells[2] > 3) {
+          //   zDir = -1
+          // }
+          // myCamera.worldPosToLookAt.cells[2] += (0.1 * zDir)
   
-          if (myCamera.worldPos.cells[2] < -3) {
-            zDir = 1
-          } 
-          if (myCamera.worldPos.cells[2] > 3) {
-            zDir = -1
-          }
-          myCamera.worldPos.cells[2] += (0.1 * zDir)
+          // if (myCamera.worldPos.cells[2] < -3) {
+          //   zDir = 1
+          // } 
+          // if (myCamera.worldPos.cells[2] > 3) {
+          //   zDir = -1
+          // }
+          // myCamera.worldPos.cells[2] += (0.1 * zDir)
 
           kbControl.update()
           myRenderer3D.process()

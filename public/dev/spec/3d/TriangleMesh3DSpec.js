@@ -111,17 +111,6 @@ describe("TriangleMesh3D", function() {
     })
   })
 
-  it("should have a list of web gl buffer objects for the color buffers", function() {
-    myTriangleMesh.glColorBuffers.forEach((buffer) => {
-      expect(buffer.constructor.name).toEqual('WebGLBuffer')
-    })
-  })
-
-  it("should have a list of arrays for the indices data", function() {
-    myTriangleMesh.primitivesColors.forEach((colors) => {
-      expect(colors.constructor.name).toEqual('Float32Array')
-    })
-  })
 
   it("should throw an error when the shader does not provide the vertex position attribute", function() {
     let tmpVertexShaderCode = `

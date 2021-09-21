@@ -54,39 +54,51 @@ describe("ColoredTriangleMesh3D", function() {
     expect(myColoredTriangleMesh.__proto__.__proto__.constructor.name).toEqual('TriangleMesh3D')
   })
 
-  // it("should configure the color attribute pointer", function() {
-  //   spyOn(glCntxt, 'vertexAttribPointer')
-  //   myTriangleMesh.draw()
-  //   expect(glCntxt.vertexAttribPointer).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_color'],
-  //     4,
-  //     glCntxt.FLOAT,
-  //     false,
-  //     0,
-  //     0)
-  // })
+  it("should configure the color attribute pointer", function() {
+    spyOn(glCntxt, 'vertexAttribPointer')
+    myColoredTriangleMesh.draw()
+    expect(glCntxt.vertexAttribPointer).toHaveBeenCalledWith(myColoredTriangleMesh.shader.glAttrLocation['a_color'],
+      4,
+      glCntxt.FLOAT,
+      false,
+      0,
+      0)
+  })
 
-  // it("should throw an error when the shader does not provide the color attribute", function() {
-  //   let tmpVertexShaderCode = `
-  //     attribute vec3 a_position;
-  //     attribute vec3 a_normal;
-  //     uniform mat4 u_modelToWorldMatrix;
-  //     uniform mat4 u_modelMatrix;
-  //     void main(void) {
-  //     }
-  //   `
-  //   let tmpFragmentShaderCode = `
-  //     void main(void) {
-  //     }
-  //   `
-  //   let tmpShader = myPlot3DShaderBuilder.buildShader(tmpVertexShaderCode, tmpFragmentShaderCode)
-  //   expect(function() { new TriangleMesh3D(glCntxt, tmpShader, math) }).toThrow()
-  // })
+  it("should throw an error when the shader does not provide the color attribute", function() {
+    let tmpVertexShaderCode = `
+      attribute vec3 a_position;
+      attribute vec3 a_normal;
+      uniform mat4 u_modelToWorldMatrix;
+      uniform mat4 u_modelMatrix;
+      void main(void) {
+      }
+    `
+    let tmpFragmentShaderCode = `
+      void main(void) {
+      }
+    `
+    let tmpShader = myPlot3DShaderBuilder.buildShader(tmpVertexShaderCode, tmpFragmentShaderCode)
+    expect(function() { new ColoredTriangleMesh(glCntxt, tmpShader, math) }).toThrow()
+  })
 
-  // it("should enable color attribute array for the a_normal shader attribute", function() {
-  //   spyOn(glCntxt, 'enableVertexAttribArray')
-  //   myTriangleMesh.draw()
-  //   expect(glCntxt.enableVertexAttribArray).toHaveBeenCalledWith(myTriangleMesh.shader.glAttrLocation['a_color'])
-  // })
+  it("should enable color attribute array for the a_normal shader attribute", function() {
+    spyOn(glCntxt, 'enableVertexAttribArray')
+    myColoredTriangleMesh.draw()
+    expect(glCntxt.enableVertexAttribArray).toHaveBeenCalledWith(myColoredTriangleMesh.shader.glAttrLocation['a_color'])
+  })
+
+  it("should have a list of web gl buffer objects for the color buffers", function() {
+    myColoredTriangleMesh.glColorBuffers.forEach((buffer) => {
+      expect(buffer.constructor.name).toEqual('WebGLBuffer')
+    })
+  })
+
+  it("should have a list of arrays for the colors data", function() {
+    myColoredTriangleMesh.primitivesColors.forEach((colors) => {
+      expect(colors.constructor.name).toEqual('Float32Array')
+    })
+  })
 
 
 })
