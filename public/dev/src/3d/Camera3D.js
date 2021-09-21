@@ -14,6 +14,8 @@ class Camera3D extends Renderable3D {
       chaseIt: false
     }
 
+    this.xAngle = 0
+
   }
 
   followTheRenderable3d(renderable3d) {
@@ -25,15 +27,16 @@ class Camera3D extends Renderable3D {
     this.glCntxt.useProgram(this.shader.program)
 
     if(this.traceObject.chaseIt) {
-      this.worldPosToLookAt.setFromVector3(this.traceObject.refToRenderable.worldPos)
+      // this.worldPosToLookAt.setFromVector3(this.traceObject.refToRenderable.worldPos)
 
     } else {
       this.worldToViewMatrix.setCellsLookAtFromWorldPosition(this.worldPos, this.worldPosToLookAt, this.up)
+      // this.worldToViewMatrix.setWorldPosition(this.worldPos)
     }
     
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelMatrix'], false, this.modelMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_modelToWorldMatrix'], false, this.modelToWorldMatrix.cells)
-    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_worldToViewMatrix'], false, this.worldToViewMatrix.invert().cells)
+    this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_worldToViewMatrix'], false, this.worldToViewMatrix.cells)
     this.glCntxt.uniformMatrix4fv(this.shader.glVertexUniformLocation['u_ViewToProjectionMatrix'], false, this.viewToProjection.cells)
   }
 
