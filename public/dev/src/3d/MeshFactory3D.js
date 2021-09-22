@@ -38,5 +38,28 @@ class MeshFactory3D extends Plot3DFactory{
     return new ColoredTriangleMesh3D(this.glCntxt, this.shader, this.math, meshData)
   }
 
+  produceATexturedTriangleMesh3DFrom(loadedData) {
+    let meshData = []
+    loadedData.meshes.forEach(mesh => {
+      mesh.primitives.forEach(primitive => {
+        meshData.push({
+            vertices: [],
+            normals: [],
+            indices: []
+          }
+        )
+        let verticeIndex = primitive.attributes.POSITION
+        let normalsIndex = primitive.attributes.NORMAL
+        let indicesIndex = primitive.indices
+        
+        loadedData.bufferViews[verticeIndex].cells.forEach(cell => { meshData[meshData.length - 1].vertices.push(cell) })
+        loadedData.bufferViews[normalsIndex].cells.forEach(cell => { meshData[meshData.length - 1].normals.push(cell) })
+        loadedData.bufferViews[indicesIndex].cells.forEach(cell => { meshData[meshData.length - 1].indices.push(cell) })
+        
+      })
+    })
+    return new TexturedTriangleMesh3D(this.glCntxt, this.shader, this.math, meshData)
+  }
+
  
 }

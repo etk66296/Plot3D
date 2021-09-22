@@ -164,16 +164,25 @@
         myRenderer3D.addRenderable3D(myTriangleMeshB)
 
         let myTriangleMeshC = undefined
+        let myTriangleMeshD = undefined
         let myLoader = new Plot3DGlTfLoader(glCntxt)
         let myMeshFactory = new MeshFactory3D(glCntxt, shader, math)
         // let meshData = []
-        myLoader.requestGlTf('http://localhost:9999/dev/spec/assets/mesh3d/cube.gltf').then(() => {
+        myLoader.requestGlTf('./spec/assets/mesh3d/cube.gltf').then(() => {
           myTriangleMeshC = myMeshFactory.produceAColoredTriangleMesh3DFrom(myLoader.loaded[0])
-          myTriangleMeshC.translateZIncremental(-2)
+          myTriangleMeshC.translateZIncremental(-3)
           myRenderer3D.addRenderable3D(myTriangleMeshC)
-          kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMeshC)
-          kbControl.imposeKeyDownWasdCtrlTo(myTriangleMeshC)
+
+          myLoader.requestGlTf('./spec/assets/mesh3d/texturedCube.gltf').then(() => {
+              myTriangleMeshD = myMeshFactory.produceATexturedTriangleMesh3DFrom(myLoader.loaded[1])
+              myTriangleMeshD.translateZIncremental(-2)
+              myRenderer3D.addRenderable3D(myTriangleMeshD)
+              kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMeshD)
+              kbControl.imposeKeyDownWasdCtrlTo(myTriangleMeshD)
+          })
         })
+
+        
 
         let zDir = 1
         setInterval(() => {

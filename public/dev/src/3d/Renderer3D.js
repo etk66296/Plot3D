@@ -35,7 +35,8 @@ class Renderer3D extends Renderer {
         drawing.draw()
       } else if (
         drawing.constructor.name === 'TriangleMesh3D' ||
-        drawing.constructor.name === 'ColoredTriangleMesh3D') {
+        drawing.constructor.name === 'ColoredTriangleMesh3D' ||
+        drawing.constructor.name === 'TexturedTriangleMesh3D') {
         if (drawing.isActive) {
           drawing.update()
           drawing.draw()
@@ -53,7 +54,8 @@ class Renderer3D extends Renderer {
       this.renderables.cameras.push(this.activeCamera)
     } else if (
         objectIsInstanceOf === 'TriangleMesh3D' ||
-        objectIsInstanceOf === 'ColoredTriangleMesh3D'
+        objectIsInstanceOf === 'ColoredTriangleMesh3D' ||
+        objectIsInstanceOf === 'TexturedTriangleMesh3D'
       ) {
       this.renderables.drawings.push(renderable3dObj)
     } else {

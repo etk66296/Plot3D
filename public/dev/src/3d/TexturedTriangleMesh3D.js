@@ -3,17 +3,18 @@ class TexturedTriangleMesh3D extends TriangleMesh3D {
     glCntxt,
     shader,
     math,
+    meshData
   ) {
-    super(glCntxt, shader, math)
+    super(glCntxt, shader, math, meshData)
 
   }
 
 
   update() {
-    
+    super.update()
   }
 
   draw() {
-    
+    super.draw()
   }
 }
