@@ -71,8 +71,24 @@ describe("Plot3DFactory", function() {
     })
   })
 
-  it("should have a instance of Plot3DGlTfLoader", function() {
-    expect(myMeshFactory3D.loaders.gltf.constructor.name).toEqual('Plot3DGlTfLoader')
+  it("should have a function for producing Colored Triangle Meshes out of loaded gltf data", function() {
+    // Mesh data composition:
+    // meshData = [
+    //   {
+    //     vertices: [..],
+    //     normals: [..],
+    //     indices: [..],
+    //     colors: [..]
+    //   },
+    //   {
+    //     vertices: [..],
+    //     normals: [..],
+    //     indices: [..],
+    //     colors: [..]
+    //   },
+    //   ..
+    // ]
+    expect(typeof myMeshFactory3D.produceAColoredTriangleMesh3DFrom).toEqual('function')
   })
 
 

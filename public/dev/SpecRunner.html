@@ -148,9 +148,9 @@
         myTriangleMeshB.translateXIncremental(3)
         let myRenderer3D = new Renderer3D()
         let kbControl = new Plot3DKeyboard()
-        kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMesh)
+        // kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMesh)
         // kbControl.imposeKeyDownArrowFlyCtrlTo(myCamera)
-        kbControl.imposeKeyDownWasdCtrlTo(myTriangleMesh)
+        // kbControl.imposeKeyDownWasdCtrlTo(myTriangleMesh)
         // kbControl.imposeKeyDownWasdCtrlTo(myCamera)
 
         // myCamera.followTheRenderable3d(myTriangleMesh)
@@ -165,35 +165,14 @@
 
         let myTriangleMeshC = undefined
         let myLoader = new Plot3DGlTfLoader(glCntxt)
-        let meshData = []
+        let myMeshFactory = new MeshFactory3D(glCntxt, shader, math)
+        // let meshData = []
         myLoader.requestGlTf('http://localhost:9999/dev/spec/assets/mesh3d/cube.gltf').then(() => {
-          myLoader.loaded[0].meshes.forEach(mesh => {
-            mesh.primitives.forEach(primitive => {
-              meshData.push({
-                  vertices: [],
-                  normals: [],
-                  indices: [],
-                  colors: []
-                }
-              )
-              let verticeIndex = primitive.attributes.POSITION
-              let normalsIndex = primitive.attributes.NORMAL
-              let indicesIndex = primitive.indices
-              let colorIndex = primitive.material
-              myLoader.loaded[0].bufferViews[verticeIndex].cells.forEach(cell => { meshData[meshData.length - 1].vertices.push(cell) })
-              myLoader.loaded[0].bufferViews[normalsIndex].cells.forEach(cell => { meshData[meshData.length - 1].normals.push(cell) })
-              myLoader.loaded[0].bufferViews[indicesIndex].cells.forEach(cell => { meshData[meshData.length - 1].indices.push(cell) })
-              for (let i = 0; i < myLoader.loaded[0].bufferViews[indicesIndex].cells.length; i++) {
-                meshData[meshData.length - 1].colors.push(myLoader.loaded[0].materials[colorIndex].pbrMetallicRoughness.baseColorFactor[0])
-                meshData[meshData.length - 1].colors.push(myLoader.loaded[0].materials[colorIndex].pbrMetallicRoughness.baseColorFactor[1])
-                meshData[meshData.length - 1].colors.push(myLoader.loaded[0].materials[colorIndex].pbrMetallicRoughness.baseColorFactor[2])
-                meshData[meshData.length - 1].colors.push(myLoader.loaded[0].materials[colorIndex].pbrMetallicRoughness.baseColorFactor[3])
-              }
-            })
-          })
-          myTriangleMeshC = new ColoredTriangleMesh3D(glCntxt, shader, math, meshData)
-          myTriangleMeshC.translateZIncremental(-4)
+          myTriangleMeshC = myMeshFactory.produceAColoredTriangleMesh3DFrom(myLoader.loaded[0])
+          myTriangleMeshC.translateZIncremental(-2)
           myRenderer3D.addRenderable3D(myTriangleMeshC)
+          kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMeshC)
+          kbControl.imposeKeyDownWasdCtrlTo(myTriangleMeshC)
         })
 
         let zDir = 1
