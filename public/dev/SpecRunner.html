@@ -92,17 +92,19 @@
           }
         }, false)
 
-        let canvas = document.getElementById("renderCanvas2")
-        let glCntxt = canvas.getContext("webgl2")
-        // glCntxt.enable(glCntxt.CULL_FACE)
-        // glCntxt.cullFace(glCntxt.FRONT_AND_BACK)
-        glCntxt.cullFace(glCntxt.BACK)
-        glCntxt.enable(glCntxt.DEPTH_TEST)
+
+        // canvas 2 ////////////////////////////////////////
+        let canvas2 = document.getElementById("renderCanvas2")
+        let glCntxt2 = canvas2.getContext("webgl2")
+        // glCntxt2.enable(glCntxt2.CULL_FACE)
+        // glCntxt2.cullFace(glCntxt2.FRONT_AND_BACK)
+        glCntxt2.cullFace(glCntxt2.BACK)
+        glCntxt2.enable(glCntxt2.DEPTH_TEST)
         let math = {
           vector3: new Vector3Math(),
           matrix4x4: new Matrix4x4Math()
         }
-        let myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt)
+        let myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt2)
         let vertexShaderCode = `
           attribute vec3 a_position;
           attribute vec3 a_normal;
@@ -130,59 +132,47 @@
           }
         `
 
-        console.log(glCntxt.getParameter(glCntxt.VERSION))
-        console.log(glCntxt.getParameter(glCntxt.SHADING_LANGUAGE_VERSION))
+        console.log(glCntxt2.getParameter(glCntxt2.VERSION))
+        console.log(glCntxt2.getParameter(glCntxt2.SHADING_LANGUAGE_VERSION))
 
-        let myBackground = new Background(glCntxt)
-        myBackground.clearColor.cells[1] = 0.9
-        let shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-        let myCamera = new Camera3D(glCntxt, shader, math)
-        myCamera.worldPos.cells = [ 0, 0, 0 ]
-        myCamera.worldPosToLookAt.cells = [ 0, 0, -3 ]
-        myCamera.up.cells = [ 0, 1, 0 ]
-        let myTriangleMesh = new ColoredTriangleMesh3D(glCntxt, shader, math)
-        let myTriangleMeshB = new ColoredTriangleMesh3D(glCntxt, shader, math)
+        let myBackground2 = new Background(glCntxt2)
+        myBackground2.clearColor.cells[1] = 0.9
+        let shader2 = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+        let myCamera2 = new Camera3D(glCntxt2, shader2, math)
+        myCamera2.worldPos.cells = [ 0, 0, 0 ]
+        myCamera2.worldPosToLookAt.cells = [ 0, 0, -3 ]
+        myCamera2.up.cells = [ 0, 1, 0 ]
+        let myTriangleMesh = new ColoredTriangleMesh3D(glCntxt2, shader2, math)
+        let myTriangleMeshB = new ColoredTriangleMesh3D(glCntxt2, shader2, math)
         myTriangleMesh.translateZIncremental(-3)
         myTriangleMeshB.translateZIncremental(-3)
         myTriangleMesh.translateXIncremental(-3)
         myTriangleMeshB.translateXIncremental(3)
-        let myRenderer3D = new Renderer3D()
+        let myRenderer3D2 = new Renderer3D()
         let kbControl = new Plot3DKeyboard()
         // kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMesh)
         // kbControl.imposeKeyDownArrowFlyCtrlTo(myCamera)
         // kbControl.imposeKeyDownWasdCtrlTo(myTriangleMesh)
-        // kbControl.imposeKeyDownWasdCtrlTo(myCamera)
-
+        // kbControl.imposeKeyDownWasdCtrlTo(myCamera
         // myCamera.followTheRenderable3d(myTriangleMesh)
 
         
 
         // myCamera.follow(myTriangleMesh)
-        myRenderer3D.addRenderable2D(myBackground)
-        myRenderer3D.addRenderable3D(myCamera)
-        myRenderer3D.addRenderable3D(myTriangleMesh)
-        myRenderer3D.addRenderable3D(myTriangleMeshB)
+        myRenderer3D2.addRenderable2D(myBackground2)
+        myRenderer3D2.addRenderable3D(myCamera2)
+        myRenderer3D2.addRenderable3D(myTriangleMesh)
+        myRenderer3D2.addRenderable3D(myTriangleMeshB)
 
         let myTriangleMeshC = undefined
-        let myTriangleMeshD = undefined
-        let myLoader = new Plot3DGlTfLoader(glCntxt)
-        let myMeshFactory = new MeshFactory3D(glCntxt, shader, math)
+        let myLoader = new Plot3DGlTfLoader(glCntxt2)
+        let myMeshFactory = new MeshFactory3D(glCntxt2, shader2, math)
         // let meshData = []
         myLoader.requestGlTf('./spec/assets/mesh3d/cube.gltf').then(() => {
           myTriangleMeshC = myMeshFactory.produceAColoredTriangleMesh3DFrom(myLoader.loaded[0])
           myTriangleMeshC.translateZIncremental(-3)
-          myRenderer3D.addRenderable3D(myTriangleMeshC)
-
-          myLoader.requestGlTf('./spec/assets/mesh3d/texturedCube.gltf').then(() => {
-              myTriangleMeshD = myMeshFactory.produceATexturedTriangleMesh3DFrom(myLoader.loaded[1])
-              myTriangleMeshD.translateZIncremental(-2)
-              myRenderer3D.addRenderable3D(myTriangleMeshD)
-              kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMeshD)
-              kbControl.imposeKeyDownWasdCtrlTo(myTriangleMeshD)
-          })
+          myRenderer3D2.addRenderable3D(myTriangleMeshC)
         })
-
-        
 
         let zDir = 1
         setInterval(() => {
@@ -208,12 +198,66 @@
           // myCamera.worldPos.cells[2] += (0.1 * zDir)
 
           kbControl.update()
-          myRenderer3D.process()
+          myRenderer3D2.process()
         }, 60)
-        // setInterval(() => {
-        //   change = !change
-        // }, 5000)
 
+        // canvas 3 ////////////////////////////////////////
+        let canvas3 = document.getElementById("renderCanvas3")
+        let glCntxt3 = canvas3.getContext("webgl2")
+        // glCntxt3.enable(glCntxt2.CULL_FACE)
+        // glCntxt3.cullFace(glCntxt2.FRONT_AND_BACK)
+        glCntxt3.cullFace(glCntxt3.BACK)
+        glCntxt3.enable(glCntxt3.DEPTH_TEST)
+        
+        vertexShaderCode = `
+          attribute vec3 a_position;
+          attribute vec3 a_normal;
+
+          uniform mat4 u_modelMatrix;
+          uniform mat4 u_modelToWorldMatrix;
+          uniform mat4 u_ViewToProjectionMatrix;
+          uniform mat4 u_worldToViewMatrix;
+
+          varying lowp vec4 v_color;
+
+          void main(void) {
+            gl_Position = u_ViewToProjectionMatrix * u_worldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+            v_color = vec4(0.5, 1.0, 0.8, 1.0);
+          }
+        `
+        fragmentShaderCode = `
+          precision mediump float;
+          varying lowp vec4 v_color;
+
+          void main(void) {
+            gl_FragColor = v_color;
+          }
+        `
+
+        let myBackground3 = new Background(glCntxt3)
+        myBackground3.clearColor.cells[0] = 0.9
+        let shader3 = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+        let myCamera3 = new Camera3D(glCntxt3, shader3, math)
+        myCamera3.worldPos.cells = [ 0, 0, 0 ]
+        myCamera3.worldPosToLookAt.cells = [ 0, 0, -3 ]
+        myCamera3.up.cells = [ 0, 1, 0 ]
+
+        let myRenderer3D3 = new Renderer3D()
+        myRenderer3D3.addRenderable2D(myBackground3)
+        myRenderer3D3.addRenderable3D(myCamera3)
+        // myLoader.requestGlTf('./spec/assets/mesh3d/texturedCube.gltf').then(() => {
+        //       myCamera.shader = shaderB
+        //       myCamera.update()
+        //       myMeshFactory.shader = shaderB
+        //       myTriangleMeshD = myMeshFactory.produceATexturedTriangleMesh3DFrom(myLoader.loaded[1])
+        //       myTriangleMeshD.translateZIncremental(-4)
+        //       myRenderer3D.addRenderable3D(myTriangleMeshD)
+        //       kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMeshD)
+        //       kbControl.imposeKeyDownWasdCtrlTo(myTriangleMeshD)
+        //   })
+        setInterval(() => {
+          myRenderer3D3.process()
+        }, 60)
       }
     )
   </script>
@@ -226,6 +270,9 @@
     </div>
     <div style="display: inline-block;" id="canvasContainer2">
       <canvas id="renderCanvas2" width="160" height="90"></canvas>
+    </div>
+    <div style="display: inline-block;" id="canvasContainer3">
+      <canvas id="renderCanvas3" width="160" height="90"></canvas>
     </div>
   </div>
 </body>
