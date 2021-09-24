@@ -104,7 +104,7 @@
           vector3: new Vector3Math(),
           matrix4x4: new Matrix4x4Math()
         }
-        let myPlot3DShaderBuilder = new Plot3DShaderBuilder(glCntxt2)
+        let myPlot3DShaderBuilder2 = new Plot3DShaderBuilder(glCntxt2)
         let vertexShaderCode = `
           attribute vec3 a_position;
           attribute vec3 a_normal;
@@ -137,7 +137,7 @@
 
         let myBackground2 = new Background(glCntxt2)
         myBackground2.clearColor.cells[1] = 0.9
-        let shader2 = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+        let shader2 = myPlot3DShaderBuilder2.buildShader(vertexShaderCode, fragmentShaderCode)
         let myCamera2 = new Camera3D(glCntxt2, shader2, math)
         myCamera2.worldPos.cells = [ 0, 0, 0 ]
         myCamera2.worldPosToLookAt.cells = [ 0, 0, -3 ]
@@ -165,11 +165,11 @@
         myRenderer3D2.addRenderable3D(myTriangleMeshB)
 
         let myTriangleMeshC = undefined
-        let myLoader = new Plot3DGlTfLoader(glCntxt2)
-        let myMeshFactory = new MeshFactory3D(glCntxt2, shader2, math)
+        let myLoader2 = new Plot3DGlTfLoader(glCntxt2)
+        let myMeshFactory2 = new MeshFactory3D(glCntxt2, shader2, math)
         // let meshData = []
-        myLoader.requestGlTf('./spec/assets/mesh3d/cube.gltf').then(() => {
-          myTriangleMeshC = myMeshFactory.produceAColoredTriangleMesh3DFrom(myLoader.loaded[0])
+        myLoader2.requestGlTf('./spec/assets/mesh3d/cube.gltf').then(() => {
+          myTriangleMeshC = myMeshFactory2.produceAColoredTriangleMesh3DFrom(myLoader2.loaded[0])
           myTriangleMeshC.translateZIncremental(-3)
           myRenderer3D2.addRenderable3D(myTriangleMeshC)
         })
@@ -202,6 +202,8 @@
         }, 60)
 
         // canvas 3 ////////////////////////////////////////
+        
+        
         let canvas3 = document.getElementById("renderCanvas3")
         let glCntxt3 = canvas3.getContext("webgl2")
         // glCntxt3.enable(glCntxt2.CULL_FACE)
@@ -234,30 +236,37 @@
           }
         `
 
+        let myPlot3DShaderBuilder3 = new Plot3DShaderBuilder(glCntxt3)
         let myBackground3 = new Background(glCntxt3)
-        myBackground3.clearColor.cells[0] = 0.9
-        let shader3 = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
+        myBackground3.clearColor.cells[2] = 0.8
+        myBackground3.clearColor.cells[1] = 0.8
+        let shader3 = myPlot3DShaderBuilder3.buildShader(vertexShaderCode, fragmentShaderCode)
+        
         let myCamera3 = new Camera3D(glCntxt3, shader3, math)
         myCamera3.worldPos.cells = [ 0, 0, 0 ]
         myCamera3.worldPosToLookAt.cells = [ 0, 0, -3 ]
         myCamera3.up.cells = [ 0, 1, 0 ]
 
+        let myTriangleMeshD = undefined
         let myRenderer3D3 = new Renderer3D()
+        let myLoader3 = new Plot3DGlTfLoader(glCntxt3)
+        let myMeshFactory3 = new MeshFactory3D(glCntxt3, shader3, math)
+        
         myRenderer3D3.addRenderable2D(myBackground3)
         myRenderer3D3.addRenderable3D(myCamera3)
-        // myLoader.requestGlTf('./spec/assets/mesh3d/texturedCube.gltf').then(() => {
-        //       myCamera.shader = shaderB
-        //       myCamera.update()
-        //       myMeshFactory.shader = shaderB
-        //       myTriangleMeshD = myMeshFactory.produceATexturedTriangleMesh3DFrom(myLoader.loaded[1])
-        //       myTriangleMeshD.translateZIncremental(-4)
-        //       myRenderer3D.addRenderable3D(myTriangleMeshD)
-        //       kbControl.imposeKeyDownArrowFlyCtrlTo(myTriangleMeshD)
-        //       kbControl.imposeKeyDownWasdCtrlTo(myTriangleMeshD)
-        //   })
-        setInterval(() => {
-          myRenderer3D3.process()
-        }, 60)
+
+        myLoader3.requestGlTfBinData('./spec/assets/mesh3d/texturedCube/texturedCube.gltf').then(() => {
+          myTriangleMeshD = myMeshFactory3.produceATexturedTriangleMesh3DFrom(myLoader3.loaded[0])
+          myTriangleMeshD.translateZIncremental(-2)
+          myRenderer3D3.addRenderable3D(myTriangleMeshD)
+          setInterval(() => {
+            myTriangleMeshD.rotateXIncremental(0.01)
+            myTriangleMeshD.rotateYIncremental(0.01)
+            myTriangleMeshD.rotateZIncremental(0.01)
+            myRenderer3D3.process()
+          }, 60)
+        })
+        
       }
     )
   </script>

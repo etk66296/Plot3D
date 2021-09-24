@@ -14,6 +14,8 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     this.loaded = []
     this.rawBufDataRegExMatcher = /(?<=data:application\/octet-stream;base64,).*/
     this.gltfRequester = new XMLHttpRequest()
+    this.binRequester = new XMLHttpRequest()
+    this.binRequester.responseType = 'blob'
     
   }
 
@@ -44,6 +46,73 @@ class Plot3DGlTfLoader extends Plot3DLoader{
         }
       }
       this.gltfRequester.send(null)
+    })
+  }
+
+  requestGlTfBinData(url) {
+    return new Promise((resolve, reject) => {
+      this.gltfRequester.open('GET', url, true)
+      this.gltfRequester.onload = () => {
+        if (this.gltfRequester.readyState === 4) {
+          if (this.gltfRequester.status === 200) {
+            let gltfObject = JSON.parse(this.gltfRequester.responseText)
+            if (gltfObject.asset.version !== '2.0') {
+              console.error('check your gltf file, version must be 2.0')
+            }
+            // console.log(responseText)
+            this.requestBin(url, gltfObject).then(() => {
+              console.log('hello bin')
+            })
+          } else {
+            reject({
+              status: this.gltfRequester.status,
+              statusText: this.gltfRequester.statusText
+            })
+          }
+        }
+        this.gltfRequester.onerror = function () {
+          reject({
+            status: this.gltfRequester.status,
+            statusText: this.gltfRequester.statusText
+          })
+        }
+      }
+      this.gltfRequester.send(null)
+    })
+  }
+
+  requestBin(url, gltf) {
+    return new Promise((resolve, reject) => {
+      this.binRequester.open('GET', url.replace(/\.gltf/, '.bin'), true)
+      this.binRequester.onload = () => {
+        if (this.binRequester.readyState === 4) {
+          if (this.binRequester.status === 200) {
+            let blob = this.binRequester.response
+            blob.arrayBuffer().then(
+              (buffer) => {
+                gltf.bufferViews.forEach((bufferView) => {
+                  let data = new DataView(buffer, bufferView.byteOffset, bufferView.byteLength)
+                  console.log(data.getUint8(0))
+                })
+                // console.log(buffer)
+                // let bufferView = new DataView(buffer)
+                // console.log(bufferView)
+              })
+          } else {
+            reject({
+              status: this.binRequester.status,
+              statusText: this.binRequester.statusText
+            })
+          }
+        }
+        this.binRequester.onerror = function () {
+          reject({
+            status: this.binRequester.status,
+            statusText: this.binRequester.statusText
+          })
+        }
+      }
+      this.binRequester.send(null)
     })
   }
 
