@@ -90,13 +90,7 @@ class Plot3DGlTfLoader extends Plot3DLoader{
             let blob = this.binRequester.response
             blob.arrayBuffer().then(
               (buffer) => {
-                gltf.bufferViews.forEach((bufferView) => {
-                  let data = new DataView(buffer, bufferView.byteOffset, bufferView.byteLength)
-                  console.log(data.getUint8(0))
-                })
-                // console.log(buffer)
-                // let bufferView = new DataView(buffer)
-                // console.log(bufferView)
+                this.extractDataFromGltfBlobBuffer(buffer, gltf)
               })
           } else {
             reject({
@@ -113,6 +107,29 @@ class Plot3DGlTfLoader extends Plot3DLoader{
         }
       }
       this.binRequester.send(null)
+    })
+  }
+
+  extractDataFromGltfBlobBuffer(gltfBinBlob, gltf) {
+    gltf.accessors.forEach((accessor) => {
+      let dataView = new DataView(
+        gltfBinBlob,
+        gltf.bufferViews[accessor.bufferView].byteOffset,
+        gltf.bufferViews[accessor.bufferView].byteLength
+      )
+
+      // GL FLOAT 5126
+      if (accessor.componentType === this.glCntxt.FLOAT) {
+        let numOfCells =  dataView.byteLength / Float32Array.BYTES_PER_ELEMENT
+        gltf.bufferViews[accessor.bufferView].cells	= new Float32Array(numOfCells)
+        let cellPointer = 0
+        for(let i = 0; i < numOfCells; i++) {
+          cellPointer = i * Float32Array.BYTES_PER_ELEMENT
+          gltf.bufferViews[accessor.bufferView].cells[i] = dataView.getFloat32(0, true)
+        }
+        // console.log(gltf.bufferViews[accessor.bufferView].cells)
+      }
+
     })
   }
 
