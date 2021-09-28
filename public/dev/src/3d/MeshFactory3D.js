@@ -45,53 +45,23 @@ class MeshFactory3D extends Plot3DFactory{
         meshData.push({
             vertices: [],
             normals: [],
-            txtrCrds: [],
             indices: [],
-            material: undefined
+            txtrCrds: []
           }
         )
         let verticeIndex = primitive.attributes.POSITION
         let normalsIndex = primitive.attributes.NORMAL
-        let txtrCrdIndex = primitive.attributes.TEXCOORD_0
         let indicesIndex = primitive.indices
-
-        let materialIndex =  primitive.material
-        
-        if ( loadedData.materials[materialIndex].pbrMetallicRoughness.baseColorFactor) {
-          meshData[meshData.length - 1].material = {
-            doubleSided :  loadedData.materials[materialIndex].doubleSided,
-            name :  loadedData.materials[materialIndex].name,
-            pbrMetallicRoughness : {
-                baseColorFactor : [
-                   loadedData.materials[materialIndex].pbrMetallicRoughness.baseColorFactor[0],
-                   loadedData.materials[materialIndex].pbrMetallicRoughness.baseColorFactor[1],
-                   loadedData.materials[materialIndex].pbrMetallicRoughness.baseColorFactor[2],
-                   loadedData.materials[materialIndex].pbrMetallicRoughness.baseColorFactor[3]
-                ],
-              metallicFactor :  loadedData.materials[materialIndex].pbrMetallicRoughness.metallicFactor,
-              roughnessFactor :  loadedData.materials[materialIndex].pbrMetallicRoughness.roughnessFactor
-            }
-          }
-        } else if( loadedData.materials[materialIndex].pbrMetallicRoughness.baseColorTexture) {
-          meshData[meshData.length - 1].material = {
-            doubleSided :  loadedData.materials[materialIndex].doubleSided,
-            name :  loadedData.materials[materialIndex].name,
-            pbrMetallicRoughness : {
-              baseColorTexture : {
-                index :  loadedData.materials[materialIndex].pbrMetallicRoughness.baseColorTexture.index
-              },
-              metallicFactor :  loadedData.materials[materialIndex].pbrMetallicRoughness.metallicFactor,
-              roughnessFactor :  loadedData.materials[materialIndex].pbrMetallicRoughness.roughnessFactor
-            }
-          }
-        }
-
-
+        // let colorIndex = primitive.material
         loadedData.bufferViews[verticeIndex].cells.forEach(cell => { meshData[meshData.length - 1].vertices.push(cell) })
         loadedData.bufferViews[normalsIndex].cells.forEach(cell => { meshData[meshData.length - 1].normals.push(cell) })
-        loadedData.bufferViews[txtrCrdIndex].cells.forEach(cell => { meshData[meshData.length - 1].txtrCrds.push(cell) })
         loadedData.bufferViews[indicesIndex].cells.forEach(cell => { meshData[meshData.length - 1].indices.push(cell) })
-        
+        for (let i = 0; i < loadedData.bufferViews[indicesIndex].cells.length; i++) {
+          meshData[meshData.length - 1].txtrCrds.push(0.1)
+          meshData[meshData.length - 1].txtrCrds.push(0.5)
+          meshData[meshData.length - 1].txtrCrds.push(0.6)
+          meshData[meshData.length - 1].txtrCrds.push(1.0)
+        }
       })
     })
     return new TexturedTriangleMesh3D(this.glCntxt, this.shader, this.math, meshData)

@@ -19,6 +19,107 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     
   }
 
+  
+  requestGlTfBinData(url) {
+    return new Promise((resolve, reject) => {
+      this.gltfRequester.open('GET', url, true)
+      this.gltfRequester.onload = () => {
+        if (this.gltfRequester.readyState === 4) {
+          if (this.gltfRequester.status === 200) {
+            let gltfObject = JSON.parse(this.gltfRequester.responseText)
+            if (gltfObject.asset.version !== '2.0') {
+              console.error('check your gltf file, version must be 2.0')
+            }
+            // console.log(responseText)
+            this.requestBin(url, gltfObject).then(() => {
+              this.loaded.push(gltfObject)
+              resolve(this.gltfRequester.response)
+            })
+          } else {
+            reject({
+              status: this.gltfRequester.status,
+              statusText: this.gltfRequester.statusText
+            })
+          }
+        }
+        this.gltfRequester.onerror = function () {
+          reject({
+            status: this.gltfRequester.status,
+            statusText: this.gltfRequester.statusText
+          })
+        }
+      }
+      this.gltfRequester.send(null)
+    })
+  }
+
+  requestBin(url, gltfObjec) {
+    return new Promise((resolve, reject) => {
+      this.binRequester.open('GET', url.replace(/\.gltf/, '.bin'), true)
+      this.binRequester.onload = () => {
+        if (this.binRequester.readyState === 4) {
+          if (this.binRequester.status === 200) {
+            let blob = this.binRequester.response
+            blob.arrayBuffer().then((buffer) => {
+              this.extractDataFromGltfBlobBuffer(buffer, gltfObjec)
+              resolve(this.binRequester.response)
+            })
+          } else {
+            reject({
+              status: this.binRequester.status,
+              statusText: this.binRequester.statusText
+            })
+          }
+        }
+        this.binRequester.onerror = function () {
+          reject({
+            status: this.binRequester.status,
+            statusText: this.binRequester.statusText
+          })
+        }
+      }
+      this.binRequester.send(null)
+    })
+    return gltfObjec
+  }
+
+  extractDataFromGltfBlobBuffer(gltfBinBlob, gltfObjec) {
+    gltfObjec.accessors.forEach((accessor) => {
+      let dataView = new DataView(
+        gltfBinBlob,
+        gltfObjec.bufferViews[accessor.bufferView].byteOffset,
+        gltfObjec.bufferViews[accessor.bufferView].byteLength
+      )
+
+      // GL FLOAT 5126
+      if (accessor.componentType === this.glCntxt.FLOAT) {
+        let numOfCells =  dataView.byteLength / Float32Array.BYTES_PER_ELEMENT
+        gltfObjec.bufferViews[accessor.bufferView].cells	= new Float32Array(numOfCells)
+        console.log(numOfCells, gltfObjec.bufferViews[accessor.bufferView].cells)
+        let cellPointer = 0
+        for(let i = 0; i < numOfCells; i++) {
+          cellPointer = i * Float32Array.BYTES_PER_ELEMENT
+          gltfObjec.bufferViews[accessor.bufferView].cells[i] = dataView.getFloat32(cellPointer, true)
+        }
+        console.log(numOfCells, gltfObjec.bufferViews[accessor.bufferView].cells)
+      }
+
+      // GL UNSIGNED_SHORT 5123
+      if (accessor.componentType === this.glCntxt.UNSIGNED_SHORT) {
+        let numOfCells =  dataView.byteLength / Uint16Array.BYTES_PER_ELEMENT
+        gltfObjec.bufferViews[accessor.bufferView].cells	= new Uint16Array(numOfCells)
+        let cellPointer = 0
+        for(let i = 0; i < numOfCells; i++) {
+          cellPointer = i * Uint16Array.BYTES_PER_ELEMENT
+          gltfObjec.bufferViews[accessor.bufferView].cells[i] = dataView.getUint16(cellPointer, true)
+        }
+      }
+
+    })
+    return gltfObjec
+  }
+
+
   requestGlTf(url) {
     return new Promise((resolve, reject) => {
       this.gltfRequester.open('GET', url, true)
@@ -49,89 +150,6 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     })
   }
 
-  requestGlTfBinData(url) {
-    return new Promise((resolve, reject) => {
-      this.gltfRequester.open('GET', url, true)
-      this.gltfRequester.onload = () => {
-        if (this.gltfRequester.readyState === 4) {
-          if (this.gltfRequester.status === 200) {
-            let gltfObject = JSON.parse(this.gltfRequester.responseText)
-            if (gltfObject.asset.version !== '2.0') {
-              console.error('check your gltf file, version must be 2.0')
-            }
-            // console.log(responseText)
-            this.requestBin(url, gltfObject).then(() => {
-              console.log('hello bin')
-            })
-          } else {
-            reject({
-              status: this.gltfRequester.status,
-              statusText: this.gltfRequester.statusText
-            })
-          }
-        }
-        this.gltfRequester.onerror = function () {
-          reject({
-            status: this.gltfRequester.status,
-            statusText: this.gltfRequester.statusText
-          })
-        }
-      }
-      this.gltfRequester.send(null)
-    })
-  }
-
-  requestBin(url, gltf) {
-    return new Promise((resolve, reject) => {
-      this.binRequester.open('GET', url.replace(/\.gltf/, '.bin'), true)
-      this.binRequester.onload = () => {
-        if (this.binRequester.readyState === 4) {
-          if (this.binRequester.status === 200) {
-            let blob = this.binRequester.response
-            blob.arrayBuffer().then(
-              (buffer) => {
-                this.extractDataFromGltfBlobBuffer(buffer, gltf)
-              })
-          } else {
-            reject({
-              status: this.binRequester.status,
-              statusText: this.binRequester.statusText
-            })
-          }
-        }
-        this.binRequester.onerror = function () {
-          reject({
-            status: this.binRequester.status,
-            statusText: this.binRequester.statusText
-          })
-        }
-      }
-      this.binRequester.send(null)
-    })
-  }
-
-  extractDataFromGltfBlobBuffer(gltfBinBlob, gltf) {
-    gltf.accessors.forEach((accessor) => {
-      let dataView = new DataView(
-        gltfBinBlob,
-        gltf.bufferViews[accessor.bufferView].byteOffset,
-        gltf.bufferViews[accessor.bufferView].byteLength
-      )
-
-      // GL FLOAT 5126
-      if (accessor.componentType === this.glCntxt.FLOAT) {
-        let numOfCells =  dataView.byteLength / Float32Array.BYTES_PER_ELEMENT
-        gltf.bufferViews[accessor.bufferView].cells	= new Float32Array(numOfCells)
-        let cellPointer = 0
-        for(let i = 0; i < numOfCells; i++) {
-          cellPointer = i * Float32Array.BYTES_PER_ELEMENT
-          gltf.bufferViews[accessor.bufferView].cells[i] = dataView.getFloat32(0, true)
-        }
-        // console.log(gltf.bufferViews[accessor.bufferView].cells)
-      }
-
-    })
-  }
 
   extractDataFromGltfJson(gltfObject) {
     let binaryData = window.atob(this.rawBufDataRegExMatcher.exec(gltfObject.buffers[0].uri)[0])

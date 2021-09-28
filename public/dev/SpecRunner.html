@@ -256,6 +256,7 @@
         myRenderer3D3.addRenderable3D(myCamera3)
 
         myLoader3.requestGlTfBinData('./spec/assets/mesh3d/texturedCube/texturedCube.gltf').then(() => {
+          // console.log(myLoader3.loaded[0])
           myTriangleMeshD = myMeshFactory3.produceATexturedTriangleMesh3DFrom(myLoader3.loaded[0])
           myTriangleMeshD.translateZIncremental(-2)
           myRenderer3D3.addRenderable3D(myTriangleMeshD)
