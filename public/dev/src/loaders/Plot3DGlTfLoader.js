@@ -95,13 +95,11 @@ class Plot3DGlTfLoader extends Plot3DLoader{
       if (accessor.componentType === this.glCntxt.FLOAT) {
         let numOfCells =  dataView.byteLength / Float32Array.BYTES_PER_ELEMENT
         gltfObjec.bufferViews[accessor.bufferView].cells	= new Float32Array(numOfCells)
-        console.log(numOfCells, gltfObjec.bufferViews[accessor.bufferView].cells)
         let cellPointer = 0
         for(let i = 0; i < numOfCells; i++) {
           cellPointer = i * Float32Array.BYTES_PER_ELEMENT
           gltfObjec.bufferViews[accessor.bufferView].cells[i] = dataView.getFloat32(cellPointer, true)
         }
-        console.log(numOfCells, gltfObjec.bufferViews[accessor.bufferView].cells)
       }
 
       // GL UNSIGNED_SHORT 5123

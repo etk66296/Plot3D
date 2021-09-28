@@ -46,22 +46,30 @@ class MeshFactory3D extends Plot3DFactory{
             vertices: [],
             normals: [],
             indices: [],
-            txtrCrds: []
+            txtrCoord: [],
+            textureData: null,
+            color: null
           }
         )
         let verticeIndex = primitive.attributes.POSITION
         let normalsIndex = primitive.attributes.NORMAL
+        let textureIndex = primitive.attributes.TEXCOORD_0
         let indicesIndex = primitive.indices
-        // let colorIndex = primitive.material
         loadedData.bufferViews[verticeIndex].cells.forEach(cell => { meshData[meshData.length - 1].vertices.push(cell) })
         loadedData.bufferViews[normalsIndex].cells.forEach(cell => { meshData[meshData.length - 1].normals.push(cell) })
+        loadedData.bufferViews[textureIndex].cells.forEach(cell => { meshData[meshData.length - 1].txtrCoord.push(cell) })
         loadedData.bufferViews[indicesIndex].cells.forEach(cell => { meshData[meshData.length - 1].indices.push(cell) })
-        for (let i = 0; i < loadedData.bufferViews[indicesIndex].cells.length; i++) {
-          meshData[meshData.length - 1].txtrCrds.push(0.1)
-          meshData[meshData.length - 1].txtrCrds.push(0.5)
-          meshData[meshData.length - 1].txtrCrds.push(0.6)
-          meshData[meshData.length - 1].txtrCrds.push(1.0)
+        
+        if (loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor != undefined) {
+            meshData[meshData.length - 1].color = []
+            meshData[meshData.length - 1].color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[0])
+            meshData[meshData.length - 1].color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[1])
+            meshData[meshData.length - 1].color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[2])
+            meshData[meshData.length - 1].color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[3])
+        } else if (loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorTexture != undefined) {
+          // load texture here
         }
+        
       })
     })
     return new TexturedTriangleMesh3D(this.glCntxt, this.shader, this.math, meshData)
