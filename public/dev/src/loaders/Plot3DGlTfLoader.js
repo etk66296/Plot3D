@@ -80,7 +80,6 @@ class Plot3DGlTfLoader extends Plot3DLoader{
       }
       this.binRequester.send(null)
     })
-    return gltfObjec
   }
 
   extractDataFromGltfBlobBuffer(gltfBinBlob, gltfObjec) {

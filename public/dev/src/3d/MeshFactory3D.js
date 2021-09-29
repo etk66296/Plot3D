@@ -99,13 +99,10 @@ class MeshFactory3D extends Plot3DFactory{
 
             this.images[this.images.length - 1].data.src = loadedData.images[textureImageIndex].uri
             this.images[this.images.length - 1].data.addEventListener('load', () => {
-              meshData[meshData.length - 1].material.imageSrc = this.images[this.images.length - 1].data.src
+              meshData[meshData.length - 1].material.imageSrc = this.images[this.images.length - 1]
             })
-          }
-
-          
-        }
-        
+          } 
+        }  
       })
     })
     return new TexturedTriangleMesh3D(this.glCntxt, this.shader, this.math, meshData)

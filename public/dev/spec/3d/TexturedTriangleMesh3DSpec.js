@@ -21,33 +21,30 @@ describe("TexturedTriangleMesh3D", function() {
     let vertexShaderCode = `
       attribute vec3 a_position;
       attribute vec3 a_normal;
-      attribute vec4 a_color;
+      attribute vec2 a_texcoord;
 
       uniform mat4 u_modelMatrix;
       uniform mat4 u_modelToWorldMatrix;
-      uniform mat4 u_cameraModelMatrix;
-      uniform mat4 u_cameraTranslationMatrix;
-      uniform mat4 u_WorldToViewMatrix;
       uniform mat4 u_ViewToProjectionMatrix;
+      uniform mat4 u_worldToViewMatrix;
 
-      varying lowp vec4 v_color;
+      varying vec2 v_texcoord;
 
       void main(void) {
-        gl_Position = u_ViewToProjectionMatrix * u_cameraTranslationMatrix * u_cameraModelMatrix * u_WorldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
-        v_color = a_color;
+        gl_Position = u_ViewToProjectionMatrix * u_worldToViewMatrix * u_modelToWorldMatrix * u_modelMatrix * vec4(a_position, 1.0);
+        v_texcoord = a_texcoord;
       }
     `
     let fragmentShaderCode = `
-      precision mediump float;
-
-      varying lowp vec4 v_color;
-
+      precision mediump float;     
+      varying vec2 v_texcoord;
+      uniform sampler2D u_texture;
       void main(void) {
-        gl_FragColor = v_color;
+        gl_FragColor = texture2D(u_texture, v_texcoord);
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    // myTexturedTriangleMesh = new TexturedTriangleMesh3D(glCntxt, shader, math)
+    myTexturedTriangleMesh = new TexturedTriangleMesh3D(glCntxt, shader, math)
   })
   
   it("has the parent class TriangleMesh3D", function() {

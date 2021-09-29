@@ -39,7 +39,7 @@ class TriangleMesh3D extends Renderable3D {
           0,1,2,
           0,2,3
         ]
-      }
+      },
     ] 
   ) {
     super(glCntxt, shader, math)
