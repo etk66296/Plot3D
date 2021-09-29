@@ -172,7 +172,7 @@
         {
             "mimeType" : "image/jpeg",
             "name" : "Fernsehturm",
-            "uri" : "Fernsehturm.jpg"
+            "uri" : "./spec/assets/mesh3d/texturedCube/Fernsehturm.jpg"
         }
     ],
     "accessors" : [

@@ -7,6 +7,14 @@ class MeshFactory3D extends Plot3DFactory{
       vector3: new Vector3Math(),
       matrix4x4: new Matrix4x4Math()
     }
+
+    this.images = []
+    /*
+    {
+      name: ...
+      src: ...
+    }
+    */
   }
 
   produceAColoredTriangleMesh3DFrom(loadedData) {
@@ -47,8 +55,11 @@ class MeshFactory3D extends Plot3DFactory{
             normals: [],
             indices: [],
             txtrCoord: [],
-            textureData: null,
-            color: null
+            material: {
+              hasAnImage: false,
+              imageSrc: null,
+              color: null
+            }
           }
         )
         let verticeIndex = primitive.attributes.POSITION
@@ -61,13 +72,38 @@ class MeshFactory3D extends Plot3DFactory{
         loadedData.bufferViews[indicesIndex].cells.forEach(cell => { meshData[meshData.length - 1].indices.push(cell) })
         
         if (loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor != undefined) {
-            meshData[meshData.length - 1].color = []
-            meshData[meshData.length - 1].color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[0])
-            meshData[meshData.length - 1].color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[1])
-            meshData[meshData.length - 1].color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[2])
-            meshData[meshData.length - 1].color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[3])
+            meshData[meshData.length - 1].material.color = []
+            meshData[meshData.length - 1].material.color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[0])
+            meshData[meshData.length - 1].material.color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[1])
+            meshData[meshData.length - 1].material.color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[2])
+            meshData[meshData.length - 1].material.color.push(loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorFactor[3])
         } else if (loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorTexture != undefined) {
-          // load texture here
+          meshData[meshData.length - 1].material.hasAnImage = true
+          meshData[meshData.length - 1].material.textureData = []
+          let textureIndex = loadedData.materials[primitive.material].pbrMetallicRoughness.baseColorTexture.index
+          let textureImageIndex = loadedData.textures[textureIndex].source
+
+          let imageWasAlreadyLoaded = false
+          this.images.forEach((image) => {
+            if (image.name === loadedData.images[textureImageIndex].name) {
+              imageWasAlreadyLoaded = true
+              meshData[meshData.length - 1].material.imageSrc = image.data.src
+            }
+          })
+
+          if (!imageWasAlreadyLoaded) {
+            this.images.push({
+              data: new Image(),
+              name: loadedData.images[textureImageIndex].name
+            })
+
+            this.images[this.images.length - 1].data.src = loadedData.images[textureImageIndex].uri
+            this.images[this.images.length - 1].data.addEventListener('load', () => {
+              meshData[meshData.length - 1].material.imageSrc = this.images[this.images.length - 1].data.src
+            })
+          }
+
+          
         }
         
       })
