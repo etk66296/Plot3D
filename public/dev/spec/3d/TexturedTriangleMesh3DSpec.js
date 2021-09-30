@@ -44,11 +44,11 @@ describe("TexturedTriangleMesh3D", function() {
       }
     `
     shader = myPlot3DShaderBuilder.buildShader(vertexShaderCode, fragmentShaderCode)
-    myTexturedTriangleMesh = new TexturedTriangleMesh3D(glCntxt, shader, math)
+    // myTexturedTriangleMesh = new TexturedTriangleMesh3D(glCntxt, shader, math)
   })
   
-  it("has the parent class TriangleMesh3D", function() {
-    expect(myTexturedTriangleMesh.__proto__.__proto__.constructor.name).toEqual('TriangleMesh3D')
-  })
+  // it("has the parent class TriangleMesh3D", function() {
+  //   expect(myTexturedTriangleMesh.__proto__.__proto__.constructor.name).toEqual('TriangleMesh3D')
+  // })
 
 })

@@ -262,12 +262,12 @@
         myLoader3.requestGlTfBinData('./spec/assets/mesh3d/texturedCube/texturedCube.gltf').then(() => {
           // console.log(myLoader3.loaded[0])
           myTriangleMeshD = myMeshFactory3.produceATexturedTriangleMesh3DFrom(myLoader3.loaded[0])
-          myTriangleMeshD.translateZIncremental(-2)
+          myTriangleMeshD.translateZIncremental(-2.5)
           myRenderer3D3.addRenderable3D(myTriangleMeshD)
           setInterval(() => {
-            myTriangleMeshD.rotateXIncremental(0.01)
-            myTriangleMeshD.rotateYIncremental(0.01)
-            myTriangleMeshD.rotateZIncremental(0.01)
+            myTriangleMeshD.rotateXIncremental(0.08)
+            myTriangleMeshD.rotateYIncremental(0.02)
+            myTriangleMeshD.rotateZIncremental(0.05)
             myRenderer3D3.process()
           }, 60)
         })
