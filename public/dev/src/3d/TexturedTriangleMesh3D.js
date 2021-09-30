@@ -52,6 +52,19 @@ class TexturedTriangleMesh3D extends TriangleMesh3D {
             Math.floor(255 * this.materials[this.materials.length - 1].color[3])
           ]
         )
+      } else {
+        if (this.materials[this.materials.length - 1].hasAnImage) {
+          this.glCntxt.bindTexture(this.glCntxt.TEXTURE_2D, this.textures[this.textures.length -1])
+          this.glCntxt.texImage2D(
+            this.glCntxt.TEXTURE_2D,
+            0,
+            this.glCntxt.RGBA,
+            this.glCntxt.RGBA,
+            this.glCntxt.UNSIGNED_BYTE,
+            this.materials[this.materials.length - 1].imageSrc.data
+          )
+          this.glCntxt.generateMipmap(this.glCntxt.TEXTURE_2D)   
+        }
       }
 
       // this.glCntxt.texImage2D(
@@ -66,18 +79,7 @@ class TexturedTriangleMesh3D extends TriangleMesh3D {
       //   this.textureImages[this.textureImages.length - 1]
       // )
       
-      // if (this.materials[this.materials.length - 1].hasAnImage) {
-      //   this.glCntxt.bindTexture(this.glCntxt.TEXTURE_2D, this.glCntxt.createTexture())
-      //   this.glCntxt.texImage2D(
-      //     this.glCntxt.TEXTURE_2D,
-      //     0,
-      //     this.glCntxt.RGBA,
-      //     this.glCntxt.RGBA,
-      //     this.glCntxt.UNSIGNED_BYTE,
-      //     this.materials[this.materials.length - 1].imageSrc.data
-      //   )
-      //   this.glCntxt.generateMipmap(this.glCntxt.TEXTURE_2D)   
-      // }
+      
     })
         
   }
@@ -129,18 +131,32 @@ class TexturedTriangleMesh3D extends TriangleMesh3D {
         this.textures[primitiveIndex]
       )
 
-      this.glCntxt.texImage2D(
-        this.glCntxt.
-        TEXTURE_2D,
-        0,
-        this.glCntxt.RGBA,
-        1,
-        1,
-        0,
-        this.glCntxt.RGBA,
-        this.glCntxt.UNSIGNED_BYTE,
-        this.textureImages[primitiveIndex]
-      )
+      if (this.materials[primitiveIndex].hasAnImage) {
+        this.glCntxt.bindTexture(this.glCntxt.TEXTURE_2D, this.textures[primitiveIndex])
+        this.glCntxt.texImage2D(
+          this.glCntxt.TEXTURE_2D,
+          0,
+          this.glCntxt.RGBA,
+          this.glCntxt.RGBA,
+          this.glCntxt.UNSIGNED_BYTE,
+          this.materials[primitiveIndex].imageSrc.data
+        )
+        this.glCntxt.generateMipmap(this.glCntxt.TEXTURE_2D)   
+      } else {
+        this.glCntxt.texImage2D(
+          this.glCntxt.
+          TEXTURE_2D,
+          0,
+          this.glCntxt.RGBA,
+          1,
+          1,
+          0,
+          this.glCntxt.RGBA,
+          this.glCntxt.UNSIGNED_BYTE,
+          this.textureImages[primitiveIndex]
+        )
+      }
+      
       this.glCntxt.bindBuffer(this.glCntxt.ELEMENT_ARRAY_BUFFER, this.glIndicesBuffers[primitiveIndex])
       let vertexCount = this.primitivesIndices[primitiveIndex].length
       let type = this.glCntxt.UNSIGNED_SHORT
