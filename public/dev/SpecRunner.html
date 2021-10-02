@@ -168,7 +168,7 @@
         let myLoader2 = new Plot3DGlTfLoader(glCntxt2)
         let myMeshFactory2 = new MeshFactory3D(glCntxt2, shader2, math)
         // let meshData = []
-        myLoader2.requestGlTf('./spec/assets/mesh3d/cube.gltf').then(() => {
+        myLoader2.requestGlTfEmbedded('./spec/assets/mesh3d/cube.gltf').then(() => {
           myTriangleMeshC = myMeshFactory2.produceAColoredTriangleMesh3DFrom(myLoader2.loaded[0])
           myTriangleMeshC.translateZIncremental(-3)
           myRenderer3D2.addRenderable3D(myTriangleMeshC)
@@ -259,14 +259,14 @@
         myRenderer3D3.addRenderable2D(myBackground3)
         myRenderer3D3.addRenderable3D(myCamera3)
 
-        myLoader3.requestGlTfBinData('./spec/assets/mesh3d/texturedCube/texturedCube.gltf').then(() => {
+        myLoader3.requestGlTfSeparated('./spec/assets/mesh3d/texturedCube/texturedCube.gltf').then(() => {
           // console.log(myLoader3.loaded[0])
           myTriangleMeshD = myMeshFactory3.produceATexturedTriangleMesh3DFrom(myLoader3.loaded[0])
           myTriangleMeshD.translateZIncremental(-2.5)
           myRenderer3D3.addRenderable3D(myTriangleMeshD)
           setInterval(() => {
             myTriangleMeshD.rotateXIncremental(0.08)
-            myTriangleMeshD.rotateYIncremental(0.02)
+            myTriangleMeshD.rotateYIncremental(0.06)
             myTriangleMeshD.rotateZIncremental(0.05)
             myRenderer3D3.process()
           }, 60)

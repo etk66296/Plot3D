@@ -12,7 +12,6 @@ class Plot3DGlTfLoader extends Plot3DLoader{
     // 5126      (FLOAT) 	          4
 
     this.loaded = []
-    this.rawBufDataRegExMatcher = /(?<=data:application\/octet-stream;base64,).*/
     this.gltfRequester = new XMLHttpRequest()
     this.binRequester = new XMLHttpRequest()
     this.binRequester.responseType = 'blob'
@@ -20,7 +19,7 @@ class Plot3DGlTfLoader extends Plot3DLoader{
   }
 
   
-  requestGlTfBinData(url) {
+  requestGlTfSeparated(url) {
     return new Promise((resolve, reject) => {
       this.gltfRequester.open('GET', url, true)
       this.gltfRequester.onload = () => {
@@ -30,7 +29,6 @@ class Plot3DGlTfLoader extends Plot3DLoader{
             if (gltfObject.asset.version !== '2.0') {
               console.error('check your gltf file, version must be 2.0')
             }
-            // console.log(responseText)
             this.requestBin(url, gltfObject).then(() => {
               this.loaded.push(gltfObject)
               resolve(this.gltfRequester.response)
@@ -117,7 +115,7 @@ class Plot3DGlTfLoader extends Plot3DLoader{
   }
 
 
-  requestGlTf(url) {
+  requestGlTfEmbedded(url) {
     return new Promise((resolve, reject) => {
       this.gltfRequester.open('GET', url, true)
       this.gltfRequester.onload = () => {
@@ -127,7 +125,7 @@ class Plot3DGlTfLoader extends Plot3DLoader{
             if (gltfObject.asset.version !== '2.0') {
               console.error('check your gltf file, version must be 2.0')
             }
-            this.loaded.push(this.extractDataFromGltfJson(gltfObject))
+            this.loaded.push(this.extractDataFromGltfEmbedded(gltfObject))
             resolve(this.gltfRequester.response)
           } else {
             reject({
@@ -148,27 +146,32 @@ class Plot3DGlTfLoader extends Plot3DLoader{
   }
 
 
-  extractDataFromGltfJson(gltfObject) {
-    let binaryData = window.atob(this.rawBufDataRegExMatcher.exec(gltfObject.buffers[0].uri)[0])
+  extractDataFromGltfEmbedded(gltfObject) {
+    
+    let binaryData = window.atob(
+      // cut the mesh data out of the base64 uri string
+      /(?<=data:application\/octet-stream;base64,).*/.exec(
+        gltfObject.buffers[0].uri
+      )[0]
+    )
     let bytes = new Uint8Array(binaryData.length)
     for (var i = 0; i < binaryData.length; i++) {
       bytes[i] = binaryData.charCodeAt(i)
     }
+
+    let byteSlice = []
     gltfObject.bufferViews.forEach((view) => {
-      view.data = bytes.slice(view.byteOffset, view.byteOffset + view.byteLength)
+      byteSlice.push(bytes.slice(view.byteOffset, view.byteOffset + view.byteLength))
     })
     
-    
     gltfObject.accessors.forEach((accessor) => {
-      let selectedByteData = gltfObject.bufferViews[accessor.bufferView].data
+      let selectedByteData = byteSlice[accessor.bufferView]
       if (this.glCntxt.FLOAT === accessor.componentType) {
         gltfObject.bufferViews[accessor.bufferView].cells = this.bytesToFloats(selectedByteData)
-        delete gltfObject.bufferViews[accessor.bufferView].data
       }
 
       if (this.glCntxt.UNSIGNED_SHORT === accessor.componentType) {
         gltfObject.bufferViews[accessor.bufferView].cells = this.bytesToUShorts(selectedByteData)
-        delete gltfObject.bufferViews[accessor.bufferView].data
       }
     })
 
@@ -176,10 +179,12 @@ class Plot3DGlTfLoader extends Plot3DLoader{
   }
 
   bytesToFloats(bytes) {
+
     let numOfCells =  bytes.length / Float32Array.BYTES_PER_ELEMENT
     let dataView	= new DataView( new ArrayBuffer(Float32Array.BYTES_PER_ELEMENT) )
     let cells	= new Float32Array(numOfCells)
     let cellPointer = 0
+    
     for(let i = 0; i < numOfCells; i++) {
       cellPointer = i * Float32Array.BYTES_PER_ELEMENT
       dataView.setUint8(0, bytes[cellPointer])
@@ -188,20 +193,24 @@ class Plot3DGlTfLoader extends Plot3DLoader{
       dataView.setUint8(3, bytes[cellPointer + 3])
       cells[i] = dataView.getFloat32(0, true)
     }
+
     return cells
   }
 
   bytesToUShorts(bytes) {
+    
     let numOfCells =  bytes.length / Uint16Array.BYTES_PER_ELEMENT
     let dataView	= new DataView( new ArrayBuffer(Uint16Array.BYTES_PER_ELEMENT) )
     let cells	= new Uint16Array(numOfCells)
     let cellPointer = 0
+    
     for(let i = 0; i < numOfCells; i++) {
       cellPointer = i * Uint16Array.BYTES_PER_ELEMENT
       dataView.setUint8(0, bytes[cellPointer])
       dataView.setUint8(1, bytes[cellPointer + 1])
       cells[i] = dataView.getUint16(0, true)
     }
+    
     return cells
   }
 }
