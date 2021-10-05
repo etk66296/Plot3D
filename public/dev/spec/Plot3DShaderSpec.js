@@ -56,4 +56,8 @@ describe("Plot3DShader", function() {
     expect(typeof myPlot3DShader.glFragmentUniformLocation).toEqual('object')
   })
 
+  it("should have a function for adding a uniform to the vertex shader", function() {
+    expect(typeof myPlot3DShader.addMat4Uniform).toEqual('function')
+  })
+
 })
