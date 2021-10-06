@@ -1,0 +1,2 @@
+describe("ShaderVarying", function() {
+})
