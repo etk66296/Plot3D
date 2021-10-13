@@ -5,6 +5,7 @@ class ShaderItem extends Plot3DObject {
     this.type = type
     this.identifier = identifier
 
+    this.targetShaderType = ''    
   }
 
   concat() {

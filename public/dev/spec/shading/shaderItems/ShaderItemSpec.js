@@ -25,6 +25,10 @@ describe("ShaderItem", function() {
     expect(tmpShaderItem.identifier).toEqual('myMat4')
   })
 
+  it("should have an attribute,which assign the shader as fragment of vertex shader", function() {
+    expect(myShaderItem.targetShaderType).toEqual('')
+  })
+
   it("should have a function for concatenate the code line", function() {
     expect(typeof   myShaderItem.concat).toBe('function')
   })
