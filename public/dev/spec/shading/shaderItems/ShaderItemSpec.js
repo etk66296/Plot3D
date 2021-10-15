@@ -7,7 +7,7 @@ describe("ShaderItem", function() {
   })
 
   it("should have the parent class Plot3DObject", function() {
-    expect(myShaderItem.__proto__.__proto__.constructor.name).toEqual('Plot3DObject')
+    expect(myShaderItem.__proto__.__proto__.constructor.name).toEqual('ShaderObject')
   })
 
   // void; bool; int; float;
@@ -26,7 +26,7 @@ describe("ShaderItem", function() {
   })
 
   it("should have an attribute,which assign the shader as fragment of vertex shader", function() {
-    expect(myShaderItem.targetShaderType).toEqual('')
+    expect(myShaderItem.targetShaderType).toEqual(myShaderItem.shaderType.NONE)
   })
 
   it("should have a function for concatenate the code line", function() {
