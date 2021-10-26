@@ -1,4 +1,4 @@
-class ShaderAttribute extends ShaderItem {
+class ShaderAttribute extends ShaderInput {
   constructor() {
     super()
 

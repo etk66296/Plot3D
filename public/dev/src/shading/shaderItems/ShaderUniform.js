@@ -1,4 +1,4 @@
-class ShaderUnifrom extends ShaderItem {
+class ShaderUnifrom extends ShaderInput {
   constructor() {
     super()
 
