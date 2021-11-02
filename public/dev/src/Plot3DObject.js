@@ -2,7 +2,6 @@ class Plot3DObject {
   constructor() {
     this.isInDebugMode = false
     this.EPSILON = 0.0000001
-    this.name = ''
     this.exceptions = {
       OutOfRange: function(message) {
         this.message = message
@@ -12,7 +11,6 @@ class Plot3DObject {
   }
 
   convertDegToRad(deg) {
-    console.log('degToRad')
     if (deg >= 0.0 && deg <= 360.0) {
       return 0.017453292519943295 * deg
     } else {

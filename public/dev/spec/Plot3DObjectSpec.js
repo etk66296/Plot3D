@@ -29,10 +29,6 @@ describe("Plot3DObject", function() {
     })
   })
 
-  it("should have an attribute name", function() {
-    expect(myPlot3DObject.name.constructor.name).toEqual("String")
-  })
-
   it("should provide a method to convert degree to radian", function() {
     expect(typeof myPlot3DObject.convertDegToRad).toBe("function")
   })

@@ -16,17 +16,8 @@ describe("ShaderItem", function() {
   // sampler2D; samplerCube
 
   it("should have a string attribute which defines the data type of the item", function() {
-    let tmpShaderItem = new ShaderItem('mat4', 'myMat4')
+    let tmpShaderItem = new ShaderItem('myMat4', 'mat4')
     expect(tmpShaderItem.type).toEqual('mat4')
-  })
-
-  it("should have a string attribute which identifies the item in the shader code", function() {
-    let tmpShaderItem = new ShaderItem('mat4', 'myMat4')
-    expect(tmpShaderItem.identifier).toEqual('myMat4')
-  })
-
-  it("should have an attribute,which assign the shader as fragment of vertex shader", function() {
-    expect(myShaderItem.targetShaderType).toEqual(myShaderItem.shaderType.NONE)
   })
 
   it("should have a function for concatenate the code line", function() {
@@ -35,7 +26,7 @@ describe("ShaderItem", function() {
 
   describe("concat", function() {
     it("should return the object appropriate glsl code line", function() {
-      let tmpShaderItem = new ShaderItem('mat4', 'myMat4')
+      let tmpShaderItem = new ShaderItem('myMat4', 'mat4')
       expect(tmpShaderItem.concat()).toEqual('mat4 myMat4;')
     })
   })

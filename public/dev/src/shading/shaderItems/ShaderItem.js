@@ -1,19 +1,14 @@
 class ShaderItem extends ShaderObject {
-  constructor(type, identifier) {
-    super()
+  constructor(name, type) {
+    super(name)
 
     this.type = type
-    this.identifier = identifier
 
-    this.shaderType = {
-      NONE: 0,
-      VERTEX: 1,
-      FRAGMENT: 2
-    }
-    this.targetShaderType = this.shaderType.NONE
+    
   }
 
   concat() {
-    return this.type + ' ' + this.identifier + ';'
+    return this.type + ' ' + this.name + ';'
   }
+  
 }
