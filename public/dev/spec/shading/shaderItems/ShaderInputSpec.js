@@ -10,4 +10,8 @@ describe("ShaderInput", function() {
     expect(myShaderInput.__proto__.__proto__.constructor.name).toEqual('ShaderItem')
   })
 
+  it("should have an attribute to safe the requested gl location", function() {
+    expect(myShaderInput.glLocation).toEqual(null)
+  })
+
 })

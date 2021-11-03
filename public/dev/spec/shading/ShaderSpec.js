@@ -16,16 +16,22 @@ describe("Plot3DShader", function() {
     expect(typeof myPlot3DShader.fragmentShaderCode).toEqual('string')
   })
 
-  it("should have an attribute vertexUniformList of type array", function() {
-    expect(myPlot3DShader.vertexUniformList.constructor.name).toEqual('Array')
+  it("should have an object inputs which holds all shader input nodes", function() {
+    expect(typeof myPlot3DShader.inputs).toBe('object')
   })
 
-  it("should have an attribute fragmentUniformList of type array", function() {
-    expect(myPlot3DShader.fragmentUniformList.constructor.name).toEqual('Array')
-  })
-
-  it("should have an attribute attributeList of type array", function() {
-    expect(myPlot3DShader.attributeList.constructor.name).toEqual('Array')
+  describe("inputs", function() {
+    it("should have an attribute vertexUniformList of type array", function() {
+      expect(myPlot3DShader.inputs.vertexUniformList.constructor.name).toEqual('Array')
+    })
+  
+    it("should have an attribute fragmentUniformList of type array", function() {
+      expect(myPlot3DShader.inputs.fragmentUniformList.constructor.name).toEqual('Array')
+    })
+  
+    it("should have an attribute attributeList of type array", function() {
+      expect(myPlot3DShader.inputs.attributeList.constructor.name).toEqual('Array')
+    })
   })
 
   it("should have an attribute program which is null", function() {

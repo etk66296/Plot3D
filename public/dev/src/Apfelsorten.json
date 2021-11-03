@@ -1,0 +1,121 @@
+{
+  "Sorten": [
+    {
+      "Name": "Ahra",
+      "Allgemein": {
+        "Wuchsstaerke": 5,
+        "Wuchsform": 6,
+        "Bluehbeginn": 2,
+        "Genussreife": 5,
+        "Ertrag": 6
+      },
+      "Frucht": {
+        "Groesse": 5,
+        "Deckfarbe": 5,
+        "EignungZumFrischverzehr": 8
+      },
+      "Anfaelligkeit": {
+        "Schorf": 1,
+        "Mehltau": 6,
+        "Bluetenfrost": 6,
+        "Holzfrost": 3
+      },
+      "Anbaueignung": "?"
+    }
+  ],
+
+  "Allgemein": {
+    "Wuchsstaerke": {
+      "sehr schwach": 1,
+      "schwach": 3,
+      "mittel": 5,
+      "stark": 7,
+      "sehr stark": 9
+    },
+    "Wuchsform": {
+      "sehr aufrecht": 1,
+      "aufrecht": 3,
+      "breitwüchsig": 5,
+      "überhängend": 7,
+      "lang überhängend": 9
+    },
+    "Bluehbeginn": {
+      "sehr früh": 1,
+      "früh": 3,
+      "mittel": 5,
+      "spät": 7,
+      "sehr spät": 9
+    },
+    "Genussreife": {
+      "sehr früh": 1,
+      "früh": 3,
+      "mittel": 5,
+      "spät": 7,
+      "sehr spät": 9
+    },
+    "Ertrag": {
+      "sehr niedrig": 1,
+      "niedrig": 3,
+      "mittel": 5,
+      "hoch": 7,
+      "sehr hoch": 9
+    }
+  },
+
+  "Frucht": {
+    "Groesse": {
+      "sehr klein": 1,
+      "klein": 3,
+      "mittel": 5,
+      "groß": 7,
+      "sehr groß": 9
+    },
+    "Deckfarbe": {
+      "fehlend oder sehr gering": 1,
+      "gering": 3,
+      "mittel": 5,
+      "hoch": 7,
+      "sehr hoch": 9
+    },
+    "EignungZumFrischverzehr": {
+      "sehr gering": 1,
+      "gering": 3,
+      "mittel": 5,
+      "hoch": 7,
+      "sehr hoch": 9
+    }
+  },
+
+  "Anfaelligkeit": {
+    "Schorf": {
+      "sehr gering": 1,
+      "gering": 3,
+      "mittel": 5,
+      "hoch": 7
+    },
+    "Mehltau": {
+      "sehr gering": 1,
+      "gering": 3,
+      "mittel": 5,
+      "hoch": 7
+    },
+    "Bluetenfrost": {
+      "sehr gering": 1,
+      "gering": 3,
+      "mittel": 5,
+      "hoch": 7
+    },
+    "Holzfrost": {
+      "sehr gering": 1,
+      "gering": 3,
+      "mittel": 5,
+      "hoch": 7
+    }
+  },
+
+  "Anbaueignung": {
+    "Erwerbsanbau": "E",
+    "Garten": "G",
+    "Streuobst": "S"
+  } 
+}

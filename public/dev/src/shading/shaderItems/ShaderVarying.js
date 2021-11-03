@@ -1,4 +1,4 @@
-class ShaderVarying extends ShaderInput {
+class ShaderVarying extends ShaderOutput {
   constructor() {
     super()
 
