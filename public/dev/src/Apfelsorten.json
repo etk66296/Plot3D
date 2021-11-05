@@ -1,5 +1,38 @@
 {
   "Sorten": [
+    
+    {
+      "Name": "1400 KE",
+      "Allgemein": {
+        "Wuchsstaerke": "-",
+        "Wuchsform": "-",
+        "Bluehbeginn": "-",
+        "Genussreife": "-",
+        "Ertrag": "-"
+      },
+      "Frucht": {
+        "Groesse": "-",
+        "Deckfarbe": "-",
+        "EignungZumFrischverzehr": "-"
+      },
+      "Anfaelligkeit": {
+        "Schorf": "-",
+        "Mehltau": "-",
+        "Bluetenfrost": "-",
+        "Holzfrost": "-"
+      },
+      "Qualtitaetseigenschaften": {
+        "Fruchtgewicht(g)": 187,
+        "Zuckergehalt(°Brix)": 12.6,
+        "Festigkeit(kg/cm2)": 7.4,
+        "Saeuregehalt(gAS/L)": 6.7,
+        "ZuckerSaeureverhaeltnis": 18.72
+      },
+      "Anbaueignung": "?",
+      "UrlBild": "",
+      "UrlWiki": ""
+    },
+
     {
       "Name": "Ahra",
       "Allgemein": {
@@ -20,8 +53,68 @@
         "Bluetenfrost": 6,
         "Holzfrost": 3
       },
-      "Anbaueignung": "?"
+      "Qualtitaetseigenschaften": {
+        "Fruchtgewicht(g/Frucht)": 143,
+        "Zuckergehalt(°Brix)": 14.3,
+        "Festigkeit(kg/cm2)": 7.6,
+        "Saeuregehalt(gAS/L)": 9.4,
+        "ZuckerSaeureverhaeltnis": 15
+      },
+      "Anbaueignung": "?",
+      "UrlBild": "",
+      "UrlWiki": ""
+    },
+
+    {
+      "Name": "Ahrina",
+      "Allgemein": {
+        "Wuchsstaerke": 7,
+        "Wuchsform": 5,
+        "Bluehbeginn": 5,
+        "Genussreife": 6,
+        "Ertrag": 7
+      },
+      "Frucht": {
+        "Groesse": 6,
+        "Deckfarbe": 7,
+        "EignungZumFrischverzehr": 6
+      },
+      "Anfaelligkeit": {
+        "Schorf": 4,
+        "Mehltau": 5,
+        "Bluetenfrost": 5,
+        "Holzfrost": 3
+      },
+      "Anbaueignung": "G",
+      "UrlBild": "https://de.wikipedia.org/wiki/Liste_von_Apfelsorten/A#/media/Datei:Ahrina_jm55205.jpg",
+      "UrlWiki": ""
+    },
+
+    {
+      "Name": "Ahrista",
+      "Allgemein": {
+        "Wuchsstaerke": 5,
+        "Wuchsform": 4,
+        "Bluehbeginn": 5,
+        "Genussreife": 4,
+        "Ertrag": 5
+      },
+      "Frucht": {
+        "Groesse": 5,
+        "Deckfarbe": 6,
+        "EignungZumFrischverzehr": 7
+      },
+      "Anfaelligkeit": {
+        "Schorf": 1,
+        "Mehltau": 6,
+        "Bluetenfrost": 3,
+        "Holzfrost": 6
+      },
+      "Anbaueignung": "?",
+      "UrlBild": "",
+      "UrlWiki": ""
     }
+
   ],
 
   "Allgemein": {
@@ -117,5 +210,7 @@
     "Erwerbsanbau": "E",
     "Garten": "G",
     "Streuobst": "S"
-  } 
+  }
+
+  
 }

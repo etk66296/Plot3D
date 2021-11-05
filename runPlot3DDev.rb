@@ -29,6 +29,15 @@ else
   require 'sinatra'
   set :port, 9999
   get '/' do
-    '<a href="http://localhost:9999/dev/SpecRunner.html">plot 3d specrunner</a>'
+    "
+      <ul>
+        <li>
+          <a href=\"http://localhost:9999/dev/SpecRunner.html\">plot 3d specrunner</a>
+        </li>
+        <li>
+          <a href=\"http://localhost:9999/dev/src/standAloneCode/glLab.html\">gl lab</a>
+        </li>
+      </ul>
+    "
   end 
 end
