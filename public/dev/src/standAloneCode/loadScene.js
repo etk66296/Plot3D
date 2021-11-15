@@ -37,7 +37,7 @@ const vertexShaderCodeB = `
 
   uniform mat4 u_modelToProjectionMatrix;
         
-  varying lowp vec4 v_color;
+  varying highp vec4 v_color;
 
   void main(void) {
     gl_Position = u_modelToProjectionMatrix * vec4(a_position, 1.0);
@@ -46,12 +46,34 @@ const vertexShaderCodeB = `
 `
 
 const fragmentShaderCodeB = `
-  precision mediump float;
+  precision highp float;
 
-  varying lowp vec4 v_color;
+  const float Pi = 6.28318530718;
 
-  void main(void) {
-    gl_FragColor = v_color;
+  const float Directions = 16.0;
+  const float Quality = 3.0;
+  const float Size = 8.0;
+  vec2 Resolution = vec2(800, 450);
+
+  const float PiDirRatio = Pi / Directions;
+
+  vec2 Radius = Size / Resolution.xy;
+
+  varying highp vec4 v_color;
+
+  void main() {
+
+    vec4 color = v_color;
+
+    vec2 uv = gl_FragCoord.xy / Resolution.xy;
+
+    for( float d = 0.0; d < Pi; d += PiDirRatio) {
+      for(float i = 1.0 / Quality; i <= 1.0; i += 1.0 / Quality) {
+        color += vec4(uv + vec2(cos(d), sin(d)) * Radius * i, color.z, 0.5);
+      }
+    }
+    color /= Quality * Directions - 15.0;
+    gl_FragColor = color;
   }
 `
 
@@ -150,6 +172,7 @@ class Matrix4x4 {
 window.addEventListener("load", () => {
   let rednerCanvas = document.getElementById("renderCanvas")
   let glCntxt = rednerCanvas.getContext("webgl2")
+  glCntxt.disable(glCntxt.DEPTH_TEST)
   clearRenderSurface(glCntxt)
 
   let shaderBuilder = new Plot3DShaderBuilder(glCntxt)
@@ -157,7 +180,8 @@ window.addEventListener("load", () => {
   let shaderA = shaderBuilder.buildShader(vertexShaderCodeA, fragmentShaderCodeA)
   let shaderB = shaderBuilder.buildShader(vertexShaderCodeB, fragmentShaderCodeB)
 
-  let modelMatrix = new Matrix4x4()
+  let modelMatrixA = new Matrix4x4()
+  let modelMatrixB = new Matrix4x4()
 
   // /*
   // ┌─────────────┬─────────────┐
@@ -171,9 +195,9 @@ window.addEventListener("load", () => {
   // └─────────────┴─────────────┘
   // */
   vertices = [
-    -0.5, 0.5, 0.0,
-    0.5, 0.5, 0.0,
-    0.0, -0.5, 0.0
+    -0.5, 0.5, 1.0,
+    0.5, 0.5, 1.0,
+    0.0, -0.5, 1.0
   ]
 
   normals = [
@@ -188,8 +212,6 @@ window.addEventListener("load", () => {
     0.0, 0.0, 1.0, 1.0,
   ]
 
-  glCntxt.useProgram(shaderA.program)
-  glCntxt.uniformMatrix4fv(shaderA.glVertexUniformLocation['u_modelToProjectionMatrix'], false, modelMatrix.cells)
 
   let glVerticesBuffersA = glCntxt.createBuffer()
   glCntxt.bindBuffer(
@@ -224,120 +246,109 @@ window.addEventListener("load", () => {
     glCntxt.STATIC_DRAW
   )
 
-  glCntxt.enableVertexAttribArray(shaderA.glAttrLocation['a_position'])
-  glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glVerticesBuffersA)
-  glCntxt.vertexAttribPointer(
-    shaderA.glAttrLocation['a_position'],
-    3,
-    glCntxt.FLOAT,
-    false,
-    0,
-    0
-  )
-        
-  glCntxt.enableVertexAttribArray(shaderA.glAttrLocation['a_normal'])
-  glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glNormalsBufferA)
-  glCntxt.vertexAttribPointer(
-    shaderA.glAttrLocation['a_normal'],
-    3,
-    glCntxt.FLOAT,
-    false,
-    0,
-    0
-  )
+  let xDir = 1
 
-  glCntxt.enableVertexAttribArray(shaderA.glAttrLocation['a_color'])
-  glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glColorsBufferA)
-  glCntxt.vertexAttribPointer(
-    shaderA.glAttrLocation['a_color'],
-    4,
-    glCntxt.FLOAT,
-    false,
-    0,
-    0
-  )
-
-  glCntxt.drawArrays(glCntxt.TRIANGLES, 0, 3)
+  let draw =function() {
 
 
+    clearRenderSurface(glCntxt)
 
+    glCntxt.useProgram(shaderA.program)
+    
+    glCntxt.uniformMatrix4fv(shaderA.glVertexUniformLocation['u_modelToProjectionMatrix'], false, modelMatrixA.cells)
 
+    glCntxt.enableVertexAttribArray(shaderA.glAttrLocation['a_position'])
+    glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glVerticesBuffersA)
+    glCntxt.vertexAttribPointer(
+      shaderA.glAttrLocation['a_position'],
+      3,
+      glCntxt.FLOAT,
+      false,
+      0,
+      0
+    )
+          
+    glCntxt.enableVertexAttribArray(shaderA.glAttrLocation['a_normal'])
+    glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glNormalsBufferA)
+    glCntxt.vertexAttribPointer(
+      shaderA.glAttrLocation['a_normal'],
+      3,
+      glCntxt.FLOAT,
+      false,
+      0,
+      0
+    )
+  
+    glCntxt.enableVertexAttribArray(shaderA.glAttrLocation['a_color'])
+    glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glColorsBufferA)
+    glCntxt.vertexAttribPointer(
+      shaderA.glAttrLocation['a_color'],
+      4,
+      glCntxt.FLOAT,
+      false,
+      0,
+      0
+    )
+  
+    glCntxt.drawArrays(glCntxt.TRIANGLES, 0, 3)
+  
+  
+  
+    glCntxt.useProgram(shaderB.program)
+  
+  
+    modelMatrixB.cells[12] -= (0.01 * xDir)
+    if (modelMatrixB.cells[12] < -1) {
+      modelMatrixB.cells[12] = -1
+      xDir *= -1
+    }
+    if (modelMatrixB.cells[12] > 1) {
+      modelMatrixB.cells[12] = 1
+      xDir *= -1
+    }
 
+  
+    glCntxt.uniformMatrix4fv(shaderB.glVertexUniformLocation['u_modelToProjectionMatrix'], false, modelMatrixB.cells)
+  
+  
+    glCntxt.enableVertexAttribArray(shaderB.glAttrLocation['a_position'])
+    glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glVerticesBuffersA)
+    glCntxt.vertexAttribPointer(
+      shaderB.glAttrLocation['a_position'],
+      3,
+      glCntxt.FLOAT,
+      false,
+      0,
+      0
+    )
+          
+    glCntxt.enableVertexAttribArray(shaderB.glAttrLocation['a_normal'])
+    glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glNormalsBufferA)
+    glCntxt.vertexAttribPointer(
+      shaderB.glAttrLocation['a_normal'],
+      3,
+      glCntxt.FLOAT,
+      false,
+      0,
+      0
+    )
+  
+    glCntxt.enableVertexAttribArray(shaderB.glAttrLocation['a_color'])
+    glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glColorsBufferA)
+    glCntxt.vertexAttribPointer(
+      shaderB.glAttrLocation['a_color'],
+      4,
+      glCntxt.FLOAT,
+      false,
+      0,
+      0
+    )
+  
+    // glCntxt.drawArrays(glCntxt.LINE_LOOP, 0, 3)
+    glCntxt.drawArrays(glCntxt.TRIANGLES, 0, 3)
+  }
 
-
-  glCntxt.useProgram(shaderB.program)
-
-  modelMatrix.cells[3] = 0.5
-
-  glCntxt.uniformMatrix4fv(shaderB.glVertexUniformLocation['u_modelToProjectionMatrix'], false, modelMatrix.cells)
-
-  // let glVerticesBuffersB = glCntxt.createBuffer()
-  // glCntxt.bindBuffer(
-  //   glCntxt.ARRAY_BUFFER,
-  //   glVerticesBuffersB
-  // )
-  // glCntxt.bufferData(
-  //   glCntxt.ARRAY_BUFFER,
-  //   new Float32Array(vertices),
-  //   glCntxt.STATIC_DRAW
-  // )
-
-  // let glNormalsBufferB = glCntxt.createBuffer()
-  // glCntxt.bindBuffer(
-  //   glCntxt.ARRAY_BUFFER,
-  //   glNormalsBufferB
-  // )
-  // glCntxt.bufferData(
-  //   glCntxt.ARRAY_BUFFER,
-  //   new Float32Array(normals),
-  //   glCntxt.STATIC_DRAW
-  // )
-
-  // let glColorsBufferB = glCntxt.createBuffer()
-  // glCntxt.bindBuffer(
-  //   glCntxt.ARRAY_BUFFER,
-  //   glColorsBufferB
-  // )
-  // glCntxt.bufferData(
-  //   glCntxt.ARRAY_BUFFER,
-  //   new Float32Array(colors),
-  //   glCntxt.STATIC_DRAW
-  // )
-
-  glCntxt.enableVertexAttribArray(shaderB.glAttrLocation['a_position'])
-  glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glVerticesBuffersA)
-  glCntxt.vertexAttribPointer(
-    shaderB.glAttrLocation['a_position'],
-    3,
-    glCntxt.FLOAT,
-    false,
-    0,
-    0
-  )
-        
-  glCntxt.enableVertexAttribArray(shaderB.glAttrLocation['a_normal'])
-  glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glNormalsBufferA)
-  glCntxt.vertexAttribPointer(
-    shaderB.glAttrLocation['a_normal'],
-    3,
-    glCntxt.FLOAT,
-    false,
-    0,
-    0
-  )
-
-  glCntxt.enableVertexAttribArray(shaderB.glAttrLocation['a_color'])
-  glCntxt.bindBuffer(glCntxt.ARRAY_BUFFER, glColorsBufferA)
-  glCntxt.vertexAttribPointer(
-    shaderB.glAttrLocation['a_color'],
-    4,
-    glCntxt.FLOAT,
-    false,
-    0,
-    0
-  )
-
-  glCntxt.drawArrays(glCntxt.LINE_LOOP, 0, 3)
+  setInterval(draw, 60)
 
   
 })
