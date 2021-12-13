@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3d plotter</title>
+    <meta charset="utf-8"/>
+
+    <style>
+ 
+    </style>
+
+    <script src="svgElements.js"></script>
+
+    <script>
+      window.addEventListener("load",
+        () => {
+          let svg = new Svg()
+          document.getElementById('mainContainer').appendChild(svg.node)
+
+          let seconds = new Rect({ x: 100, y: 100, width: 2, height: 80, fill:'#ff00ff' })
+          let minutes = new Rect({ x: 100, y: 100, width: 3, height: 60, fill:'#0000ff' })
+          let hours = new Rect({ x: 100, y: 100, width: 4, height: 30, fill:'#f000ff' })
+          svg.appendChild(seconds)
+          svg.appendChild(minutes)
+          svg.appendChild(hours)
+
+          let secondsAngle = 0
+          let minutesAngle = 0
+          let hoursAngle = 0
+          setInterval(function() {
+            secondsAngle += 6
+            seconds.rotate(secondsAngle)
+            minutesAngle += 0.1
+            minutes.rotate(minutesAngle)
+            hoursAngle += 0.001666666667
+            hours.rotate(hoursAngle)
+          }, 1000)
+        }
+      )
+    </script>
+  </head>
+  <body>
+    <div id="mainContainer"></div>
+  </body>
+</html>
