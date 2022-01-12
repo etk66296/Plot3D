@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Needle Clock</title>
+    <meta charset="utf-8"/>
+
+    <style>
+      html {
+        background-color: #000;
+      }
+
+      #mainContainer {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      }
+    </style>
+
+    <script src="../svgElements.js"></script>
+    <script src="needleClock.js"></script>
+
+    <script>
+      window.addEventListener("load",
+        () => {
+          let clock = new NeedleClock(5.0)
+          clock.appendTo('mainContainer')
+        }
+      )
+    </script>
+  </head>
+  <body>
+    <div id="mainContainer"></div>
+  </body>
+</html>
